@@ -1,0 +1,4019 @@
+
+SSQL> insert into users values('use01','akshaya','aksh021');
+
+1 row created.
+
+SQL> insert into users values('adm01','nithya','sri021');
+
+1 row created.
+
+SQL> insert into users values('wor01','suvetha','abcd4');
+
+1 row created.
+
+SQL> insert into users values('cas01','santhosh','cash5');
+
+1 row created.
+
+SQL> select * from users;
+
+USER_ USER_NAME            PASSWORD
+----- -------------------- --------
+use01 akshaya              aksh021
+adm01 nithya               sri021
+wor01 suvetha              abcd4
+cas01 santhosh             cash5
+
+SQL> insert into admins values('adm01','active',sysdate);
+
+1 row created.
+
+SQL> select * from admins;
+
+USER_ STATUS
+----- ----------
+LAST_LOGIN_TIME
+---------------------------------------------------------------------------
+adm01 active
+20-FEB-26 06.38.17.000000 PM
+
+
+SQL> set linesize 120;
+SQL> select * from admins;
+
+USER_ STATUS     LAST_LOGIN_TIME
+----- ---------- ---------------------------------------------------------------------------
+adm01 active     20-FEB-26 06.38.17.000000 PM
+
+SQL> insert into workers values('wor01',5000.0,'morning');
+
+1 row created.
+
+SQL> select * from workers;
+
+USER_     SALARY WORK_SHIFT
+----- ---------- ----------
+wor01       5000 morning
+
+SQL> insert into cashier values('cas01',1,5000.0,'evening');
+
+1 row created.
+
+SQL> select * from cashier;
+
+USER_ COUNTER_NO     SALARY SHIFT_TIME
+----- ---------- ---------- ----------
+cas01          1       5000 evening
+
+SQL> delete from customer;
+delete from customer
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008362) violated - child record found
+
+
+SQL> delete from customer_phone;
+
+3 rows deleted.
+
+SQL> delete rows from customer;
+delete rows from customer
+       *
+ERROR at line 1:
+ORA-00903: invalid table name
+
+
+SQL> delete from customer;
+delete from customer
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008355) violated - child record found
+
+
+S
+SQL> delete from sales;
+
+0 rows deleted.
+
+SQL> delete from sale_detail;
+
+0 rows deleted.
+
+SQL> delete from customer;
+delete from customer
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008355) violated - child record found
+
+
+SQL> delete from sales_product;
+
+0 rows deleted.
+
+SQL> delete from bill;
+delete from bill
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008358) violated - child record found
+
+
+SQL> delete from discount;
+delete from discount
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008356) violated - child record found
+
+
+SQL> delete from payment;
+
+2 rows deleted.
+
+SQL> delete from discount;
+delete from discount
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008356) violated - child record found
+
+SQL> insert into customer values('cus01','devi',20,'moorthy nagar','kalaiyarkovil',630551);
+
+1 row created.
+
+SQL> insert into customer values('cus02','amutha',50,'ss nagar','kalaiyarkovil',630551);
+
+1 row created.
+
+SQL> insert into customer values('cus03','akshaya',34,'thiru nagar','kalaiyarkovil',630551);
+
+1 row created.
+
+SQL> insert into customer values('cus04','nathiya',60,'vip nagar','kalaiyarkovil',630551);
+
+1 row created.
+
+SQL> insert into customer values('cus05','shiva',77,'rose nagar','sivagangai',630551);
+
+1 row created.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             20 moorthy nagar             kalaiyarkovil                 630551
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+SQL> insert into customer_phone values('cus04',9786517047);
+
+1 row created.
+
+SQL> insert into customer_phone values('cus01',9786123456);
+
+1 row created.
+
+SQL> insert into customer_phone values('cus02',8790345689);
+
+1 row created.
+
+SQL> select * from customer_phone;
+
+CUSTO   PHONE_NO
+----- ----------
+cus01 9786123456
+cus02 8790345689
+cus04 9786517047
+
+SQL> insert into supplier values('sup01','dhivya',654321,'madurai','gandhi nagar');
+
+1 row created.
+
+SQL> insert into supplier values('sup02','murugen',621091,'chennai','kv nagar');
+
+1 row created.
+
+SQL> select * from supplier;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+----- -------------------- --------------- -------------------- --------------------
+sup01 dhivya                        654321 madurai              gandhi nagar
+sup02 murugen                       621091 chennai              kv nagar
+
+SQL> insert into category values('cat01','dairy');
+
+1 row created.
+
+SQL> insert into category values('cat02','statinary');
+
+1 row created.
+
+SQL> insert into category values('cat04','grocery');
+
+1 row created.
+
+SQL> select * from category;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+SQL> insert into product values('pro01','cat01',10000.0,'sup01',20,'milk','29/02/2025');
+
+1 row created.
+
+SQL> insert into product values('pro02','cat04',1000.0,'sup02',20,'dhal','09/12/2026');
+
+1 row created.
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME         EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                 29/02/2025
+pro02 cat04          1000 sup02         20 dhal                 09/12/2026
+
+SQL> insert into sales values('sal01','cash','paid','cus01','pro01');
+
+1 row created.
+
+SQL> insert into sales values('sal02','card','paid','cus02','pro02');
+
+1 row created.
+
+SQL> insert into sales values('sal02','card','paid','cus02','pro02');
+insert into sales values('sal02','card','paid','cus02','pro02')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008328) violated
+
+
+SQL> select * from sales;
+
+SALE_ PAYMENT_MO SALE_STATU CUSTO PRODU
+----- ---------- ---------- ----- -----
+sal01 cash       paid       cus01 pro01
+sal02 card       paid       cus02 pro02
+
+SQL> insert into sale_detail values('sde01','sal01','pro01',10000,500,25);
+
+1 row created.
+
+SQL>  select * from sale_detail;
+
+SALE_ SALE_ PRODU TOTAL_PRICE SELLING_PRICE QUANTITY_SOLD
+----- ----- ----- ----------- ------------- -------------
+sde01 sal01 pro01       10000           500            25
+
+SQL>  insert into discount values('dis01',30.0,'available',1000,'pongal sale','21/01/2026','01/02/2026');
+
+1 row created.
+
+SQL> insert into discount values('dis02',50.0,'available',2000,'diwali sale','12/08/2026','01/09/2026');
+
+1 row created.
+
+SQL> select * from discount;
+
+DISCO DISCOUNT_PERCENT STATUS     MIN_BILL_AMOUNT DESCRIPTION               START_DATE END_DATE
+----- ---------------- ---------- --------------- ------------------------- ---------- ----------
+dis01               30 available             1000 pongal sale               21/01/2026 01/02/2026
+dis02               50 available             2000 diwali sale               12/08/2026 01/09/2026
+
+SQL>  insert into bill values('bil01',sysdate,5000,'paid','cus01','dis01');
+
+1 row created.
+
+SQL> insert into bill values('bil02',sysdate,6000,'paid','cus02','dis02');
+
+1 row created.
+
+SQL> select * from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+
+SQL> insert into payment values('pay01','bil01',5000,'card','successfully');
+
+1 row created.
+
+SQL> insert into payment values('pay02','bil02',6000,'cash','successfully');
+
+1 row created.
+
+SQL> select * from payment;
+
+PAYME BILL_ AMOUNT_PAI PAYMENT_MODE         PAYMENT_STATUS
+----- ----- ---------- -------------------- --------------------
+pay01 bil01 5000       card                 successfully
+pay02 bil02 6000       cash                 successfully
+
+SQL> insert into sales_product values('sal01','pro01',5000);
+
+1 row created.
+
+SQL> select * from sales_product;
+
+SALE_ PRODU TOTAL_AMOUNT
+----- ----- ------------
+sal01 pro01         5000
+
+SQL> commit;
+
+Commit complete.
+
+SQL> insert all
+  2
+SQL> INSERT ALL
+  2    INTO BRANCH (BR_NAME, BR_CITY, ASSETS) VALUES ('SIVAKASI MEPCO', 'SIVAKASI', 30000000)
+  3    INTO BRANCH (BR_NAME, BR_CITY, ASSETS) VALUES ('VIRUDUNAGAR EAST', 'VIRUDUNAGAR', 45000000)
+  4    INTO BRANCH (BR_NAME, BR_CITY, ASSETS) VALUES ('MADURAI CENTRAL', 'MADURAI', 25000000)
+  5  SELECT * FROM dual;
+  INTO BRANCH (BR_NAME, BR_CITY, ASSETS) VALUES ('MADURAI CENTRAL', 'MADURAI', 25000000)
+       *
+ERROR at line 4:
+ORA-00942: table or view does not exist
+
+
+SQL> INSERT ALL
+  2    INTO BRANCH (BR_NAME, BR_CITY, ASSETS) VALUES ('SIVAKASI MEPCO', 'SIVAKASI', 30000000)
+  3
+SQL>
+SQL> insert into bill values('bil03',sysdate,2000,'paid','cus03','dis02');
+
+1 row created.
+
+SQL> insert into discount values('dis03',25.0,'available',2000,'christmas sale','12/11/2025','21/12/2025');
+
+1 row created.
+
+SQL> insert into discount values('dis04',40.0,' not available',1000,'summer sale','12/03/2025','21/05/2025');
+insert into discount values('dis04',40.0,' not available',1000,'summer sale','12/03/2025','21/05/2025')
+                                         *
+ERROR at line 1:
+ORA-12899: value too large for column "SYSTEM"."DISCOUNT"."STATUS" (actual: 14, maximum: 10)
+
+
+SQL> insert into discount values('dis04',40.0,' not avail',1000,'summer sale','12/03/2025','21/05/2025');
+
+1 row created.
+
+SQL> insert into bill values('bil04',sysdate,5000,'not paid','cus04','dis03');
+
+1 row created.
+
+SQL> insert into bill values('bil05',sysdate,2400,'paid','cus05','dis04');
+
+1 row created.
+
+SQL> select * from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+bil03 20-FEB-26         2000 paid       cus03 dis02
+bil04 20-FEB-26         5000 not paid   cus04 dis03
+bil05 20-FEB-26         2400 paid       cus05 dis04
+
+SQL> select * from discount;
+
+DISCO DISCOUNT_PERCENT STATUS     MIN_BILL_AMOUNT DESCRIPTION               START_DATE END_DATE
+----- ---------------- ---------- --------------- ------------------------- ---------- ----------
+dis01               30 available             1000 pongal sale               21/01/2026 01/02/2026
+dis02               50 available             2000 diwali sale               12/08/2026 01/09/2026
+dis03               25 available             2000 christmas sale            12/11/2025 21/12/2025
+dis04               40  not avail            1000 summer sale               12/03/2025 21/05/2025
+
+SQL> select * from payment;
+
+PAYME BILL_ AMOUNT_PAI PAYMENT_MODE         PAYMENT_STATUS
+----- ----- ---------- -------------------- --------------------
+pay01 bil01 5000       card                 successfully
+pay02 bil02 6000       cash                 successfully
+
+SQL> insert into payment values('pay03','bil03',5000.0,'credit card','not paid'),('pay04','bil04',2400.0,'cash','paid');
+insert into payment values('pay03','bil03',5000.0,'credit card','not paid'),('pay04','bil04',2400.0,'cash','paid')
+                                                                           *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> desc payment[
+SP2-0565: Illegal identifier.
+SQL> desc payment;
+ Name                                                              Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ PAYMENT_ID                                                        NOT NULL VARCHAR2(5)
+ BILL_ID                                                                    VARCHAR2(5)
+ AMOUNT_PAID                                                                VARCHAR2(10)
+ PAYMENT_MODE                                                               VARCHAR2(20)
+ PAYMENT_STATUS                                                             VARCHAR2(20)
+
+SQL> insert all into payment ( PAYMENT_ID, BILL_ID,AMOUNT_PAID,PAYMENT_MODE, PAYMENT_STATUS) values ('pay03','bil03',5000.0,'credit card','not paid') into payment ( PAYMENT_ID, BILL_ID,AMOUNT_PAID,PAYMENT_MODE, PAYMENT_STATUS) values ('pay04','bil04',2400.0,'cash','paid');
+insert all into payment ( PAYMENT_ID, BILL_ID,AMOUNT_PAID,PAYMENT_MODE, PAYMENT_STATUS) values ('pay03','bil03',5000.0,'credit card','not paid') into payment ( PAYMENT_ID, BILL_ID,AMOUNT_PAID,PAYMENT_MODE, PAYMENT_STATUS) values ('pay04','bil04',2400.0,'cash','paid')
+                                                                                                                                                                                                                                                                          *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> insert all into payment ( PAYMENT_ID, BILL_ID,AMOUNT_PAID,PAYMENT_MODE, PAYMENT_STATUS) values ('pay03','bil03',5000.0,'credit card','not paid') into payment ( PAYMENT_ID, BILL_ID,AMOUNT_PAID,PAYMENT_MODE, PAYMENT_STATUS) values ('pay04','bil04',2400.0,'cash','paid') select * from dual;
+
+2 rows created.
+
+SQL> select * from payment;
+
+PAYME BILL_ AMOUNT_PAI PAYMENT_MODE         PAYMENT_STATUS
+----- ----- ---------- -------------------- --------------------
+pay01 bil01 5000       card                 successfully
+pay02 bil02 6000       cash                 successfully
+pay03 bil03 5000       credit card          not paid
+pay04 bil04 2400       cash                 paid
+
+SQL> insert into customer values('cus03','yash',-1,'mother nagar','kadayanallur',627751);
+insert into customer values('cus03','yash',-1,'mother nagar','kadayanallur',627751)
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.C1) violated
+
+
+SQL>  insert into bill values('bil04',sysdate,5000,'not paid','cus04','dis03');
+ insert into bill values('bil04',sysdate,5000,'not paid','cus04','dis03')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008354) violated
+
+
+SQL>  insert into bill values('bil04',sysdate,5000,'not paid','cus04');
+ insert into bill values('bil04',sysdate,5000,'not paid','cus04')
+             *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> ALTER TABLE ACCOUNT ADD CONSTRAINT C3 FOREIGN KEY(BRANCH) REFERENCES BRANCH(BR_NAME);
+ALTER TABLE ACCOUNT ADD CONSTRAINT C3 FOREIGN KEY(BRANCH) REFERENCES BRANCH(BR_NAME)
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> create table cus1 as select * from customer;
+
+Table created.
+
+SQL> insert into cus1 (customer_name,address_city,loyalty_points) select customer_name,address_city,loyalty_points from customer where loyalty_points>20;
+
+4 rows created.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             20 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+      amutha                           50                          kalaiyarkovil
+      akshaya                          34                          kalaiyarkovil
+      nathiya                          60                          kalaiyarkovil
+      shiva                            77                          sivagangai
+
+9 rows selected.
+
+SQL> set linesize 120;
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             20 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+      amutha                           50                          kalaiyarkovil
+      akshaya                          34                          kalaiyarkovil
+      nathiya                          60                          kalaiyarkovil
+      shiva                            77                          sivagangai
+
+9 rows selected.
+
+SQL> delete from cus1;
+
+9 rows deleted.
+
+SQL> desc cus1;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ CUSTOMER_ID                                                       VARCHAR2(5)
+ CUSTOMER_NAME                                                     VARCHAR2(20)
+ LOYALTY_POINTS                                                    NUMBER(38)
+ ADDRESS_STREET                                                    VARCHAR2(25)
+ ADDRESS_CITY                                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                                   NUMBER(38)
+
+SQL> delete from cus1 where loyalty_points=25;
+
+0 rows deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> delete from cus1 where loyalty_points=25;
+
+0 rows deleted.
+
+SQL> delete from cus1 where loyalty_points=20;
+
+1 row deleted.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+SQL> delete from cus1 where address_city='sivagangai';
+
+1 row deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+SQL> delete from cus1 where address_city like 's%';
+
+1 row deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> delete from customer where address_city like '%l'
+  2  ;
+delete from customer where address_city like '%l'
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008362) violated - child record found
+
+
+SQL> delete from cus1 where address_city like '%l';
+
+3 rows deleted.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+SQL> delete from cus1 where address_city like '_i%';
+
+1 row deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> delete from cus1 where address_city like 'l%' and loyalty_points>30;
+
+0 rows deleted.
+
+SQL> delete from cus1 where address_city like 'l%' and loyalty_points>60;
+
+0 rows deleted.
+
+SQL> delete from cus1 where address_city like 'l%' and loyalty_points=60;
+
+0 rows deleted.
+
+SQL> delete from cus1 where address_city like 'k%' and loyalty_points=60;
+
+1 row deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> delete from cus1 where address_city like 'k%' or loyalty_points=60;
+
+3 rows deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> update customer set loyalty_points=loyalty_points+10;
+
+5 rows updated.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           60 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          70 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            87 rose nagar               sivagangai                     630551
+
+SQL> update customer set loyalty_points=loyalty_points+10 where loyalty_points>100;
+
+0 rows updated.
+
+SQL> update customer set loyalty_points=loyalty_points+10 where loyalty_points>50;
+
+3 rows updated.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            97 rose nagar               sivagangai                     630551
+
+SQL> update customer set loyalty_points=loyalty_points+20 where loyalty_points>60 and address_city like '__________';
+
+1 row updated.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                           117 rose nagar               sivagangai                     630551
+
+SQL> desc product;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ PRODUCT_ID                                                       NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                                       VARCHAR2(5)
+ PRODUCT_PRICE                                                     FLOAT(126)
+ SUPPLIER_ID                                                       VARCHAR2(5)
+ QUANTITY                                                          NUMBER(38)
+ PRODUCT_NAME                                                     NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                                       VARCHAR2(10)
+
+SQL> alter table customer add total int;
+
+Table altered.
+
+SQL> insert into customer (total) values (1000);
+insert into customer (total) values (1000)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."CUSTOMER"."CUSTOMER_ID")
+
+
+SQL> insert into customer (customer_id,total) values ('cus01',1000);
+insert into customer (customer_id,total) values ('cus01',1000)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008325) violated
+
+
+SQL> insert into customer (customer_id,total) values ('cus06',1000);
+
+1 row created.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE      TOTAL
+----- -------------------- -------------- ------------------------- -------------------- --------------- ----------
+cus06                                                                 1000
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                           117 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> delete from customer where total=1000;
+
+1 row deleted.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE      TOTAL
+----- -------------------- -------------- ------------------------- -------------------- --------------- ----------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                           117 rose nagar               sivagangai                     630551
+
+SQL> alter table customer drop column total;
+
+Table altered.
+
+SQL> update customer set loyalty_points=loyalty_points+10,customer_name='shiva'+ 's' where loyalty_points=117 and address_city like '__________';
+update customer set loyalty_points=loyalty_points+10,customer_name='shiva'+ 's' where loyalty_points=117 and address_city like '__________'
+                                                                   *
+ERROR at line 1:
+ORA-01722: invalid number
+
+
+SQL> update customer set loyalty_points=loyalty_points+10,pin_code=670831 where loyalty_points=117 and address_city like '__________';
+update customer set loyalty_points=loyalty_points+10,pin_code=670831 where loyalty_points=117 and address_city like '__________'
+                                                     *
+ERROR at line 1:
+ORA-00904: "PIN_CODE": invalid identifier
+
+
+SQL> alter table customer add total int;
+
+Table altered.
+
+SQL> update customer set loyalty_points=loyalty_points+10,total=total+1000 where loyalty_points=117 and address_city like '__________';
+
+1 row updated.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE      TOTAL
+----- -------------------- -------------- ------------------------- -------------------- --------------- ----------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                           127 rose nagar               sivagangai                     630551
+
+SQL> alter table customer drop column total;
+
+Table altered.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                           127 rose nagar               sivagangai                     630551
+
+SQL> commit;
+
+Commit complete.
+
+SQL> alter table customer add dob date;
+
+Table altered.
+
+SQL> desc customer;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ CUSTOMER_ID                                                      NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                                     VARCHAR2(20)
+ LOYALTY_POINTS                                                    NUMBER(38)
+ ADDRESS_STREET                                                    VARCHAR2(25)
+ ADDRESS_CITY                                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                                   NUMBER(38)
+ DOB                                                               DATE
+
+SQL> alter table customer add age number;
+
+Table altered.
+
+SQL> select sysdate from dual;
+
+SYSDATE
+---------
+20-FEB-26
+
+SQL> insert into customer(customer_name,address_city,dob) values('akshay','madurai','21-mar-26');
+insert into customer(customer_name,address_city,dob) values('akshay','madurai','21-mar-26')
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."CUSTOMER"."CUSTOMER_ID")
+
+
+SQL> insert into customer(customer_id,address_city,dob) values('cus01','madurai','21-mar-26');
+insert into customer(customer_id,address_city,dob) values('cus01','madurai','21-mar-26')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008325) violated
+
+
+SQL> insert into customer(customer_id,address_city,dob) values('cus06','madurai','21-mar-26');
+
+1 row created.
+
+SQL> update customer set age = trunc(months_between(sysdate,dob)/12);
+
+6 rows updated.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06                                                              madurai                               21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+
+
+cus05 shiva                           127 rose nagar               sivagangai                     630551
+
+
+
+6 rows selected.
+
+SQL> set linesize 120
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06                                                               madurai                              21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+
+
+cus02 amutha                           70 ss nagar                  kalaiyarkovil                 630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          44 thiru nagar               kalaiyarkovil                 630551
+
+
+cus04 nathiya                          80 vip nagar                 kalaiyarkovil                 630551
+
+
+cus05 shiva                           127 rose nagar                sivagangai                    630551
+
+
+
+6 rows selected.
+
+QL> commit;
+
+Commit complete.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           70 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          44 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          80 vip nagar                kalaiyarkovil                  630551
+
+
+cus05 shiva                           127 rose nagar               sivagangai                     630551
+
+
+
+6 rows selected.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+SQL> merge into customer c1
+  2  using cus1 c2
+  3  on (c1.customer_name = c2.customer_name)
+  4  when maatched then
+  5  update set c1.address_city = c2.address_city,c1.loyalty_points=c2.loyalty_points
+  6  when not matched then
+  7  insert(customer_name,address_city,loyalty_points)
+  8  values(c2.customer_name,c2.address_city,c2.loyalty_points);
+when maatched then
+     *
+ERROR at line 4:
+ORA-00905: missing keyword
+
+
+SQL> merge into customer c1
+  2  using cus1 c2
+  3   on (c1.customer_name = c2.customer_name)
+  4  when matched then
+  5  update set c1.address_city = c2.address_city,c1.loyalty_points=c2.loyalty_points
+  6    6  when not matched then
+  7    7  insert(customer_name,address_city,loyalty_points)
+  8
+SQL> merge into customer c1
+  2  using cus1 c2
+  3  on (c1.customer_name = c2.customer_name)
+  4  when matched then
+  5  update set c1.address_city = c2.address_city,c1.loyalty_points=c2.loyalty_points
+  6  when not matched then
+  7  insert(customer_name,address_city,loyalty_points)
+  8  values(c2.customer_name,c2.address_city,c2.loyalty_points);
+
+4 rows merged.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+6 rows selected.
+
+SQL> select * from cus1;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE
+----- -------------------- -------------- ------------------------- -------------------- ---------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+SQL>
+
+SQL> select customer_name,address_city from customer;
+
+CUSTOMER_NAME        ADDRESS_CITY
+-------------------- --------------------
+kavi                 madurai
+devi                 kalaiyarkovil
+amutha               kalaiyarkovil
+akshaya              kalaiyarkovil
+nathiya              kalaiyarkovil
+shiva                sivagangai
+
+6 rows selected.
+
+SQL> select customer_name,address_city,loyalty_points from customer;
+
+CUSTOMER_NAME        ADDRESS_CITY         LOYALTY_POINTS
+-------------------- -------------------- --------------
+kavi                 madurai                          23
+devi                 kalaiyarkovil                    30
+amutha               kalaiyarkovil                    50
+akshaya              kalaiyarkovil                    34
+nathiya              kalaiyarkovil                    60
+shiva                sivagangai                       77
+
+6 rows selected.
+
+SQL> select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+madurai
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+sivagangai
+
+6 rows selected.
+
+SQL> select distinct address_city from customer;
+
+ADDRESS_CITY
+--------------------
+madurai
+kalaiyarkovil
+sivagangai
+
+SQL> select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+madurai
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+sivagangai
+
+6 rows selected.
+
+SQL> select address_city city from customer;
+
+CITY
+--------------------
+madurai
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+sivagangai
+
+6 rows selected.
+
+SQL> select address_city as city from customer;
+
+CITY
+--------------------
+madurai
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+sivagangai
+
+6 rows selected.
+
+SQL> select customer_name,loyalty_points from customer;
+
+CUSTOMER_NAME        LOYALTY_POINTS
+-------------------- --------------
+kavi                             23
+devi                             30
+amutha                           50
+akshaya                          34
+nathiya                          60
+shiva                            77
+
+6 rows selected.
+
+SQL> select customer_name,loyalty_points+10 from customer;
+
+CUSTOMER_NAME        LOYALTY_POINTS+10
+-------------------- -----------------
+kavi                                33
+devi                                40
+amutha                              60
+akshaya                             44
+nathiya                             70
+shiva                               87
+
+6 rows selected.
+
+SQL> select customer_name,loyalty_points+10 incr_lp from customer;
+
+CUSTOMER_NAME           INCR_LP
+-------------------- ----------
+kavi                         33
+devi                         40
+amutha                       60
+akshaya                      44
+nathiya                      70
+shiva                        87
+
+6 rows selected.
+
+SQL> select customer_name,loyalty_points-10 decr_lp from customer;
+
+CUSTOMER_NAME           DECR_LP
+-------------------- ----------
+kavi                         13
+devi                         20
+amutha                       40
+akshaya                      24
+nathiya                      50
+shiva                        67
+
+6 rows selected.
+
+SQL> select customer_name,loyalty_points*2 mul_lp from customer;
+
+CUSTOMER_NAME            MUL_LP
+-------------------- ----------
+kavi                         46
+devi                         60
+amutha                      100
+akshaya                      68
+nathiya                     120
+shiva                       154
+
+6 rows selected.
+
+SQL> select customer_name,loyalty_points/2 div_lp from customer;
+
+CUSTOMER_NAME            DIV_LP
+-------------------- ----------
+kavi                       11.5
+devi                         15
+amutha                       25
+akshaya                      17
+nathiya                      30
+shiva                      38.5
+
+6 rows selected.
+
+SQL> select customer_name||'has'||'Rs'||loyalty_points from customer;
+
+CUSTOMER_NAME||'HAS'||'RS'||LOYALTY_POINTS
+-----------------------------------------------------------------
+kavihasRs23
+devihasRs30
+amuthahasRs50
+akshayahasRs34
+nathiyahasRs60
+shivahasRs77
+
+6 rows selected.
+
+SQL> select customer_name||' has '||' Rs '||loyalty_points from customer;
+
+CUSTOMER_NAME||'HAS'||'RS'||LOYALTY_POINTS
+---------------------------------------------------------------------
+kavi has  Rs 23
+devi has  Rs 30
+amutha has  Rs 50
+akshaya has  Rs 34
+nathiya has  Rs 60
+shiva has  Rs 77
+
+6 rows selected.
+
+SQL> select * from customer where loyalty_points=60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+SQL> set linesize 120;
+SQL> select * from customer where loyalty_points=60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+
+
+
+SQL> select * from customer where loyalty_points>60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where loyalty_points>=60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where loyalty_points<=60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+SQL> select * from customer where loyalty_points<>60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where loyalty_points between 30 and 60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+SQL> select * from customer where loyalty_points not between 30 and 60;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where loyalty_points>=30 and loyalty_points<=70
+  2  ;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+SQL> select * from customer where loyalty_points>=30 or loyalty_points<=70;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+6 rows selected.
+
+SQL> select * from customer where address_city in('madurai','sivagangai');
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where address_city like 'madurai' or address_city like 'sivagangai');
+select * from customer where address_city like 'madurai' or address_city like 'sivagangai')
+                                                                                          *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select * from customer where address_city like 'madurai' or address_city like 'sivagangai';
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where address_city not in('madurai','sivagangai');
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+SQL> select * from customer where address_city like '%s%'
+  2  ;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where address_city like '_s%'
+  2  ;
+
+no rows selected
+
+SQL> select * from customer where address_city like '_i%';
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where address_city not like '_i%';
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+SQL> select * from customer where age is null;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+
+SQL> select * from customer where age is not null;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+
+SQL> SELECT LOWER(CUSTOMER_NAME),UPPER(CUSTOMER_NAME),INITCAP(CUSTOMER_NAME) FROM CUSTOMER;
+
+LOWER(CUSTOMER_NAME) UPPER(CUSTOMER_NAME) INITCAP(CUSTOMER_NAM
+-------------------- -------------------- --------------------
+kavi                 KAVI                 Kavi
+devi                 DEVI                 Devi
+amutha               AMUTHA               Amutha
+akshaya              AKSHAYA              Akshaya
+nathiya              NATHIYA              Nathiya
+shiva                SHIVA                Shiva
+
+6 rows selected.
+
+SQL> SELECT INITCAP('MY DEAR STUDENTS') FROM DUAL;
+
+INITCAP('MYDEARS
+----------------
+My Dear Students
+
+SQL> SELECT CONCAT('DR.',CUSTOMER_NAME) FROM CUSTOMER;
+
+CONCAT('DR.',CUSTOMER_N
+-----------------------
+DR.kavi
+DR.devi
+DR.amutha
+DR.akshaya
+DR.nathiya
+DR.shiva
+
+6 rows selected.
+
+SQL> SELECT CONCAT('DR.','S','.',CUSTOMER_NAME) FROM CUSTOMER;
+SELECT CONCAT('DR.','S','.',CUSTOMER_NAME) FROM CUSTOMER
+       *
+ERROR at line 1:
+ORA-00909: invalid number of arguments
+
+
+SQL> SELECT CONCAT('DR.',CONCAT('S',CONCAT('.',CUSTOMER_NAME))) FROM CUSTOMER;
+
+CONCAT('DR.',CONCAT('S',C
+-------------------------
+DR.S.kavi
+DR.S.devi
+DR.S.amutha
+DR.S.akshaya
+DR.S.nathiya
+DR.S.shiva
+
+6 rows selected.
+
+SQL> SELECT CONCAT('DR.',CONCAT('S',CONCAT('.',CUSTOMER_NAME))) AS FORMAL_NAME FROM CUSTOMER;
+
+FORMAL_NAME
+-------------------------
+DR.S.kavi
+DR.S.devi
+DR.S.amutha
+DR.S.akshaya
+DR.S.nathiya
+DR.S.shiva
+
+6 rows selected.
+
+SQL> SELECT SUBSTR(CUSTOMER_NAME,1,3) FROM CUSTOMER;
+
+SUBSTR(CUSTO
+------------
+kav
+dev
+amu
+aks
+nat
+shi
+
+6 rows selected.
+
+SQL> SELECT SUBSTR(CUSTOMER_NAME,2,2) FROM CUSTOMER;
+
+SUBSTR(C
+--------
+av
+ev
+mu
+ks
+at
+hi
+
+6 rows selected.
+
+SQL> SELECT LENGTH(CUSTOMER_NAME) FROM CUSTOMER;
+
+LENGTH(CUSTOMER_NAME)
+---------------------
+                    4
+                    4
+                    6
+                    7
+                    7
+                    5
+
+6 rows selected.
+
+SQL> SELECT CUSTOMER_NAME FROM CUSTOMER;
+
+CUSTOMER_NAME
+--------------------
+kavi
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT INSTR(CUSTOMER_NAME,'R') FROM CUSTOMER;
+
+INSTR(CUSTOMER_NAME,'R')
+------------------------
+                       0
+                       0
+                       0
+                       0
+                       0
+                       0
+
+6 rows selected.
+
+SQL> SELECT INSTR(CUSTOMER_NAME,'T') FROM CUSTOMER;
+
+INSTR(CUSTOMER_NAME,'T')
+------------------------
+                       0
+                       0
+                       0
+                       0
+                       0
+                       0
+
+6 rows selected.
+
+SQL> SELECT INSTR(CUSTOMER_NAME,'i') FROM CUSTOMER;
+
+INSTR(CUSTOMER_NAME,'I')
+------------------------
+                       4
+                       4
+                       0
+                       0
+                       5
+                       3
+
+6 rows selected.
+
+SQL> SELECT LPAD(CUSTOMER_NAME, 20, '*') AS Padded_CUSTOMER_NAME FROM CUSTOMER;
+
+PADDED_CUSTOMER_NAME
+--------------------------------------------------------------------------------
+****************kavi
+****************devi
+**************amutha
+*************akshaya
+*************nathiya
+***************shiva
+
+6 rows selected.
+
+SQL> SELECT RPAD(CUSTOMER_NAME, 20, '*') AS RPAD_CUS FROM CUSTOMER;
+
+RPAD_CUS
+--------------------------------------------------------------------------------
+kavi****************
+devi****************
+amutha**************
+akshaya*************
+nathiya*************
+shiva***************
+
+6 rows selected.
+
+SQL> SELECT CUSTOMER_NAME FROM CUSTOMER;
+
+CUSTOMER_NAME
+--------------------
+kavi
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT TRIM(CUSTOMER_NAME) FROM CUSTOMER;
+
+TRIM(CUSTOMER_NAME)
+--------------------
+kavi
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT TRIM('     MEPCO       ') FROM CUSTOMER;
+
+TRIM(
+-----
+MEPCO
+MEPCO
+MEPCO
+MEPCO
+MEPCO
+MEPCO
+
+6 rows selected.
+
+SQL> SELECT TRIM('     MEPCO       ') FROM DUAL;
+
+TRIM(
+-----
+MEPCO
+
+SQL> SELECT '     MEPCO       ' FROM DUAL;
+
+'MEPCO'
+-----------------
+     MEPCO
+
+SQL> SELECT TRIM('     MEPCO       ') FROM DUAL;
+
+TRIM(
+-----
+MEPCO
+
+SQL> SELECT RTRIM('     MEPCO       ') FROM DUAL;
+
+RTRIM('MEP
+----------
+     MEPCO
+
+SQL> SELECT RTRIM('     MEPCO       ') FROM DUAL;
+
+RTRIM('MEP
+----------
+     MEPCO
+
+SQL> SELECT REPLACE(CUSTOMER_NAME,'n','R') FROM CUSTOMER;
+
+REPLACE(CUSTOMER_NAM
+--------------------
+kavi
+devi
+amutha
+akshaya
+Rathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT REPLACE(CUS_NAME,'KAVI','PAVI') FROM CUSTOMER;
+SELECT REPLACE(CUS_NAME,'KAVI','PAVI') FROM CUSTOMER
+               *
+ERROR at line 1:
+ORA-00904: "CUS_NAME": invalid identifier
+
+
+SQL> SELECT REPLACE(CUSTOMER_NAME,'KAVI','PAVI') FROM CUSTOMER;
+
+REPLACE(CUSTOMER_NAME,'KAVI','PAVI')
+--------------------------------------------------------------------------------
+kavi
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT REPLACE(CUSTOMER_NAME,'kavi','PAVI') FROM CUSTOMER;
+
+REPLACE(CUSTOMER_NAME,'KAVI','PAVI')
+--------------------------------------------------------------------------------
+PAVI
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT REPLACE(CUSTOMER_NAME,'kavi','PAVITHRA') FROM CUSTOMER;
+
+REPLACE(CUSTOMER_NAME,'KAVI','PAVITHRA')
+------------------------------------------------------------------------------------------------------------------------
+PAVITHRA
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> commit
+  2  ;
+
+Commit complete.
+
+
+SQL> select abs(-23.6) from dual;
+
+ABS(-23.6)
+----------
+      23.6
+
+SQL> select ceil(23.6),floor(23.6) from dual;
+
+CEIL(23.6) FLOOR(23.6)
+---------- -----------
+        24          23
+
+SQL> select power(2,3),sqrt(16) from dual;
+
+POWER(2,3)   SQRT(16)
+---------- ----------
+         8          4
+
+SQL> select sign(23),sign(-23),sign(0) from dual;
+
+  SIGN(23)  SIGN(-23)    SIGN(0)
+---------- ---------- ----------
+         1         -1          0
+
+SQL> select ln(20),log(10,100) from dual;
+
+    LN(20) LOG(10,100)
+---------- -----------
+2.99573227           2
+
+SQL> SELECT EXP(1) FROM dual;
+
+    EXP(1)
+----------
+2.71828183
+
+SQL> SELECT EXP(23.6) FROM dual;
+
+ EXP(23.6)
+----------
+1.7756E+10
+
+
+SQL> SELECT GREATEST(2,3,10), LEAST(2.3,4.6,7.9) FROM DUAL;
+
+GREATEST(2,3,10) LEAST(2.3,4.6,7.9)
+---------------- ------------------
+              10                2.3
+
+
+SQL> SELECT DBMS_RANDOM.VALUE FROM dual;
+
+     VALUE
+----------
+.309657988
+
+SQL> SELECT DBMS_RANDOM.VALUE FROM dual;
+
+     VALUE
+----------
+.996486261
+
+SQL> select sysdate from dual;
+
+SYSDATE
+---------
+28-JAN-25
+
+SQL> select CURRENT_date from dual;
+
+CURRENT_D
+---------
+28-JAN-25
+
+SQL> SELECT CURRENT_TIMESTAMP FROM dual;
+
+CURRENT_TIMESTAMP
+---------------------------------------------------------------------------
+28-JAN-25 10.07.15.718000 AM +05:30
+
+SYSDATE+5
+---------
+02-FEB-25
+
+SQL> select sysdate-5 from dual;
+
+SYSDATE-5
+---------
+23-JAN-25
+
+SQL> SELECT SYSDATE - TO_DATE('16-01-25', 'DD-MM-YY') AS day_difference FROM dual;
+
+DAY_DIFFERENCE
+--------------
+    12.4248495
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-25', 'DD-MM-YY')) AS day_difference FROM dual;
+
+DAY_DIFFERENCE
+--------------
+            12
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-24', 'DD-MM-YY')) AS day_difference FROM dual;
+
+DAY_DIFFERENCE
+--------------
+           378
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-24', 'DD-MM-YY'))/7 AS WEEK_difference FROM dual;
+
+WEEK_DIFFERENCE
+---------------
+             54
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-24', 'DD-MM-YY'))/30 AS MONT_difference FROM dual;
+
+MONTH_DIFFERENCE
+---------------
+           12.6
+
+SQL> SELECT TO_DATE('2025-01-21', 'YYYY-MM-DD’) FROM DUAL;
+
+TO_DATE('
+---------
+21-JAN-25
+
+SQL> SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') FROM dual;
+
+TO_CHAR(SYSDATE,'YY
+-------------------
+2025-01-28 10:17:28
+
+SQL> SELECT TO_CHAR(SYSDATE, 'YY-MM-DD HH24:MI:SS') FROM dual;
+
+TO_CHAR(SYSDATE,'
+-----------------
+25-01-28 10:17:45
+
+SQL> SELECT TO_CHAR(SYSDATE, 'YY-MM-DD') FROM dual;
+
+TO_CHAR(
+--------
+25-01-28
+
+SQL> SELECT ADD_MONTHS(SYSDATE, 3)  FROM dual;
+
+ADD_MONTH
+---------
+28-APR-25
+
+SQL> SELECT ADD_MONTHS(SYSDATE, -3)  FROM dual;
+
+ADD_MONTH
+---------
+28-OCT-24
+
+SQL> SELECT ADD_MONTHS(SYSDATE, 0)  FROM dual;
+
+ADD_MONTH
+---------
+28-JAN-25
+
+SQL> SELECT MONTHS_BETWEEN('01-SEP-95', '11-JAN-94') FROM DUAL;
+
+MONTHS_BETWEEN('01-SEP-95','11-JAN-94')
+---------------------------------------
+                             19.6774194
+
+SQL> SELECT TRUNC(MONTHS_BETWEEN('01-SEP-95', '11-JAN-94')) FROM DUAL;
+
+TRUNC(MONTHS_BETWEEN('01-SEP-95','11-JAN-94'))
+----------------------------------------------
+                                            19
+
+SQL> SELECT ROUND(MONTHS_BETWEEN('01-SEP-95', '11-JAN-94')) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN('01-SEP-95','11-JAN-94'))
+----------------------------------------------
+                                            20
+
+SQL> SELECT ROUND(MONTHS_BETWEEN('01-SEP-95', SYSDATE)) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN('01-SEP-95',SYSDATE))
+------------------------------------------
+                                      -353
+
+SQL> SELECT ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE+300)) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE+300))
+------------------------------------------
+                                       -10
+
+SQL> SELECT ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE-300)) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE-300))
+------------------------------------------
+                                        10
+
+SQL> SELECT NEXT_DAY(SYSDATE, 'MONDAY’) FROM DUAL;
+
+NEXT_DAY(
+---------
+03-FEB-25
+
+SQL> SELECT NEXT_DAY(SYSDATE, 'TUESDAY’) FROM DUAL;
+
+NEXT_DAY(
+---------
+04-FEB-25
+
+SQL> SELECT NEXT_DAY(SYSDATE,'SATURDAY') FROM DUAL;
+
+NEXT_DAY(
+---------
+01-FEB-25
+
+
+SQL> SELECT LAST_DAY(SYSDATE) FROM DUAL;
+
+LAST_DAY(
+---------
+31-JAN-25
+
+SQL> SELECT LAST_DAY(SYSDATE+20) FROM DUAL;
+
+LAST_DAY(
+---------
+28-FEB-25
+
+SQL> SELECT LAST_DAY(SYSDATE+50) FROM DUAL;
+
+LAST_DAY(
+---------
+31-MAR-25
+
+SQL> SELECT TRUNC(SYSDATE, 'DD') FROM dual;
+
+TRUNC(SYS
+---------
+28-JAN-25
+
+SQL> SELECT TRUNC(SYSDATE, 'MM') FROM dual;
+
+TRUNC(SYS
+---------
+01-JAN-25
+
+SQL> SELECT TRUNC(SYSDATE, 'YY') FROM dual;
+
+TRUNC(SYS
+---------
+01-JAN-25
+
+SQL> SELECT EXTRACT(DAY FROM SYSDATE) FROM dual;
+
+EXTRACT(DAYFROMSYSDATE)
+-----------------------
+                     28
+
+SQL> SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual;
+
+EXTRACT(MONTHFROMSYSDATE)
+-------------------------
+                        1
+
+SQL> SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual;
+
+EXTRACT(YEARFROMSYSDATE)
+------------------------
+                    2025
+
+SQL> SELECT EXTRACT(HOUR FROM SYSDATE) FROM dual;
+SELECT EXTRACT(HOUR FROM SYSDATE) FROM dual
+                         *
+ERROR at line 1:
+ORA-30076: invalid extract field for extract source
+
+SQL> SELECT EXTRACT(HOUR FROM CURRENT_TIMESTAMP) FROM dual;
+
+EXTRACT(HOURFROMCURRENT_TIMESTAMP)
+----------------------------------
+                                 5
+SQL> SELECT EXTRACT(MINUTE FROM CURRENT_TIMESTAMP) FROM dual;
+
+EXTRACT(MINUTEFROMCURRENT_TIMESTAMP)
+------------------------------------
+                                   2
+
+SQL> SELECT EXTRACT(SECOND FROM CURRENT_TIMESTAMP) FROM dual;
+
+EXTRACT(SECONDFROMCURRENT_TIMESTAMP)
+------------------------------------
+                              18.752
+
+SQL> SELECT ROUND(sysdate, 'YYYY') FROM dual;
+
+ROUND(SYS
+---------
+01-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'MON') FROM dual;
+
+ROUND(SYS
+---------
+01-FEB-25
+
+SQL> SELECT ROUND(sysdate, 'MM') FROM dual;
+
+ROUND(SYS
+---------
+01-FEB-25
+
+SQL> SELECT ROUND(sysdate, 'DD') FROM dual;
+
+ROUND(SYS
+---------
+28-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'DAY') FROM dual;
+
+ROUND(SYS
+---------
+26-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'HH') FROM dual;
+
+ROUND(SYS
+---------
+28-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'MI') FROM dual;
+
+ROUND(SYS
+---------
+28-JAN-25
+
+SQL> SELECT TO_NUMBER('123') FROM dual;
+
+TO_NUMBER('123')
+----------------
+             123
+
+SQL> select to_char(sysdate,'yyyy') from dual;
+
+TO_C
+----
+2025
+
+SQL> select to_char(sysdate,'yy') from dual;
+
+TO
+--
+25
+
+SQL> select to_char(sysdate,'YEAR') from dual;
+
+TO_CHAR(SYSDATE,'YEAR')
+------------------------------------------
+TWENTY TWENTY-FIVE
+
+SQL> select to_char(sysdate,'MM') from dual;
+
+TO
+--
+01
+
+SQL> select to_char(sysdate,'MON') from dual;
+
+TO_CHAR(SYSD
+------------
+JAN
+
+SQL> select to_char(sysdate,'MONTH') from dual;
+
+TO_CHAR(SYSDATE,'MONTH')
+------------------------------------
+JANUARY
+
+SQL> select to_char(sysdate,'DD') from dual;
+
+TO
+--
+28
+
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------------- --------------- --------- ----------
+cus06 kavi                             23 ddnagar
+madurai                       654789 21-MAR-26          0
+
+cus01 devi                             30 moorthy nagar
+kalaiyarkovil                 630551
+
+cus02 amutha                           50 ss nagar
+kalaiyarkovil                 630551
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------------- --------------- --------- ----------
+cus03 akshaya                          34 thiru nagar
+kalaiyarkovil                 630551
+
+cus04 nathiya                          60 vip nagar
+kalaiyarkovil                 630551
+
+cus05 shiva                            77 rose nagar
+sivagangai                    630551
+
+
+6 rows selected.
+
+SQL> set linesize 120;
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                   madurai                       654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+
+
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+
+
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+
+
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+
+
+6 rows selected.
+
+SQL> set pagesize 100;
+SQL> set wrap off;
+SQL> select * from customer;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus06 kavi                             23 ddnagar                   madurai                       654789 21-MAR-26
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+6 rows selected.
+
+SQL> select * from customer;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus06 kavi                             23 ddnagar                   madurai                       654789 21-MAR-26
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+6 rows selected.
+
+SQL> SELECT ASCII(CUSTOMER_NAME) FROM CUSTOMER;
+
+ASCII(CUSTOMER_NAME)
+--------------------
+                 107
+                 100
+                  97
+                  97
+                 110
+                 115
+
+6 rows selected.
+
+SQL> SELECT ASCII('A') FROM CUSTOMER;
+
+ASCII('A')
+----------
+        65
+        65
+        65
+        65
+        65
+        65
+
+6 rows selected.
+
+SQL> SELECT ASCII('KA') FROM CUSTOMER;
+
+ASCII('KA')
+-----------
+         75
+         75
+         75
+         75
+         75
+         75
+
+6 rows selected.
+
+SQL> SELECT ASCII('KAVI') FROM DUAL;
+
+ASCII('KAVI')
+-------------
+           75
+
+SQL> DESC PRODUCT;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ PRODUCT_ID                                                       NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                                       VARCHAR2(5)
+ PRODUCT_PRICE                                                     FLOAT(126)
+ SUPPLIER_ID                                                       VARCHAR2(5)
+ QUANTITY                                                          NUMBER(38)
+ PRODUCT_NAME                                                     NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                                       VARCHAR2(10)
+
+SQL> SELECT * FROM PRODUCT;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                29/02/2025
+pro02 cat04          1000 sup02         20 dhal                09/12/2026
+
+SQL> SELECT ROUND(PRODUCT_PRICE) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE)
+--------------------
+               10000
+                1000
+
+SQL> INSERT INTO PRODUCT VALUES('PRO03',20000.23,'SUP01',29,'CHOCLATE','21/09/2026);
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+
+SQL> INSERT INTO PRODUCT VALUES('PRO03',20000.23,'SUP01',29,'CHOCLATE','21/09/2026');
+INSERT INTO PRODUCT VALUES('PRO03',20000.23,'SUP01',29,'CHOCLATE','21/09/2026')
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> INSERT INTO PRODUCT VALUES('PRO03','CAT01',20000.23,'SUP01',29,'CHOCOLATE','21/09/2026');
+INSERT INTO PRODUCT VALUES('PRO03','CAT01',20000.23,'SUP01',29,'CHOCOLATE','21/09/2026')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.SYS_C008337) violated - parent key not found
+
+
+SQL> SELECT ROUND(PRODUCT_PRICE,0) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,0)
+----------------------
+                 10000
+                  1000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,2) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,2)
+----------------------
+                 10000
+                  1000
+
+SQL> SELECT * FROM SUPPLIER;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY        ADDRESS_STREET
+----- -------------------- --------------- -------------------- --------------------
+sup01 dhivya                        654321 madurai             gandhi nagar
+sup02 murugen                       621091 chennai             kv nagar
+
+SQL> INSERT INTO SUPPLIER VALUES('SUP03','SHIVA',627751,'TENKASI','NORTH STREET');
+
+1 row created.
+
+SQL> INSERT INTO SUPPLIER VALUES('SUP04','DEEPAK',6213451,'KADAYANALLUR','WEST STREET');
+
+1 row created.
+
+SQL> SELECT * FROM CATEGORY;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+SQL> INSERT INTO CATEGORY VALUES('CAT03','CHOCOLATES');
+
+1 row created.
+
+SQL> INSERT INTO PRODUCT VALUES('PRO03','CAT03',20000.23,'SUP04',29,'MUNCH','21/09/2026');
+
+1 row created.
+
+SQL> SELECT ROUND(PRODUCT_PRICE,0) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,0)
+----------------------
+                 10000
+                  1000
+                 20000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,2) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,2)
+----------------------
+                 10000
+                  1000
+              20000.23
+
+SQL> SELECT ROUND(PRODUCT_PRICE,-1) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,-1)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,-2) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,-2)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,-3) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,-3)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE)
+--------------------
+               10000
+                1000
+               20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,0) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,0)
+----------------------
+                 10000
+                  1000
+                 20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,1) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,1)
+----------------------
+                 10000
+                  1000
+               20000.2
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,2) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,2)
+----------------------
+                 10000
+                  1000
+              20000.23
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,-1) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,-1)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,10) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,10)
+-----------------------
+                  10000
+                   1000
+               20000.23
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,11) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,11)
+-----------------------
+                  10000
+                   1000
+               20000.23
+
+SQL> SELECT MOD(PRODUCT_PRICE,11) FROM PRODUCT;
+
+MOD(PRODUCT_PRICE,11)
+---------------------
+                    1
+                   10
+                 2.23
+
+SQL> SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(BR_CITY, 'SIVAKASI', 'RURAL', 'MADURAI','METRO','OTHER') AS DECODE FROM CUSTOMER;
+SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(BR_CITY, 'SIVAKASI', 'RURAL', 'MADURAI','METRO','OTHER') AS DECODE FROM CUSTOMER
+                                           *
+ERROR at line 1:
+ORA-00904: "BR_CITY": invalid identifier
+
+
+SQL> SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(ADDRESS_CITY, 'SIVAKASI', 'RURAL', 'MADURAI','METRO','OTHER') AS DECODE FROM CUSTOMER;
+
+CUSTOMER_NAME        ADDRESS_CITY         DECOD
+-------------------- -------------------- -----
+kavi                 madurai              OTHER
+devi                 kalaiyarkovil        OTHER
+amutha               kalaiyarkovil        OTHER
+akshaya              kalaiyarkovil        OTHER
+nathiya              kalaiyarkovil        OTHER
+shiva                sivagangai           OTHER
+
+6 rows selected.
+
+SQL> SELECT COUNT(*) FROM CUSTOMER;
+
+  COUNT(*)
+----------
+         6
+
+SQL> SELECT COUNT(ADDRESS_CITY) FROM CUSTOMER;
+
+COUNT(ADDRESS_CITY)
+-------------------
+                  6
+
+SQL> SELECT COUNT(LOYALTY_POINTS) FROM CUSTOMER;
+
+COUNT(LOYALTY_POINTS)
+---------------------
+                    6
+
+SQL> SELECT AVG(LOYALTY_POINTS) FROM CUSTOMER;
+
+AVG(LOYALTY_POINTS)
+-------------------
+         45.6666667
+
+SQL> SELECT SUM(LOYALTY_POINTS) FROM CUSTOMER;
+
+SUM(LOYALTY_POINTS)
+-------------------
+                274
+
+SQL> SELECT MIN(LOYALTY_POINTS) FROM CUSTOMER;
+
+MIN(LOYALTY_POINTS)
+-------------------
+                 23
+
+SQL> SELECT MAX(LOYALTY_POINTS) FROM CUSTOMER;
+
+MAX(LOYALTY_POINTS)
+-------------------
+                 77
+
+SQL> SELECT MEDIAN(LOYALTY_POINTS) FROM CUSTOMER;
+
+MEDIAN(LOYALTY_POINTS)
+----------------------
+                    42
+
+SQL> SELECT VARIANCE(LOYALTY_POINTS) FROM CUSTOMER;
+
+VARIANCE(LOYALTY_POINTS)
+------------------------
+              420.266667
+
+SQL> SELECT STDDEV(LOYALTY_POINTS) FROM CUSTOMER;
+
+STDDEV(LOYALTY_POINTS)
+----------------------
+            20.5004065
+
+SQL> SELECT * FROM CUSTOMER ORDER BY CUSTOMER_CITY;
+SELECT * FROM CUSTOMER ORDER BY CUSTOMER_CITY
+                                *
+ERROR at line 1:
+ORA-00904: "CUSTOMER_CITY": invalid identifier
+
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY ASC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY DESC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY,LOYALTY_POINTS DESC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY,LOYALTY_POINTS ASC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT CUSTOMER_NAME FROM CUSTOMER GROUP BY CUSTOMER_NAME;
+
+CUSTOMER_NAME
+--------------------
+kavi
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT ADDRESS_CITY FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY
+--------------------
+madurai
+kalaiyarkovil
+sivagangai
+
+SQL> SELECT ADDRESS_CITY COUNT(*) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+SELECT ADDRESS_CITY COUNT(*) FROM CUSTOMER GROUP BY ADDRESS_CITY
+                         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> SELECT ADDRESS_CITY,COUNT(*) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY           COUNT(*)
+-------------------- ----------
+madurai                       1
+kalaiyarkovil                 4
+sivagangai                    1
+
+SQL> SELECT ADDRESS_CITY,COUNT(address_city) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY         COUNT(ADDRESS_CITY)
+-------------------- -------------------
+madurai                                1
+kalaiyarkovil                          4
+sivagangai                             1
+
+SQL> SELECT ADDRESS_CITY,COUNT(LOYALTY_POINTS) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY         COUNT(LOYALTY_POINTS)
+-------------------- ---------------------
+madurai                                  1
+kalaiyarkovil                            4
+sivagangai                               1
+
+SQL> SELECT ADDRESS_CITY,MIN(LOYALTY_POINTS) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY         MIN(LOYALTY_POINTS)
+-------------------- -------------------
+madurai                               23
+kalaiyarkovil                         30
+sivagangai                            77
+
+SQL> SELECT MIN(LOYALTY_POINTS) FROM CUSTOMER;
+
+MIN(LOYALTY_POINTS)
+-------------------
+                 23
+
+SQL> SELECT ADDRESS_CITY, SUM(LOYALTY_POINTS) AS TOTAL_LP FROM CUSTOMER GROUP BY ADDRESS_CITY HAVING SUM(LOYALTY_POINTS) >= 60;
+
+ADDRESS_CITY           TOTAL_LP
+-------------------- ----------
+kalaiyarkovil               174
+sivagangai                   77
+
+SQL> SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,LOYALTY_POINTS HAVING TOTAL_LP>50;
+SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,LOYALTY_POINTS HAVING TOTAL_LP>50
+                                                                    *
+ERROR at line 1:
+ORA-00904: "TOTAL_LP": invalid identifier
+
+
+SQL> SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,LOYALTY_POINTS HAVING LOYALTY_POINTS>50;
+SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,LOYALTY_POINTS HAVING LOYALTY_POINTS>50
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,ADDRESS_CITY HAVING LOYALTY_POINTS>50;
+SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,ADDRESS_CITY HAVING LOYALTY_POINTS>50
+                                                                  *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+SQL> SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(ADDRESS_CITY, 'sivagangai', 'RURAL', 'madurai','METRO','OTHER') AS DECODE FROM CUSTOMER;
+
+CUSTOMER_NAME        ADDRESS_CITY         DECOD
+-------------------- -------------------- -----
+kavi                 madurai              METRO
+devi                 kalaiyarkovil        OTHER
+amutha               kalaiyarkovil        OTHER
+akshaya              kalaiyarkovil        OTHER
+nathiya              kalaiyarkovil        OTHER
+shiva                sivagangai           RURAL
+
+6 rows selected.
+
+SQL> select * from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+bil03 20-FEB-26         2000 paid       cus03 dis02
+bil04 20-FEB-26         5000 not paid   cus04 dis03
+bil05 20-FEB-26         2400 paid       cus05 dis04
+
+SQL> select * from bill where bill_date = to_date('20-FEB-2026', 'DD-MON-YYYY');
+
+no rows selected
+
+SQL> SELECT BILL_, BILL_DATE, TO_DATE('2025-01-21', 'YYYY-MM-DD') AS SAMPLE_DATE
+  2
+SQL> SELECT bill_date, TO_DATE('2025-01-21', 'YYYY-MM-DD') as sample_date from bill;
+
+BILL_DATE SAMPLE_DA
+--------- ---------
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+
+SQL> SELECT bill_date, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') as sam_date from bill;
+
+BILL_DATE SAM_DATE
+--------- -------------------
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+
+SQL> select * from category;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME         EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                 29/02/2025
+pro02 cat04          1000 sup02         20 dhal                 09/12/2026
+
+SQL> SELECT CATEG
+  2  FROM PRODUCT
+  3  FROM PRODUCT
+  4  ;
+FROM PRODUCT
+*
+ERROR at line 3:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select category from product where category not in (select category from category);
+select category from product where category not in (select category from category)
+                                   *
+ERROR at line 1:
+ORA-00904: "CATEGORY": invalid identifier
+
+
+SQL> select category_id from product where category not in (select category_id from category);
+select category_id from product where category not in (select category_id from category)
+                                      *
+ERROR at line 1:
+ORA-00904: "CATEGORY": invalid identifier
+
+
+SQL> select category_id from product where category_id not in (select category_id from category);
+
+no rows selected
+
+SQL> alter table product add constraint fk_cat foreign key(category_id) references category(category_id);
+alter table product add constraint fk_cat foreign key(category_id) references category(category_id)
+                                          *
+ERROR at line 1:
+ORA-02275: such a referential constraint already exists in the table
+
+
+SQL> desc product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PRODUCT_ID                                NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                        VARCHAR2(5)
+ PRODUCT_PRICE                                      FLOAT(126)
+ SUPPLIER_ID                                        VARCHAR2(5)
+ QUANTITY                                           NUMBER(38)
+ PRODUCT_NAME                              NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                        VARCHAR2(10)
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME         EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                 29/02/2025
+pro02 cat04          1000 sup02         20 dhal                 09/12/2026
+
+SQL> insert into product values('pro03','cat08',2000,'sup03','chocolate','30/08/2026');
+insert into product values('pro03','cat08',2000,'sup03','chocolate','30/08/2026')
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> insert into product values('pro03','cat08',2000,'sup03',21,'chocolate','30/08/2026');
+insert into product values('pro03','cat08',2000,'sup03',21,'chocolate','30/08/2026')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.SYS_C008337) violated - parent key not
+found
+
+
+SQL> select customer_name,address_city,loyalty_points from customer where loyalty_points=60 group by  customer_name,address_city,loyalty_points;
+
+CUSTOMER_NAME        ADDRESS_CITY         LOYALTY_POINTS
+-------------------- -------------------- --------------
+nathiya              kalaiyarkovil                    60
+
+SQL> commit;
+
+Commit complete.
+
+
+
+
+SQL> select '&amp,customer_name' as entered_name from customer;
+Enter value for amp: shiva
+old   1: select '&amp,customer_name' as entered_name from customer
+new   1: select 'shiva,customer_name' as entered_name from customer
+
+ENTERED_NAME
+-------------------
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+
+6 rows selected.
+
+SQL> select sysdate from dual;
+
+SYSDATE
+---------
+28-JAN-25
+
+SQL> select CURRENT_date from dual;
+
+CURRENT_D
+---------
+28-JAN-25
+
+SQL> SELECT CURRENT_TIMESTAMP FROM dual;
+
+CURRENT_TIMESTAMP
+---------------------------------------------------------------------------
+28-JAN-25 10.07.15.718000 AM +05:30
+
+SYSDATE+5
+---------
+02-FEB-25
+
+SQL> select sysdate-5 from dual;
+
+SYSDATE-5
+---------
+23-JAN-25
+
+SQL> SELECT SYSDATE - TO_DATE('16-01-25', 'DD-MM-YY') AS day_difference FROM dual;
+
+DAY_DIFFERENCE
+--------------
+    12.4248495
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-25', 'DD-MM-YY')) AS day_difference FROM dual;
+
+DAY_DIFFERENCE
+--------------
+            12
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-24', 'DD-MM-YY')) AS day_difference FROM dual;
+
+DAY_DIFFERENCE
+--------------
+           378
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-24', 'DD-MM-YY'))/7 AS WEEK_difference FROM dual;
+
+WEEK_DIFFERENCE
+---------------
+             54
+
+SQL> SELECT TRUNC(SYSDATE - TO_DATE('16-01-24', 'DD-MM-YY'))/30 AS MONT_difference FROM dual;
+
+MONTH_DIFFERENCE
+---------------
+           12.6
+
+SQL> SELECT TO_DATE('2025-01-21', 'YYYY-MM-DD’) FROM DUAL;
+
+TO_DATE('
+---------
+21-JAN-25
+
+SQL> SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') FROM dual;
+
+TO_CHAR(SYSDATE,'YY
+-------------------
+2025-01-28 10:17:28
+
+SQL> SELECT TO_CHAR(SYSDATE, 'YY-MM-DD HH24:MI:SS') FROM dual;
+
+TO_CHAR(SYSDATE,'
+-----------------
+25-01-28 10:17:45
+
+SQL> SELECT TO_CHAR(SYSDATE, 'YY-MM-DD') FROM dual;
+
+TO_CHAR(
+--------
+25-01-28
+
+SQL> SELECT ADD_MONTHS(SYSDATE, 3)  FROM dual;
+
+ADD_MONTH
+---------
+28-APR-25
+
+SQL> SELECT ADD_MONTHS(SYSDATE, -3)  FROM dual;
+
+ADD_MONTH
+---------
+28-OCT-24
+
+SQL> SELECT ADD_MONTHS(SYSDATE, 0)  FROM dual;
+
+ADD_MONTH
+---------
+28-JAN-25
+
+SQL> SELECT MONTHS_BETWEEN('01-SEP-95', '11-JAN-94') FROM DUAL;
+
+MONTHS_BETWEEN('01-SEP-95','11-JAN-94')
+---------------------------------------
+                             19.6774194
+
+SQL> SELECT TRUNC(MONTHS_BETWEEN('01-SEP-95', '11-JAN-94')) FROM DUAL;
+
+TRUNC(MONTHS_BETWEEN('01-SEP-95','11-JAN-94'))
+----------------------------------------------
+                                            19
+
+SQL> SELECT ROUND(MONTHS_BETWEEN('01-SEP-95', '11-JAN-94')) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN('01-SEP-95','11-JAN-94'))
+----------------------------------------------
+                                            20
+
+SQL> SELECT ROUND(MONTHS_BETWEEN('01-SEP-95', SYSDATE)) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN('01-SEP-95',SYSDATE))
+------------------------------------------
+                                      -353
+
+SQL> SELECT ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE+300)) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE+300))
+------------------------------------------
+                                       -10
+
+SQL> SELECT ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE-300)) FROM DUAL;
+
+ROUND(MONTHS_BETWEEN(SYSDATE,SYSDATE-300))
+------------------------------------------
+                                        10
+
+SQL> SELECT NEXT_DAY(SYSDATE, 'MONDAY’) FROM DUAL;
+
+NEXT_DAY(
+---------
+03-FEB-25
+
+SQL> SELECT NEXT_DAY(SYSDATE, 'TUESDAY’) FROM DUAL;
+
+NEXT_DAY(
+---------
+04-FEB-25
+
+SQL> SELECT NEXT_DAY(SYSDATE,'SATURDAY') FROM DUAL;
+
+NEXT_DAY(
+---------
+01-FEB-25
+
+
+SQL> SELECT LAST_DAY(SYSDATE) FROM DUAL;
+
+LAST_DAY(
+---------
+31-JAN-25
+
+SQL> SELECT LAST_DAY(SYSDATE+20) FROM DUAL;
+
+LAST_DAY(
+---------
+28-FEB-25
+
+SQL> SELECT LAST_DAY(SYSDATE+50) FROM DUAL;
+
+LAST_DAY(
+---------
+31-MAR-25
+
+SQL> SELECT TRUNC(SYSDATE, 'DD') FROM dual;
+
+TRUNC(SYS
+---------
+28-JAN-25
+
+SQL> SELECT TRUNC(SYSDATE, 'MM') FROM dual;
+
+TRUNC(SYS
+---------
+01-JAN-25
+
+SQL> SELECT TRUNC(SYSDATE, 'YY') FROM dual;
+
+TRUNC(SYS
+---------
+01-JAN-25
+
+SQL> SELECT EXTRACT(DAY FROM SYSDATE) FROM dual;
+
+EXTRACT(DAYFROMSYSDATE)
+-----------------------
+                     28
+
+SQL> SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual;
+
+EXTRACT(MONTHFROMSYSDATE)
+-------------------------
+                        1
+
+SQL> SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual;
+
+EXTRACT(YEARFROMSYSDATE)
+------------------------
+                    2025
+
+SQL> SELECT EXTRACT(HOUR FROM SYSDATE) FROM dual;
+SELECT EXTRACT(HOUR FROM SYSDATE) FROM dual
+                         *
+ERROR at line 1:
+ORA-30076: invalid extract field for extract source
+
+SQL> SELECT EXTRACT(HOUR FROM CURRENT_TIMESTAMP) FROM dual;
+
+EXTRACT(HOURFROMCURRENT_TIMESTAMP)
+----------------------------------
+                                 5
+SQL> SELECT EXTRACT(MINUTE FROM CURRENT_TIMESTAMP) FROM dual;
+
+EXTRACT(MINUTEFROMCURRENT_TIMESTAMP)
+------------------------------------
+                                   2
+
+SQL> SELECT EXTRACT(SECOND FROM CURRENT_TIMESTAMP) FROM dual;
+
+EXTRACT(SECONDFROMCURRENT_TIMESTAMP)
+------------------------------------
+                              18.752
+
+SQL> SELECT ROUND(sysdate, 'YYYY') FROM dual;
+
+ROUND(SYS
+---------
+01-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'MON') FROM dual;
+
+ROUND(SYS
+---------
+01-FEB-25
+
+SQL> SELECT ROUND(sysdate, 'MM') FROM dual;
+
+ROUND(SYS
+---------
+01-FEB-25
+
+SQL> SELECT ROUND(sysdate, 'DD') FROM dual;
+
+ROUND(SYS
+---------
+28-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'DAY') FROM dual;
+
+ROUND(SYS
+---------
+26-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'HH') FROM dual;
+
+ROUND(SYS
+---------
+28-JAN-25
+
+SQL> SELECT ROUND(sysdate, 'MI') FROM dual;
+
+ROUND(SYS
+---------
+28-JAN-25
+
+SQL> SELECT TO_NUMBER('123') FROM dual;
+
+TO_NUMBER('123')
+----------------
+             123
+
+SQL> select to_char(sysdate,'yyyy') from dual;
+
+TO_C
+----
+2025
+
+SQL> select to_char(sysdate,'yy') from dual;
+
+TO
+--
+25
+
+SQL> select to_char(sysdate,'YEAR') from dual;
+
+TO_CHAR(SYSDATE,'YEAR')
+------------------------------------------
+TWENTY TWENTY-FIVE
+
+SQL> select to_char(sysdate,'MM') from dual;
+
+TO
+--
+01
+
+SQL> select to_char(sysdate,'MON') from dual;
+
+TO_CHAR(SYSD
+------------
+JAN
+
+SQL> select to_char(sysdate,'MONTH') from dual;
+
+TO_CHAR(SYSDATE,'MONTH')
+------------------------------------
+JANUARY
+
+SQL> select to_char(sysdate,'DD') from dual;
+
+TO
+--
+28
+
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------------- --------------- --------- ----------
+cus06 kavi                             23 ddnagar
+madurai                       654789 21-MAR-26          0
+
+cus01 devi                             30 moorthy nagar
+kalaiyarkovil                 630551
+
+cus02 amutha                           50 ss nagar
+kalaiyarkovil                 630551
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------------- --------------- --------- ----------
+cus03 akshaya                          34 thiru nagar
+kalaiyarkovil                 630551
+
+cus04 nathiya                          60 vip nagar
+kalaiyarkovil                 630551
+
+cus05 shiva                            77 rose nagar
+sivagangai                    630551
+
+
+6 rows selected.
+
+SQL> set linesize 120;
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus06 kavi                             23 ddnagar                   madurai                       654789 21-MAR-26
+         0
+
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+
+
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE
+----------
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+
+
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+
+
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+
+
+6 rows selected.
+
+SQL> set pagesize 100;
+SQL> set wrap off;
+SQL> select * from customer;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus06 kavi                             23 ddnagar                   madurai                       654789 21-MAR-26
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+6 rows selected.
+
+SQL> select * from customer;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus06 kavi                             23 ddnagar                   madurai                       654789 21-MAR-26
+cus01 devi                             30 moorthy nagar             kalaiyarkovil                 630551
+cus02 amutha                           50 ss nagar                  kalaiyarkovil                 630551
+cus03 akshaya                          34 thiru nagar               kalaiyarkovil                 630551
+cus04 nathiya                          60 vip nagar                 kalaiyarkovil                 630551
+cus05 shiva                            77 rose nagar                sivagangai                    630551
+
+6 rows selected.
+
+SQL> SELECT ASCII(CUSTOMER_NAME) FROM CUSTOMER;
+
+ASCII(CUSTOMER_NAME)
+--------------------
+                 107
+                 100
+                  97
+                  97
+                 110
+                 115
+
+6 rows selected.
+
+SQL> SELECT ASCII('A') FROM CUSTOMER;
+
+ASCII('A')
+----------
+        65
+        65
+        65
+        65
+        65
+        65
+
+6 rows selected.
+
+SQL> SELECT ASCII('KA') FROM CUSTOMER;
+
+ASCII('KA')
+-----------
+         75
+         75
+         75
+         75
+         75
+         75
+
+6 rows selected.
+
+SQL> SELECT ASCII('KAVI') FROM DUAL;
+
+ASCII('KAVI')
+-------------
+           75
+
+SQL> DESC PRODUCT;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ PRODUCT_ID                                                       NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                                       VARCHAR2(5)
+ PRODUCT_PRICE                                                     FLOAT(126)
+ SUPPLIER_ID                                                       VARCHAR2(5)
+ QUANTITY                                                          NUMBER(38)
+ PRODUCT_NAME                                                     NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                                       VARCHAR2(10)
+
+SQL> SELECT * FROM PRODUCT;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                29/02/2025
+pro02 cat04          1000 sup02         20 dhal                09/12/2026
+
+SQL> SELECT ROUND(PRODUCT_PRICE) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE)
+--------------------
+               10000
+                1000
+
+
+SQL> SELECT ROUND(PRODUCT_PRICE,0) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,0)
+----------------------
+                 10000
+                  1000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,2) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,2)
+----------------------
+                 10000
+                  1000
+
+SQL> SELECT * FROM SUPPLIER;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY        ADDRESS_STREET
+----- -------------------- --------------- -------------------- --------------------
+sup01 dhivya                        654321 madurai             gandhi nagar
+sup02 murugen                       621091 chennai             kv nagar
+
+SQL> INSERT INTO SUPPLIER VALUES('SUP03','SHIVA',627751,'TENKASI','NORTH STREET');
+
+1 row created.
+
+SQL> INSERT INTO SUPPLIER VALUES('SUP04','DEEPAK',6213451,'KADAYANALLUR','WEST STREET');
+
+1 row created.
+
+SQL> SELECT * FROM CATEGORY;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+SQL> INSERT INTO CATEGORY VALUES('CAT03','CHOCOLATES');
+
+1 row created.
+
+SQL> INSERT INTO PRODUCT VALUES('PRO03','CAT03',20000.23,'SUP04',29,'MUNCH','21/09/2026');
+
+1 row created.
+
+SQL> SELECT ROUND(PRODUCT_PRICE,0) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,0)
+----------------------
+                 10000
+                  1000
+                 20000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,2) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,2)
+----------------------
+                 10000
+                  1000
+              20000.23
+
+SQL> SELECT ROUND(PRODUCT_PRICE,-1) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,-1)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,-2) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,-2)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT ROUND(PRODUCT_PRICE,-3) FROM PRODUCT;
+
+ROUND(PRODUCT_PRICE,-3)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE)
+--------------------
+               10000
+                1000
+               20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,0) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,0)
+----------------------
+                 10000
+                  1000
+                 20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,1) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,1)
+----------------------
+                 10000
+                  1000
+               20000.2
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,2) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,2)
+----------------------
+                 10000
+                  1000
+              20000.23
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,-1) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,-1)
+-----------------------
+                  10000
+                   1000
+                  20000
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,10) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,10)
+-----------------------
+                  10000
+                   1000
+               20000.23
+
+SQL> SELECT TRUNC(PRODUCT_PRICE,11) FROM PRODUCT;
+
+TRUNC(PRODUCT_PRICE,11)
+-----------------------
+                  10000
+                   1000
+               20000.23
+
+SQL> SELECT MOD(PRODUCT_PRICE,11) FROM PRODUCT;
+
+MOD(PRODUCT_PRICE,11)
+---------------------
+                    1
+                   10
+                 2.23
+
+SQL> SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(BR_CITY, 'SIVAKASI', 'RURAL', 'MADURAI','METRO','OTHER') AS DECODE FROM CUSTOMER;
+SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(BR_CITY, 'SIVAKASI', 'RURAL', 'MADURAI','METRO','OTHER') AS DECODE FROM CUSTOMER
+                                           *
+ERROR at line 1:
+ORA-00904: "BR_CITY": invalid identifier
+
+
+SQL> SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(ADDRESS_CITY, 'SIVAKASI', 'RURAL', 'MADURAI','METRO','OTHER') AS DECODE FROM CUSTOMER;
+
+CUSTOMER_NAME        ADDRESS_CITY         DECOD
+-------------------- -------------------- -----
+kavi                 madurai              OTHER
+devi                 kalaiyarkovil        OTHER
+amutha               kalaiyarkovil        OTHER
+akshaya              kalaiyarkovil        OTHER
+nathiya              kalaiyarkovil        OTHER
+shiva                sivagangai           OTHER
+
+6 rows selected.
+
+SQL> SELECT COUNT(*) FROM CUSTOMER;
+
+  COUNT(*)
+----------
+         6
+
+SQL> SELECT COUNT(ADDRESS_CITY) FROM CUSTOMER;
+
+COUNT(ADDRESS_CITY)
+-------------------
+                  6
+
+SQL> SELECT COUNT(LOYALTY_POINTS) FROM CUSTOMER;
+
+COUNT(LOYALTY_POINTS)
+---------------------
+                    6
+
+SQL> SELECT AVG(LOYALTY_POINTS) FROM CUSTOMER;
+
+AVG(LOYALTY_POINTS)
+-------------------
+         45.6666667
+
+SQL> SELECT SUM(LOYALTY_POINTS) FROM CUSTOMER;
+
+SUM(LOYALTY_POINTS)
+-------------------
+                274
+
+SQL> SELECT MIN(LOYALTY_POINTS) FROM CUSTOMER;
+
+MIN(LOYALTY_POINTS)
+-------------------
+                 23
+
+SQL> SELECT MAX(LOYALTY_POINTS) FROM CUSTOMER;
+
+MAX(LOYALTY_POINTS)
+-------------------
+                 77
+
+SQL> SELECT MEDIAN(LOYALTY_POINTS) FROM CUSTOMER;
+
+MEDIAN(LOYALTY_POINTS)
+----------------------
+                    42
+
+SQL> SELECT VARIANCE(LOYALTY_POINTS) FROM CUSTOMER;
+
+VARIANCE(LOYALTY_POINTS)
+------------------------
+              420.266667
+
+SQL> SELECT STDDEV(LOYALTY_POINTS) FROM CUSTOMER;
+
+STDDEV(LOYALTY_POINTS)
+----------------------
+            20.5004065
+
+SQL> SELECT * FROM CUSTOMER ORDER BY CUSTOMER_CITY;
+SELECT * FROM CUSTOMER ORDER BY CUSTOMER_CITY
+                                *
+ERROR at line 1:
+ORA-00904: "CUSTOMER_CITY": invalid identifier
+
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY ASC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY DESC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY,LOYALTY_POINTS DESC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT * FROM CUSTOMER ORDER BY ADDRESS_CITY,LOYALTY_POINTS ASC;
+truncating (as requested) before column AGE
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+6 rows selected.
+
+SQL> SELECT CUSTOMER_NAME FROM CUSTOMER GROUP BY CUSTOMER_NAME;
+
+CUSTOMER_NAME
+--------------------
+kavi
+devi
+amutha
+akshaya
+nathiya
+shiva
+
+6 rows selected.
+
+SQL> SELECT ADDRESS_CITY FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY
+--------------------
+madurai
+kalaiyarkovil
+sivagangai
+
+SQL> SELECT ADDRESS_CITY COUNT(*) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+SELECT ADDRESS_CITY COUNT(*) FROM CUSTOMER GROUP BY ADDRESS_CITY
+                         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> SELECT ADDRESS_CITY,COUNT(*) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY           COUNT(*)
+-------------------- ----------
+madurai                       1
+kalaiyarkovil                 4
+sivagangai                    1
+
+SQL> SELECT ADDRESS_CITY,COUNT(address_city) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY         COUNT(ADDRESS_CITY)
+-------------------- -------------------
+madurai                                1
+kalaiyarkovil                          4
+sivagangai                             1
+
+SQL> SELECT ADDRESS_CITY,COUNT(LOYALTY_POINTS) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY         COUNT(LOYALTY_POINTS)
+-------------------- ---------------------
+madurai                                  1
+kalaiyarkovil                            4
+sivagangai                               1
+
+SQL> SELECT ADDRESS_CITY,MIN(LOYALTY_POINTS) FROM CUSTOMER GROUP BY ADDRESS_CITY;
+
+ADDRESS_CITY         MIN(LOYALTY_POINTS)
+-------------------- -------------------
+madurai                               23
+kalaiyarkovil                         30
+sivagangai                            77
+
+SQL> SELECT MIN(LOYALTY_POINTS) FROM CUSTOMER;
+
+MIN(LOYALTY_POINTS)
+-------------------
+                 23
+
+SQL> SELECT ADDRESS_CITY, SUM(LOYALTY_POINTS) AS TOTAL_LP FROM CUSTOMER GROUP BY ADDRESS_CITY HAVING SUM(LOYALTY_POINTS) >= 60;
+
+ADDRESS_CITY           TOTAL_LP
+-------------------- ----------
+kalaiyarkovil               174
+sivagangai                   77
+
+SQL> SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,LOYALTY_POINTS HAVING TOTAL_LP>50;
+SELECT * FROM CUSTOMER GROUP BY CUSTOMER_NAME,LOYALTY_POINTS HAVING TOTAL_LP>50
+                                                                    *
+ERROR at line 1:
+ORA-00904: "TOTAL_LP": invalid identifier
+
+
+SQL> SELECT CUSTOMER_NAME, ADDRESS_CITY, DECODE(ADDRESS_CITY, 'sivagangai', 'RURAL', 'madurai','METRO','OTHER') AS DECODE FROM CUSTOMER;
+
+CUSTOMER_NAME        ADDRESS_CITY         DECOD
+-------------------- -------------------- -----
+kavi                 madurai              METRO
+devi                 kalaiyarkovil        OTHER
+amutha               kalaiyarkovil        OTHER
+akshaya              kalaiyarkovil        OTHER
+nathiya              kalaiyarkovil        OTHER
+shiva                sivagangai           RURAL
+
+6 rows selected.
+
+SQL> select * from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+bil03 20-FEB-26         2000 paid       cus03 dis02
+bil04 20-FEB-26         5000 not paid   cus04 dis03
+bil05 20-FEB-26         2400 paid       cus05 dis04
+
+SQL> SELECT bill_date, TO_DATE('2025-01-21', 'YYYY-MM-DD') as sample_date from bill;
+
+BILL_DATE SAMPLE_DA
+--------- ---------
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+20-FEB-26 21-JAN-25
+
+SQL> SELECT bill_date, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') as sam_date from bill;
+
+BILL_DATE SAM_DATE
+--------- -------------------
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+20-FEB-26 2026-02-21 15:23:07
+
+SQL> select * from category;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME         EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                 29/02/2025
+pro02 cat04          1000 sup02         20 dhal                 09/12/2026
+
+SQL> select category from product where category not in (select category from category);
+select category from product where category not in (select category from category)
+                                   *
+ERROR at line 1:
+ORA-00904: "CATEGORY": invalid identifier
+
+
+SQL> desc product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PRODUCT_ID                                NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                        VARCHAR2(5)
+ PRODUCT_PRICE                                      FLOAT(126)
+ SUPPLIER_ID                                        VARCHAR2(5)
+ QUANTITY                                           NUMBER(38)
+ PRODUCT_NAME                              NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                        VARCHAR2(10)
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME         EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                 29/02/2025
+pro02 cat04          1000 sup02         20 dhal                 09/12/2026
+
+SQL> insert into product values('pro03','cat08',2000,'sup03','chocolate','30/08/2026');
+insert into product values('pro03','cat08',2000,'sup03','chocolate','30/08/2026')
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> insert into product values('pro03','cat08',2000,'sup03',21,'chocolate','30/08/2026');
+insert into product values('pro03','cat08',2000,'sup03',21,'chocolate','30/08/2026')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.SYS_C008337) violated - parent key not
+found
+
+
+SQL> select customer_name,address_city,loyalty_points from customer where loyalty_points=60 group by  customer_name,address_city,loyalty_points;
+
+CUSTOMER_NAME        ADDRESS_CITY         LOYALTY_POINTS
+-------------------- -------------------- --------------
+nathiya              kalaiyarkovil                    60
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select '&amp,customer_name' as entered_name from customer;
+Enter value for amp: shiva
+old   1: select '&amp,customer_name' as entered_name from customer
+new   1: select 'shiva,customer_name' as entered_name from customer
+
+ENTERED_NAME
+-------------------
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+shiva,customer_name
+
+6 rows selected.
+
