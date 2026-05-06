@@ -1,0 +1,833 @@
+SQL> set serveroutput on;
+SQL> DECLARE
+  2         v_city customer.cus_city%TYPE;
+  3     BEGIN
+  4         SELECT cus_city INTO v_city
+  5         FROM customer
+  6         WHERE cus_city LIKE 'theni%';
+  7
+  8         DBMS_OUTPUT.PUT_LINE('Welcome the Customer from ' || v_city);
+  9     END;
+ 10  /
+Welcome the Customer from theni
+
+PL/SQL procedure successfully completed.
+
+SQL> select avg(product_price) from product;
+
+AVG(PRODUCT_PRICE)
+------------------
+            5008.5
+
+SQL> DECLARE
+  2           v_avg NUMBER;
+  3       BEGIN
+  4           SELECT AVG(product_price) INTO v_avg FROM product;
+  5           DBMS_OUTPUT.PUT_LINE('Average price: ' || v_avg);
+  6       END;
+  7       /
+Average price: 5008.5
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                29/02/2025
+pro3                 25.5               15 notebook
+pro02                5000               25 dhal
+
+SQL> DECLARE
+  2           v_total NUMBER;
+  3       BEGIN
+  4           SELECT SUM(quantity) INTO v_total FROM product WHERE supplier_id = 'sup01';
+  5           DBMS_OUTPUT.PUT_LINE('Total items supplied by supplier sup01: ' || v_total);
+  6       END;
+  7       /
+Total items supplied by supplier sup01: 20
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_qty product.quantity%TYPE;
+  3       BEGIN
+  4           SELECT quantity INTO v_qty FROM product WHERE product_id = 'pro01';
+  5          IF v_qty = '1' THEN
+  6              DBMS_OUTPUT.PUT_LINE('less product');
+  7           ELSE
+  8               DBMS_OUTPUT.PUT_LINE('more products');
+  9          END IF;
+ 10       END;
+ 11       /
+more products
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_price NUMBER;
+  3           v_status VARCHAR2(20);
+  4       BEGIN
+  5           SELECT product_price INTO v_price FROM product WHERE product_id = 'pro01';
+  6           v_status := CASE WHEN v_price < 50 THEN 'Cheap' ELSE 'Expensive' END;
+  7           DBMS_OUTPUT.PUT_LINE('product is ' || v_status);
+  8       END;
+  9       /
+product is Expensive
+
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product where product_id = 'pro01'
+  2  ;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                29/02/2025
+
+SQL> DECLARE
+  2           v_item product%ROWTYPE;
+  3       BEGIN
+  4           SELECT * INTO v_item FROM product WHERE product_id = 'pro01';
+  5           DBMS_OUTPUT.PUT_LINE('Item: ' || v_item.product_name || ' Category: ' || v_item.category_id);
+  6       END;
+  7       /
+Item: milk Category: cat01
+
+PL/SQL procedure successfully completed.
+
+
+SQL> DECLARE
+  2           TYPE sup_rectype IS RECORD (s_name supplier.supplier_name%TYPE);
+  3           v_sup sup_rectype;
+  4       BEGIN
+  5           SELECT supplier_name INTO v_sup.s_name FROM supplier WHERE supplier_name = 'ravi';
+  6           DBMS_OUTPUT.PUT_LINE('Supplier found: ' || v_sup.s_name);
+  7       END;
+  8       /
+Supplier found: ravi
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2      CURSOR c_city IS SELECT customer_name FROM customer WHERE cus_city = 'MADURAI';
+  3
+  4      v_name customer.customer_name%TYPE;
+  5
+  6  BEGIN
+  7      OPEN c_city;
+  8
+  9      LOOP
+ 10          FETCH c_city INTO v_name;
+ 11          EXIT WHEN c_city%NOTFOUND;
+ 12          DBMS_OUTPUT.PUT_LINE('Customer from Madurai: ' || v_name);
+ 13      END LOOP;
+ 14      CLOSE c_city;
+ 15  END;
+ 16  /
+Customer from Madurai: DHIVI
+Customer from Madurai: KAVI
+Customer from Madurai: ARUN
+Customer from Madurai: VARUN
+
+PL/SQL procedure successfully completed.
+
+SQL> select product_id,product_name,quantity from product;
+
+PRODU PRODUCT_NAME           QUANTITY
+----- -------------------- ----------
+pro01 milk                         20
+pro3  notebook                     15
+pro02 dhal                         25
+
+SQL> select product_price from product;
+
+PRODUCT_PRICE
+-------------
+        10000
+         25.5
+         5000
+
+SQL> BEGIN
+  2           FOR r IN (SELECT product_id, product_price FROM product) LOOP
+  3               DBMS_OUTPUT.PUT_LINE('product ' || r.product_id || ' Amount: ' || r.product_price);
+  4           END LOOP;
+  5       END;
+  6       /
+product pro01 Amount: 10000
+product pro3 Amount: 25.5
+product pro02 Amount: 5000
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           CURSOR c_name IS SELECT customer_name FROM customer;
+  3           v_name customer.customer_name%TYPE;
+  4       BEGIN
+  5           OPEN c_name;
+  6           FETCH c_name INTO v_name;
+  7           WHILE c_name%FOUND LOOP
+  8               DBMS_OUTPUT.PUT_LINE('customer name: ' || v_name);
+  9
+ 10               FETCH c_name INTO v_name;
+ 11           END LOOP;
+ 12           CLOSE c_name;
+ 13       END;
+ 14       /
+customer name: shiva
+customer name: kavi
+customer name: PAVI
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_name supplier.supplier_name%TYPE;
+  3       BEGIN
+  4           SELECT supplier_name INTO v_name FROM supplier;
+  5       EXCEPTION
+  6           WHEN TOO_MANY_ROWS THEN
+  7               DBMS_OUTPUT.PUT_LINE('Error: Too many suppliers found.');
+  8       END;
+  9       /
+Error: Too many suppliers found.
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product
+  2  ;
+
+SQL> select * from product where product_id ='pro02';
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro02                5000               25 dhal
+
+SQL> DECLARE
+  2           v_price NUMBER;
+  3           e_zero_price EXCEPTION;
+  4       BEGIN
+  5           SELECT product_price INTO v_price FROM product WHERE product_id = 'pro02';
+  6           IF v_price <= 0 THEN RAISE e_zero_price; END IF;
+  7       EXCEPTION
+  8           WHEN e_zero_price THEN
+  9               DBMS_OUTPUT.PUT_LINE('Alert: Item price is zero or negative!');
+ 10       END;
+ 11       /
+
+PL/SQL procedure successfully completed.
+
+SQL> select *  from category;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+
+SQL> insert into product ( product_id,category_id,product_price,supplier_id,quantity,product_name,expiry_date) values ('pro04','cat01',0,'sup06',10,'butter','25/09/26');
+
+1 row created.
+
+SQL> select * from product where product_id ='pro04';
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro04 cat01             0 sup06         10 butter              25/09/26
+
+SQL> DECLARE
+  2           v_price NUMBER;
+  3           e_zero_price EXCEPTION;
+  4       BEGIN
+  5           SELECT product_price INTO v_price FROM product WHERE product_id = 'pro01';
+  6           IF v_price <= 0 THEN RAISE e_zero_price; END IF;
+  7       EXCEPTION
+  8           WHEN e_zero_price THEN
+  9               DBMS_OUTPUT.PUT_LINE('Alert: Item price is zero or negative!');
+ 10       END;
+ 11       /
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_price NUMBER;
+  3           e_zero_price EXCEPTION;
+  4       BEGIN
+  5           SELECT product_price INTO v_price FROM product WHERE product_id = 'pro01';
+  6           IF v_price <= 0 THEN RAISE e_zero_price; END IF;
+  7       EXCEPTION
+  8           WHEN e_zero_price THEN
+  9               DBMS_OUTPUT.PUT_LINE('Alert: Item price is zero or negative!');
+ 10       END;
+ 11       /
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_price NUMBER;
+  3           e_zero_price EXCEPTION;
+  4       BEGIN
+  5           SELECT product_price INTO v_price FROM product WHERE product_id = 'pro04';
+  6           IF v_price <= 0 THEN RAISE e_zero_price; END IF;
+  7       EXCEPTION
+  8           WHEN e_zero_price THEN
+  9               DBMS_OUTPUT.PUT_LINE('Alert: Item price is zero or negative!');
+ 10       END;
+ 11       /
+Alert: Item price is zero or negative!
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product;
+
+PRODU CATEG PRODUCT_PRICE SUPPL   QUANTITY PRODUCT_NAME        EXPIRY_DAT
+----- ----- ------------- ----- ---------- -------------------- ----------
+pro01 cat01         10000 sup01         20 milk                29/02/2025
+pro04 cat01             0 sup06         10 butter              25/09/26
+pro3                 25.5               15 notebook
+pro02                5000               25 dhal
+
+SQL> DECLARE
+  2           v_name product.product_price%TYPE;
+  3       BEGIN
+  4           SELECT product_price into v_name FROM product WHERE product_id = 'pro00';
+  5       EXCEPTION
+  6           WHEN NO_DATA_FOUND THEN
+  7               DBMS_OUTPUT.PUT_LINE('Error: product ID does not exist.');
+  8       END;
+  9       /
+Error: product ID does not exist.
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2           UPDATE product SET product_price = product_price + 5 WHERE category_id = 'cat01';
+  3           DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' cat01 updated.');
+  4       END;
+  5       /
+2 cat01 updated.
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2           DELETE FROM product WHERE quantity IS NULL;
+  3          IF SQL%NOTFOUND THEN
+  4              DBMS_OUTPUT.PUT_LINE('Not found.');
+  5          END IF;
+  6       END;
+  7      /
+Not found.
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2          TYPE t_sups IS TABLE OF supplier.supplier_name%TYPE;
+  3           v_list t_sups;
+  4       BEGIN
+  5           SELECT supplier_name BULK COLLECT INTO v_list FROM supplier;
+  6           DBMS_OUTPUT.PUT_LINE('Total Suppliers: ' || v_list.COUNT);
+  7       END;
+  8       /
+Total Suppliers: 4
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2           FOR r IN (SELECT * FROM product WHERE product_price BETWEEN 1000 AND 1500) LOOP
+  3               DBMS_OUTPUT.PUT_LINE('Mid-range product: ' || r.product_id);
+  4           END LOOP;
+  5       END;
+  6       /
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2           FOR r IN (SELECT * FROM product WHERE product_price BETWEEN 1000 AND 5000) LOOP
+  3               DBMS_OUTPUT.PUT_LINE('Mid-range product: ' || r.product_id);
+  4           END LOOP;
+  5       END;
+  6       /
+Mid-range product: pro02
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_new_amt NUMBER;
+  3       BEGIN
+  4           UPDATE product SET product_price = 1500 WHERE product_id = 'pro01'
+  5           RETURNING product_price INTO v_new_amt;
+  6           DBMS_OUTPUT.PUT_LINE('New price: ' || v_new_amt);
+  7       END;
+  8       /
+New price: 1500
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2           FOR r IN (SELECT supplier_id FROM product WHERE supplier_id = 'sup06') LOOP
+  3               DBMS_OUTPUT.PUT_LINE('previous supply of milk: ' || r.supplier_id);
+  4           END LOOP;
+  5       END;
+  6       /
+previous supply of milk: sup06
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_name product.product_name%TYPE;
+  3       BEGIN
+  4           FOR r IN (SELECT product_id FROM product) LOOP
+  5               SELECT product_name INTO v_name FROM product WHERE product_id = r.product_id;
+  6               DBMS_OUTPUT.PUT_LINE('product contained: ' || v_name);
+  7           END LOOP;
+  8        EXCEPTION WHEN OTHERS THEN NULL;
+  9      END;
+ 10  /
+product contained: milk
+product contained: dhal
+product contained: butter
+product contained: notebook
+
+PL/SQL procedure successfully completed.
+
+SQL> select product_id,product_price from product where product_id = 'pro02';
+
+PRODU PRODUCT_PRICE
+----- -------------
+pro02          5000
+
+SQL> DECLARE
+  2           v_inc NUMBER := 500;
+  3       BEGIN
+  4           UPDATE product SET product_price = product_price + v_inc WHERE product_id = 'pro01';
+  5           DBMS_OUTPUT.PUT_LINE('Product pro01 updated.');
+  6       END;
+  7       /
+Product pro01 updated.
+
+PL/SQL procedure successfully completed.
+
+SQL> select product_id,product_price from product where product_id = 'pro02';
+
+PRODU PRODUCT_PRICE
+----- -------------
+pro02          5000
+
+SQL> DECLARE
+  2           v_inc NUMBER := 500;
+  3       BEGIN
+  4           UPDATE product SET product_price = product_price + v_inc WHERE product_id = 'pro02';
+  5           DBMS_OUTPUT.PUT_LINE('Product pro01 updated.');
+  6       END;
+  7       /
+Product pro01 updated.
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_inc NUMBER := 500;
+  3       BEGIN
+  4           UPDATE product SET product_price = product_price + v_inc WHERE product_id = 'pro02';
+  5           DBMS_OUTPUT.PUT_LINE('Product pro01 updated.');
+  6       END;
+  7       /
+Product pro01 updated.
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2           v_inc NUMBER := 500;
+  3       BEGIN
+  4           UPDATE product SET product_price = product_price + v_inc WHERE product_id = 'pro02';
+  5           DBMS_OUTPUT.PUT_LINE('Product pro01 updated.');
+  6       END;
+  7       /
+Product pro01 updated.
+
+PL/SQL procedure successfully completed.
+
+SQL> select product_id,product_price from product where product_id = 'pro02';
+
+PRODU PRODUCT_PRICE
+----- -------------
+pro02          6500
+
+SQL> DECLARE
+  2           v_id product.product_id%TYPE := 'pro05';
+  3           v_name product.product_name%TYPE := 'milkshake';
+  4       BEGIN
+  5           INSERT INTO product (product_id, product_name, product_price) VALUES (v_id, v_name, 30);
+  6       END;
+  7  /
+
+PL/SQL procedure successfully completed.
+
+SQL> set serveroutput on;
+SQL> DECLARE
+  2      v_price product.product_price%TYPE;
+  3  BEGIN
+  4      SELECT product_price INTO v_price
+  5      FROM product
+  6      WHERE product_id = '&mid';
+  7
+  8      IF v_price < 50 THEN
+  9          DBMS_OUTPUT.PUT_LINE('Cheap Item');
+ 10      ELSIF v_price BETWEEN 50 AND 100 THEN
+ 11          DBMS_OUTPUT.PUT_LINE('Moderate Item');
+ 12      ELSE
+ 13          DBMS_OUTPUT.PUT_LINE('Expensive Item');
+ 14      END IF;
+ 15  END;
+ 16  /
+Enter product ID: pro04
+old   6:     WHERE product_id = '&mid';
+new   6:     WHERE product_id = 'pro04';
+Cheap Item
+
+PL/SQL procedure successfully completed.
+
+SQL> /
+Enter product ID: pro02
+old   6:     WHERE product_id = '&mid';
+new   6:     WHERE product_id = 'pro02';
+Expensive Item
+
+PL/SQL procedure successfully completed.
+
+SQL> /
+Enter product ID: pro05
+old   6:     WHERE product_id = '&mid';
+new   6:     WHERE product_id = 'pro05';
+Moderate Item
+
+PL/SQL procedure successfully completed.
+
+SQL> set serveroutput on;
+SQL> ACCEPT letter CHAR PROMPT 'Enter starting letter: '
+Enter starting letter: r
+SQL> DECLARE
+  2          CURSOR cus_cur IS
+  3             SELECT customer_name
+  4             FROM customer
+  5             WHERE customer_name LIKE '&letter%';
+  6
+  7          v_name customer.customer_name%TYPE;
+  8
+  9       BEGIN
+ 10          OPEN cus_cur;
+ 11
+ 12          LOOP
+ 13             FETCH cus_cur INTO v_name;
+ 14             EXIT WHEN cus_cur%NOTFOUND;
+ 15
+ 16             DBMS_OUTPUT.PUT_LINE('customer Name: ' || v_name);
+ 17          END LOOP;
+ 18
+ 19          CLOSE cus_cur;
+ 20       END;
+ 21       /
+old   5:            WHERE customer_name LIKE '&letter%';
+new   5:            WHERE customer_name LIKE 'r%';
+customer Name: ram
+customer Name: ravi
+
+PL/SQL procedure successfully completed.
+
+SQL>
+
+SQL> DECLARE
+  2    v_num NUMBER:=1;
+  3  BEGIN
+  4    LOOP
+  5      DBMS_OUTPUT.PUT_LINE(v_num);
+  6      v_num:=v_num+1;
+  7      EXIT WHEN v_num>5;
+  8    END LOOP;
+  9  END;
+ 10  /
+1
+2
+3
+4
+5
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2    FOR i IN 1..5 LOOP
+  3      DBMS_OUTPUT.PUT_LINE('Order: '||i);
+  4    END LOOP;
+  5  END;
+  6  /
+Order: 1
+Order: 2
+Order: 3
+Order: 4
+Order: 5
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2    v_num NUMBER:=1;
+  3  BEGIN
+  4    WHILE v_num<=5 LOOP
+  5      DBMS_OUTPUT.PUT_LINE(v_num);
+  6      v_num:=v_num+1;
+  7    END LOOP;
+  8  END;
+  9  /
+1
+2
+3
+4
+5
+
+PL/SQL procedure successfully completed.
+
+SQL> begin
+  2       for i in reverse 1..10 loop
+  3           dbms_output.put_line(i);
+  4       end loop;
+  5  end;
+  6  /
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2         FOR i IN 1..10 BY 2 LOOP
+  3            DBMS_OUTPUT.PUT_LINE('Value of i: ' || i);
+  4         END LOOP;
+  5  END;
+  6  /
+Value of i: 1
+Value of i: 3
+Value of i: 5
+Value of i: 7
+Value of i: 9
+
+PL/SQL procedure successfully completed.
+
+SQL> BEGIN
+  2    FOR i IN 1..5 LOOP
+  3      DBMS_OUTPUT.PUT_LINE('Order: '||i);
+  4      i:i+2
+  5    END LOOP;
+  6  END;
+  7  /
+SP2-0552: Bind variable "I" not declared.
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+              CURSOR c_cat(p_cat VARCHAR2) IS SELECT product_name FROM product WHERE category_id = p_cat;
+          BEGIN
+              FOR r IN c_cat('Milk') LOOP
+                  DBMS_OUTPUT.PUT_LINE('product Option: ' || r.product_name);
+             END LOOP;
+          END;
+          /
+
+PL/SQL procedure successfully completed.
+
+SQL>  DECLARE
+  2      CURSOR c_cat(p_cat VARCHAR2) IS
+  3          SELECT product_name FROM product WHERE category_id = p_cat;
+  4  BEGIN
+  5      FOR r IN c_cat('cat01') LOOP
+  6          DBMS_OUTPUT.PUT_LINE('Product Option: ' || r.product_name);
+  7      END LOOP;
+  8  END;
+  9  /
+Product Option: milk
+Product Option: butter
+
+PL/SQL procedure successfully completed.
+
+---------------------------------------------------------------------------------
+
+HACKERANK QUESTIONS
+
+---------------------------------------------------------------------------------
+
+A)       Print fibonocci series
+B)      Print even or prime or odd or Armstrong number or positive or negative
+
+Self – II: Declare cursor to retrieve employee whose name starts with ‘a’ and display the values of  cursor attributes
+
+Self – III: Declare cursor to count number of employees residing in ‘sivakasi’ and earning salary higher than average salary of their departments wit necessary exception handling.
+
+SQL> ACCEPT fib PROMPT 'Enter no.of terms:'
+Enter no.of terms:5
+SQL> DECLARE
+  2     a NUMBER := 0;
+  3     b NUMBER := 1;
+  4     temp NUMBER;
+  5     n NUMBER := &fib;
+  6  BEGIN
+  7     DBMS_OUTPUT.PUT_LINE('Fibonacci Series:');
+  8     FOR i IN 1..n LOOP
+  9        DBMS_OUTPUT.PUT(a || ' ');
+ 10        temp := a + b;
+ 11        a := b;
+ 12        b := temp;
+ 13     END LOOP;
+ 14     DBMS_OUTPUT.PUT_LINE('');
+ 15  END;
+ 16  /
+old   5:    n NUMBER := &fib;
+new   5:    n NUMBER := 5;
+Fibonacci Series:
+0 1 1 2 3
+
+PL/SQL procedure successfully completed.
+
+SQL> ACCEPT num PROMPT 'Enter number:'
+Enter number:45
+SQL> DECLARE
+  2     num NUMBER := &num;
+  3     temp NUMBER;
+  4     rem NUMBER;
+  5     sum_p NUMBER := 0;
+  6     is_prime BOOLEAN := TRUE;
+  7  BEGIN
+  8
+  9     IF num > 0 THEN DBMS_OUTPUT.PUT_LINE(num || ' is Positive');
+ 10     ELSIF num < 0 THEN DBMS_OUTPUT.PUT_LINE(num || ' is Negative');
+ 11     ELSE DBMS_OUTPUT.PUT_LINE(num || ' is Zero');
+ 12     END IF;
+ 13
+ 14       IF MOD(num, 2) = 0 THEN DBMS_OUTPUT.PUT_LINE('Even');
+ 15     ELSE DBMS_OUTPUT.PUT_LINE('Odd');
+ 16     END IF;
+ 17
+ 18       IF num < 2 THEN is_prime := FALSE;
+ 19     ELSE
+ 20        FOR i IN 2..SQRT(num) LOOP
+ 21           IF MOD(num, i) = 0 THEN is_prime := FALSE; EXIT; END IF;
+ 22        END LOOP;
+ 23     END IF;
+ 24     IF is_prime THEN DBMS_OUTPUT.PUT_LINE('Prime');
+ 25     ELSE DBMS_OUTPUT.PUT_LINE('Not Prime'); END IF;
+ 26
+ 27       temp := num;
+ 28     WHILE temp > 0 LOOP
+ 29        rem := MOD(temp, 10);
+ 30        sum_p := sum_p + (rem ** 3);
+ 31        temp := TRUNC(temp / 10);
+ 32     END LOOP;
+ 33     IF sum_p = num THEN DBMS_OUTPUT.PUT_LINE('Armstrong Number');
+ 34     ELSE DBMS_OUTPUT.PUT_LINE('Not Armstrong'); END IF;
+ 35  END;
+ 36  /
+old   2:    num NUMBER := &num;
+new   2:    num NUMBER := 45;
+45 is Positive
+Odd
+Not Prime
+Not Armstrong
+
+PL/SQL procedure successfully completed.
+
+SQL> ACCEPT num PROMPT 'Enter number:'
+Enter number:-23
+   /
+old   2:    num NUMBER := &num;
+new   2:    num NUMBER := 374;
+374 is Positive
+Even
+Not Prime
+Not Armstrong
+
+PL/SQL procedure successfully completed.
+
+SQL> ACCEPT num PROMPT 'Enter number:'
+Enter number:3
+/
+old   2:    num NUMBER := &num;
+new   2:    num NUMBER := 3;
+3 is Positive
+Odd
+Prime
+Not Armstrong
+
+PL/SQL procedure successfully completed.
+
+SQL> ACCEPT num PROMPT 'Enter number:'
+Enter number:153
+ /
+old   2:    num NUMBER := &num;
+new   2:    num NUMBER := 153;
+153 is Positive
+Odd
+Not Prime
+Armstrong Number
+
+PL/SQL procedure successfully completed.
+
+SQL> ACCEPT role CHAR PROMPT 'Enter payment mode: '
+Enter payment mode: card
+
+SQL> DECLARE
+  2     v_count NUMBER;
+  3
+  4  BEGIN
+  5
+  6     SELECT COUNT(payment_mode)
+  7     INTO v_count
+  8     FROM payment
+  9     WHERE payment_mode = '&role';
+ 10
+ 11     DBMS_OUTPUT.PUT_LINE('Mode Count: ' || v_count);
+ 12
+ 13  EXCEPTION
+ 14     WHEN NO_DATA_FOUND THEN
+ 15        DBMS_OUTPUT.PUT_LINE('No mode found');
+ 16
+ 17  END;
+ 18  /
+old   9:    WHERE payment_mode = '&role';
+new   9:    WHERE payment_mode = 'card';
+Mode Count: 5
+
+PL/SQL procedure successfully completed.
+
+SQL> set serveroutput on;
+SQL> ACCEPT letter CHAR PROMPT 'Enter starting letter: '
+Enter starting letter: r
+SQL> DECLARE
+  2          CURSOR cus_cur IS
+  3             SELECT customer_name
+  4             FROM customer
+  5             WHERE customer_name LIKE '&letter%';
+  6
+  7          v_name customer.customer_name%TYPE;
+  8
+  9       BEGIN
+ 10          OPEN cus_cur;
+ 11
+ 12          LOOP
+ 13             FETCH cus_cur INTO v_name;
+ 14             EXIT WHEN cus_cur%NOTFOUND;
+ 15
+ 16             DBMS_OUTPUT.PUT_LINE('customer Name: ' || v_name);
+ 17          END LOOP;
+ 18
+ 19          CLOSE cus_cur;
+ 20       END;
+ 21       /
+old   5:            WHERE customer_name LIKE '&letter%';
+new   5:            WHERE customer_name LIKE 'r%';
+customer Name: ram
+
+PL/SQL procedure successfully completed.
+
