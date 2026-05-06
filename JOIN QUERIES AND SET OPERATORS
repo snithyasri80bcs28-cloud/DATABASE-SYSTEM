@@ -1,0 +1,1006 @@
+
+SQL> select * from supplier;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET
+--------------------
+sup01 dhivya                        654321 madurai
+gandhi nagar
+
+sup02 murugen                       621091 chennai
+kv nagar
+
+
+SQL> insert into supplier values('sup03','ravi',630551,'kalaiyar kovil','kk nagar');
+
+1 row created.
+
+SQL> insert into supplier values('sup04','ram',630221,'sivagangai','ss nagar');
+
+1 row created.
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------------- --------------- --------- ----------
+cus06 kavi                             23 ddnagar
+madurai                       654789 21-MAR-26          0
+
+cus01 devi                             30 moorthy nagar
+kalaiyarkovil                 630551
+
+cus02 amutha                           50 ss nagar
+kalaiyarkovil                 630551
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------------- --------------- --------- ----------
+cus03 akshaya                          34 thiru nagar
+kalaiyarkovil                 630551
+
+cus04 nathiya                          60 vip nagar
+kalaiyarkovil                 630551
+
+cus05 shiva                            77 rose nagar
+sivagangai                    630551
+
+
+6 rows selected.
+
+SQL> select address_city from supplier union select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+kalaiyar kovil
+sivagangai
+madurai
+chennai
+kalaiyarkovil
+
+SQL> select address_city from supplier union all select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+kalaiyar kovil
+sivagangai
+madurai
+chennai
+madurai
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+sivagangai
+
+10 rows selected.
+
+SQL> select address_city from supplier intersect all select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+sivagangai
+madurai
+
+SQL> select address_city from supplier intersect select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+sivagangai
+madurai
+
+SQL> select address_city from supplier minus select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+kalaiyar kovil
+chennai
+
+SQL> select address_city from customer minus select address_city from supplier;
+
+ADDRESS_CITY
+--------------------
+kalaiyarkovil
+
+SQL> select address_city from supplier minus select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+kalaiyar kovil
+chennai
+
+SQL> create table supplier1 as select * from supplier;
+
+Table created.
+
+SQL> insert into supplier1 values('sup01','raj',630331,'kalaiyar kovil','north street');
+
+1 row created.
+
+SQL> insert into supplier1 values('sup02','shiva',632331,'madurai','south street');
+
+1 row created.
+
+SQL> select address_city from supplier1 minus select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+kalaiyar kovil
+chennai
+
+SQL> select address_city from supplier1 except select address_city from customer;
+
+ADDRESS_CITY
+--------------------
+kalaiyar kovil
+chennai
+
+SQL> select * from supplier,customer;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       CUSTO CUSTOMER_NAME        LOYALTY_POINTS
+-------------------- ----- -------------------- --------------
+ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+------------------------- -------------------- --------------- ---------
+       AGE
+----------
+sup03 ravi                          630551 kalaiyar kovil
+kk nagar             cus06 kavi                             23
+ddnagar                   madurai                       654789 21-MAR-26
+         0
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       CUSTO CUSTOMER_NAME        LOYALTY_POINTS
+-------------------- ----- -------------------- --------------
+ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+------------------------- -------------------- --------------- ---------
+       AGE
+----------
+sup03 ravi                          630551 kalaiyar kovil
+kk nagar             cus01 devi                             30
+moorthy nagar             kalaiyarkovil                 630551
+
+
+
+24 rows selected.
+
+SQL> set linesize 120;
+SQL> select * from supplier,customer;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET       CUSTO CUSTOMER_NAME
+----- -------------------- --------------- -------------------- -------------------- ----- --------------------
+LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------- ------------------------- -------------------- --------------- --------- ----------
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus06 kavi
+            23 ddnagar                   madurai                       654789 21-MAR-26          0
+
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus01 devi
+            30 moorthy nagar             kalaiyarkovil                 630551
+
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus02 amutha
+            50 ss nagar                  kalaiyarkovil                 630551
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET       CUSTO CUSTOMER_NAME
+----- -------------------- --------------- -------------------- -------------------- ----- --------------------
+LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------- ------------------------- -------------------- --------------- --------- ----------
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus03 akshaya
+            34 thiru nagar               kalaiyarkovil                 630551
+
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus04 nathiya
+            60 vip nagar                 kalaiyarkovil                 630551
+
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus05 shiva
+            77 rose nagar                sivagangai                    630551
+
+
+24 rows selected.
+
+SQL> set pagesize 200;
+SQL> set wrap off;
+SQL> select * from supplier,customer;
+truncating (as requested) before column LOYALTY_POINTS
+
+rows will be truncated
+
+rows will be truncated
+
+rows will be truncated
+
+rows will be truncated
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET       CUSTO CUSTOMER_NAME        ADDRESS_
+----- -------------------- --------------- -------------------- -------------------- ----- -------------------- --------
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus06 kavi                 ddnagar
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus01 devi                 moorthy
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus02 amutha               ss nagar
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus03 akshaya              thiru na
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus04 nathiya              vip naga
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             cus05 shiva                rose nag
+sup04 ram                           630221 sivagangai           ss nagar             cus06 kavi                 ddnagar
+sup04 ram                           630221 sivagangai           ss nagar             cus01 devi                 moorthy
+sup04 ram                           630221 sivagangai           ss nagar             cus02 amutha               ss nagar
+sup04 ram                           630221 sivagangai           ss nagar             cus03 akshaya              thiru na
+sup04 ram                           630221 sivagangai           ss nagar             cus04 nathiya              vip naga
+sup04 ram                           630221 sivagangai           ss nagar             cus05 shiva                rose nag
+sup01 dhivya                        654321 madurai              gandhi nagar         cus06 kavi                 ddnagar
+sup01 dhivya                        654321 madurai              gandhi nagar         cus01 devi                 moorthy
+sup01 dhivya                        654321 madurai              gandhi nagar         cus02 amutha               ss nagar
+sup01 dhivya                        654321 madurai              gandhi nagar         cus03 akshaya              thiru na
+sup01 dhivya                        654321 madurai              gandhi nagar         cus04 nathiya              vip naga
+sup01 dhivya                        654321 madurai              gandhi nagar         cus05 shiva                rose nag
+sup02 murugen                       621091 chennai              kv nagar             cus06 kavi                 ddnagar
+sup02 murugen                       621091 chennai              kv nagar             cus01 devi                 moorthy
+sup02 murugen                       621091 chennai              kv nagar             cus02 amutha               ss nagar
+sup02 murugen                       621091 chennai              kv nagar             cus03 akshaya              thiru na
+sup02 murugen                       621091 chennai              kv nagar             cus04 nathiya              vip naga
+sup02 murugen                       621091 chennai              kv nagar             cus05 shiva                rose nag
+
+24 rows selected.
+
+SQL> select * from supplier s,customer c where s.address_city=c.address_city;
+truncating (as requested) before column LOYALTY_POINTS
+
+rows will be truncated
+
+rows will be truncated
+
+rows will be truncated
+
+rows will be truncated
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY        ADDRESS_STREET        CUSTO CUSTOMER_NAME        ADDRESS_
+----- -------------------- --------------- -------------------- -------------------- ----- -------------------- --------
+sup01 dhivya                        654321 madurai             gandhi nagar          cus06 kavi                 ddnagar
+sup04 ram                           630221 sivagangai          ss nagar      cus05 shiva                rose nag
+
+SQL>
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Wed Feb 25 00:04:25 2026
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: System
+Enter password:
+Last Successful login time: Tue Feb 24 2026 22:42:15 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> select * from supplier s,customer c where s.address_city=c.address_city;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       CUSTO CUSTOMER_NAME        LOYALTY_POINTS
+-------------------- ----- -------------------- --------------
+ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+------------------------- -------------------- --------------- ---------
+       AGE
+----------
+sup01 dhivya                        654321 madurai
+gandhi nagar         cus06 kavi                             23
+ddnagar                   madurai                       654789 21-MAR-26
+         0
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       CUSTO CUSTOMER_NAME        LOYALTY_POINTS
+-------------------- ----- -------------------- --------------
+ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB
+------------------------- -------------------- --------------- ---------
+       AGE
+----------
+sup04 ram                           630221 sivagangai
+ss nagar             cus05 shiva                            77
+rose nagar                sivagangai                    630551
+
+
+
+SQL> set linesize 120;
+SQL> select * from supplier s,customer c where s.address_city=c.address_city;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET       CUSTO CUSTOMER_NAME
+----- -------------------- --------------- -------------------- -------------------- ----- --------------------
+LOYALTY_POINTS ADDRESS_STREET            ADDRESS_CITY         ADDRESS_PINCODE DOB              AGE
+-------------- ------------------------- -------------------- --------------- --------- ----------
+sup01 dhivya                        654321 madurai              gandhi nagar         cus06 kavi
+            23 ddnagar                   madurai                       654789 21-MAR-26          0
+
+sup04 ram                           630221 sivagangai           ss nagar             cus05 shiva
+            77 rose nagar                sivagangai                    630551
+
+
+SQL> select * from customer c cross join supplier s on c.address_city=s.address_city;
+select * from customer c cross join supplier s on c.address_city=s.address_city
+                                               *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select * from customer c inner join supplier s on c.address_city-c.address_city;
+select * from customer c inner join supplier s on c.address_city-c.address_city
+                                                                              *
+ERROR at line 1:
+ORA-00920: invalid relational operator
+
+
+SQL> select * from customer c inner join supplier s on c.address_city=c.address_city;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+---------- ----- -------------------- --------------- -------------------- --------------------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0 sup03 ravi                          630551 kalaiyar kovil       kk nagar
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+           sup03 ravi                          630551 kalaiyar kovil       kk nagar
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+           sup03 ravi                          630551 kalaiyar kovil       kk nagar
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+---------- ----- -------------------- --------------- -------------------- --------------------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+           sup03 ravi                          630551 kalaiyar kovil       kk nagar
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+           sup03 ravi                          630551 kalaiyar kovil       kk nagar
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+           sup03 ravi                          630551 kalaiyar kovil       kk nagar
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+---------- ----- -------------------- --------------- -------------------- --------------------
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0 sup04 ram                           630221 sivagangai   ss nagar
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+           sup04 ram                           630221 sivagangai   ss nagar
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+           sup04 ram                           630221 sivagangai   ss nagar
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+---------- ----- -------------------- --------------- -------------------- --------------------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+           sup04 ram                           630221 sivagangai   ss nagar
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+           sup04 ram                           630221 sivagangai   ss nagar
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+           sup04 ram                           630221 sivagangai   ss nagar
+
+
+24 rows selected.
+
+SQL> select * from customer c  supplier s on c.address_city=c.address_city;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+---------- ----- -------------------- --------------- -------------------- --------------------
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+           sup02 murugen                       621091 chennai     kv nagar
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+           sup02 murugen                       621091 chennai     kv nagar
+
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+           sup02 murugen                       621091 chennai     kv nagar
+
+
+24 rows selected.
+
+SQL> select * from customer c natural join supplier s;
+
+no rows selected
+
+SQL> select * from supplier natural join customer c;
+
+no rows selected
+
+SQL> insert into customer values('cus06','shiva',88,'north street','sivagangai',630551);
+insert into customer values('cus06','shiva',88,'north street','sivagangai',630551)
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> desc customer;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ CUSTOMER_ID                                                      NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                                     VARCHAR2(20)
+ LOYALTY_POINTS                                                    NUMBER(38)
+ ADDRESS_STREET                                                    VARCHAR2(25)
+ ADDRESS_CITY                                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                                   NUMBER(38)
+ DOB                                                               DATE
+ AGE                                                               NUMBER
+
+SQL> insert into customer values('cus06','shiva',88,'north street','sivagangai',630551,sydate,21);
+insert into customer values('cus06','shiva',88,'north street','sivagangai',630551,sydate,21)
+                                                                                  *
+ERROR at line 1:
+ORA-00984: column not allowed here
+
+
+SQL> insert into customer values('cus06','shiva',88,'north street','sivagangai',630551,sysdate,21);
+insert into customer values('cus06','shiva',88,'north street','sivagangai',630551,sysdate,21)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008325) violated
+
+
+SQL> insert into customer values('cus09','shiva',88,'north street','sivagangai',630551,sysdate,21);
+
+1 row created.
+
+SQL> insert into supplier values('sup01','dhivya',654321,'madurai','north street
+  2
+SQL>
+SQL> insert into supplier values('sup06','dhivya',6305511,'sivagangai','north street');
+
+1 row created.
+
+SQL> select * from supplier s natural join customer c;
+
+no rows selected
+
+SQL> alter table supplier rename column address_ciyt to sup_city;
+alter table supplier rename column address_ciyt to sup_city
+                                   *
+ERROR at line 1:
+ORA-00904: "ADDRESS_CIYT": invalid identifier
+
+
+SQL> alter table supplier rename column address_city to sup_city;
+
+Table altered.
+
+SQL> select * from supplier s natural join customer c;
+
+no rows selected
+
+SQL> select * from supplier;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY            ADDRESS_STREET
+----- -------------------- --------------- -------------------- --------------------
+sup03 ravi                          630551 kalaiyar kovil      kk nagar
+sup04 ram                           630221 sivagangai          ss nagar
+sup01 dhivya                        654321 madurai             gandhi nagar
+sup02 murugen                       621091 chennai             kv nagar
+sup06 dhivya                       6305511 sivagangai          north street
+
+SQL> select * from supplier natural join supplier1;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE ADDRESS_STREET      SUP_CITY      ADDRESS_CITY
+----- -------------------- --------------- -------------------- -------------------- --------------------
+sup03 ravi                          630551 kk nagar            kalaiyar kovil        kalaiyar kovil
+sup04 ram                           630221 ss nagar            sivagangai            sivagangai
+sup01 dhivya                        654321 gandhi nagar        madurai       madurai
+sup02 murugen                       621091 kv nagar            chennai       chennai
+
+SQL>
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Wed Feb 25 13:41:06 2026
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: System
+Enter password:
+Last Successful login time: Wed Feb 25 2026 00:04:36 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> select * from supplier a inner join supplier1 s1 on s.address_city = s1.address_city;
+select * from supplier a inner join supplier1 s1 on s.address_city = s1.address_city
+                                                    *
+ERROR at line 1:
+ORA-00904: "S"."ADDRESS_CITY": invalid identifier
+
+
+SQL> desc supplier;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SUPPLIER_ID                               NOT NULL VARCHAR2(5)
+ SUPPLIER_NAME                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+ SUP_CITY                                           VARCHAR2(20)
+ ADDRESS_STREET                                     VARCHAR2(20)
+
+SQL> desc supplier1;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SUPPLIER_ID                                        VARCHAR2(5)
+ SUPPLIER_NAME                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_STREET                                     VARCHAR2(20)
+
+SQL> select * from supplier a inner join supplier1 s1 on s.sup_city = s1.address_city;
+select * from supplier a inner join supplier1 s1 on s.sup_city = s1.address_city
+                                                    *
+ERROR at line 1:
+ORA-00904: "S"."SUP_CITY": invalid identifier
+
+
+SQL> select * from supplier s inner join supplier1 s1 on s.sup_city = s1.address_city;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       SUPPL SUPPLIER_NAME        ADDRESS_PINCODE
+-------------------- ----- -------------------- ---------------
+ADDRESS_CITY         ADDRESS_STREET
+-------------------- --------------------
+sup03 ravi                          630551 kalaiyar kovil
+kk nagar             sup03 ravi                          630551
+kalaiyar kovil       kk nagar
+
+sup04 ram                           630221 sivagangai
+ss nagar             sup04 ram                           630221
+sivagangai           ss nagar
+
+7 rows selected.
+
+SQL> select * from supplier s outer join supplier1 s1 on s.sup_city = s1.address_city;
+select * from supplier s outer join supplier1 s1 on s.sup_city = s1.address_city
+                               *
+ERROR at line 1:
+ORA-00905: missing keyword
+
+
+SQL> select * from supplier s left outer join supplier1 s1 on s.sup_city = s1.address_city;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       SUPPL SUPPLIER_NAME        ADDRESS_PINCODE
+-------------------- ----- -------------------- ---------------
+ADDRESS_CITY         ADDRESS_STREET
+-------------------- --------------------
+sup03 ravi                          630551 kalaiyar kovil
+kk nagar             sup03 ravi                          630551
+kalaiyar kovil       kk nagar
+
+sup04 ram                           630221 sivagangai
+ss nagar             sup04 ram                           630221
+sivagangai           ss nagar
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       SUPPL SUPPLIER_NAME        ADDRESS_PINCODE
+-------------------- ----- -------------------- ---------------
+ADDRESS_CITY         ADDRESS_STREET
+-------------------- --------------------
+
+sup06 dhivya                       6305511 sivagangai
+north street         sup04 ram                           630221
+sivagangai           ss nagar
+
+sup01 dhivya                        654321 madurai
+gandhi nagar         sup01 dhivya                        654321
+
+7 rows selected.
+
+SQL> select * from supplier s right outer join supplier1 s1 on s.sup_city = s1.address_city;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET       SUPPL SUPPLIER_NAME        ADDRESS_PINCODE
+-------------------- ----- -------------------- ---------------
+ADDRESS_CITY         ADDRESS_STREET
+-------------------- --------------------
+kv nagar             sup02 murugen                       621091
+chennai              kv nagar
+
+sup06 dhivya                       6305511 sivagangai
+north street         sup04 ram                           630221
+sivagangai           ss nagar
+
+
+7 rows selected.
+
+SQL> set linesize 120;
+SQL> select * from supplier s right outer join supplier1 s1 on s.sup_city = s1.address_city;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY             ADDRESS_STREET       SUPPL SUPPLIER_NAME
+----- -------------------- --------------- -------------------- -------------------- ----- --------------------
+ADDRESS_PINCODE ADDRESS_CITY         ADDRESS_STREET
+--------------- -------------------- --------------------
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             sup03 ravi
+         630551 kalaiyar kovil       kk nagar
+
+sup03 ravi                          630551 kalaiyar kovil       kk nagar             sup01 raj
+         630331 kalaiyar kovil       north street
+
+sup04 ram                           630221 sivagangai           ss nagar             sup04 ram
+         630221 sivagangai           ss nagar
+
+
+
+7 rows selected.
+
+SQL> select * from supplier s left outer join supplier1 s1 on s.sup_city = s1.address_city;
+
+7 rows selected.
+
+SQL> select * from supplier s full outer join supplier1 s1 on s.sup_city = s1.address_city;
+
+
+7 rows selected.
+
+SQL> alter table customer add supplier_name varchar(20);
+
+Table altered.
+
+SQL> INSERT INTO CUSTOMER(CUS_NAME,CUS_CITY,AGE) VALUES('PAVI','CHENNAI',45);
+INSERT INTO CUSTOMER(CUS_NAME,CUS_CITY,AGE) VALUES('PAVI','CHENNAI',45)
+                              *
+ERROR at line 1:
+ORA-00904: "CUS_CITY": invalid identifier
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_NAME,CUSTOMER_CITY,AGE) VALUES('PAVI','CHENNAI',45);
+INSERT INTO CUSTOMER(CUSTOMER_NAME,CUSTOMER_CITY,AGE) VALUES('PAVI','CHENNAI',45)
+                                   *
+ERROR at line 1:
+ORA-00904: "CUSTOMER_CITY": invalid identifier
+
+
+SQL> DESC CUSTOMER;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ CUSTOMER_ID                                                      NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                                     VARCHAR2(20)
+ LOYALTY_POINTS                                                    NUMBER(38)
+ ADDRESS_STREET                                                    VARCHAR2(25)
+ ADDRESS_CITY                                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                                   NUMBER(38)
+ DOB                                                               DATE
+ AGE                                                               NUMBER
+ SUPPLIER_NAME                                                     VARCHAR2(20)
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('PAVI','CHENNAI',45);
+INSERT INTO CUSTOMER(CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('PAVI','CHENNAI',45)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."CUSTOMER"."CUSTOMER_ID")
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMMER-ID,CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('CUS11','PAVI','CHENNAI',45);
+INSERT INTO CUSTOMER(CUSTOMMER-ID,CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('CUS11','PAVI','CHENNAI',45)
+                              *
+ERROR at line 1:
+ORA-00917: missing comma
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('CUS11','PAVI','CHENNAI',45);
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('CUS12','ARUN','SIVAKASI',34);
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE) VALUES('CUS13','DHIVI','MADURAI',22);
+
+1 row created.
+
+SQL> SELECT * FROM CUSTOMER;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           ADDRESS_CITY  ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUPPLIER_NAME
+---------- --------------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+10 rows selected.
+
+SQL> ALTER TABLE CUSTOMER ADD CONSTRAINT FK_SUP FOREIGN KEY(SUPPLIER_NAME) REFERENCES CUSTOMER(CUSTOMER_ID);
+
+Table altered.
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE,SUPPLIER_NAME) VALUES('CUS15','DHARUN','SIVAGANGAI',32,'SEKAR');
+INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE,SUPPLIER_NAME) VALUES('CUS15','DHARUN','SIVAGANGAI',32,'SEKAR')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.FK_SUP) violated - parent key not found
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE,SUPPLIER_NAME) VALUES('CUS15','DHARUN','SIVAGANGAI',32,'RAVI');
+INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE,SUPPLIER_NAME) VALUES('CUS15','DHARUN','SIVAGANGAI',32,'RAVI')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.FK_SUP) violated - parent key not found
+
+
+SQL> SELECT * FROM SUPPLIER;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY            ADDRESS_STREET
+----- -------------------- --------------- -------------------- --------------------
+sup03 ravi                          630551 kalaiyar kovil      kk nagar
+sup04 ram                           630221 sivagangai          ss nagar
+sup01 dhivya                        654321 madurai             gandhi nagar
+sup02 murugen                       621091 chennai             kv nagar
+sup06 dhivya                       6305511 sivagangai          north street
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE,SUPPLIER_NAME) VALUES('CUS15','DHARUN','SIVAGANGAI',32,'RAM');
+INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,ADDRESS_CITY,AGE,SUPPLIER_NAME) VALUES('CUS15','DHARUN','SIVAGANGAI',32,'RAM')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.FK_SUP) violated - parent key not found
+
+
+
+
+SQL> desc
+Usage: DESCRIBE [schema.]object[@db_link]
+SQL> decs customer;
+SP2-0734: unknown command beginning "decs custo..." - rest of line ignored.
+SQL> desc customer;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ CUSTOMER_ID                                                      NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                                     VARCHAR2(20)
+ LOYALTY_POINTS                                                    NUMBER(38)
+ ADDRESS_STREET                                                    VARCHAR2(25)
+ ADDRESS_CITY                                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                                   NUMBER(38)
+ DOB                                                               DATE
+ AGE                                                               NUMBER
+ SUPPLIER_NAME                                                     VARCHAR2(20)
+
+SQL>  SELECT C1.CUSTOMER_NAME AS CUS_NAME,C1.ADDRESS_CITY AS CUSTOMER_CITY,C2.CUSTOMER_NAME AS SUPERVISOR_NAME,C2.ADDRESS_CITY AS SUPERVISOR_CITY FROM CUSTOMER C1 JOIN CUSTOMER C2 ON C1.SUPPLIER_NAME = C2.CUSTOMER_NAME AND C1.ADDRESS_CITY = C2.ADDRESS_CITY;
+
+no rows selected
+
+SQL> alter table customer drop column supplier_name;
+
+Table altered.
+
+SQL> desc sale;
+ERROR:
+ORA-04043: object sale does not exist
+
+
+SQL> desc sales;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ SALE_ID                                                          NOT NULL VARCHAR2(5)
+ PAYMENT_MODE                                                      VARCHAR2(10)
+ SALE_STATUS                                                       VARCHAR2(10)
+ CUSTOMER_ID                                                       VARCHAR2(5)
+ PRODUCT_ID                                                        VARCHAR2(5)
+
+SQL> desc bill;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ BILL_ID                                                          NOT NULL VARCHAR2(5)
+ BILL_DATE                                                         DATE
+ FINAL_AMOUNT                                                      FLOAT(126)
+ BILL_STATUS                                                       VARCHAR2(10)
+ CUSTOMER_ID                                                       VARCHAR2(5)
+ DISCOUNT_ID                                                       VARCHAR2(5)
+
+SQL> select* from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+bil03 20-FEB-26         2000 paid       cus03 dis02
+bil04 20-FEB-26         5000 not paid   cus04 dis03
+bil05 20-FEB-26         2400 paid       cus05 dis04
+
+SQL> select* from bill_detail;
+select* from bill_detail
+             *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select* from bill_details;
+select* from bill_details
+             *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select* from payment;
+
+PAYME BILL_ AMOUNT_PAI PAYMENT_MODE         PAYMENT_STATUS
+----- ----- ---------- -------------------- --------------------
+pay01 bil01 5000       card                 successfully
+pay02 bil02 6000       cash                 successfully
+pay03 bil03 5000       credit card          not paid
+pay04 bil04 2400       cash                 paid
+
+SQL> ALTER TABLE CUSTOMER RENAME COLUMN SUP_ID TO SUP_NAME;
+
+Table altered.
+
+SQL> INSERT INTO CUSTOMER(CUS_NAME,CUS_CITY,AGE) VALUES('KAVI','MADURAI',43);
+INSERT INTO CUSTOMER(CUS_NAME,CUS_CITY,AGE) VALUES('KAVI','MADURAI',43)
+                              *
+ERROR at line 1:
+ORA-00904: "CUS_CITY": invalid identifier
+
+
+SQL> ALTER TABLE CUSTOMER RENAME COLUMN ADDRESS_CITY TO CUS_CITY;
+
+Table altered.
+
+SQL> INSERT INTO CUSTOMER(CUS_NAME,CUS_CITY,AGE) VALUES('KAVI','MADURAI',43);
+INSERT INTO CUSTOMER(CUS_NAME,CUS_CITY,AGE) VALUES('KAVI','MADURAI',43)
+                     *
+ERROR at line 1:
+ORA-00904: "CUS_NAME": invalid identifier
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_NAME,CUS_CITY,AGE) VALUES('KAVI','MADURAI',43);
+INSERT INTO CUSTOMER(CUSTOMER_NAME,CUS_CITY,AGE) VALUES('KAVI','MADURAI',43)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."CUSTOMER"."CUSTOMER_ID")
+
+
+SQL> INSERT INTO CUSTOMER('CUSTOMER_ID',CUSTOMER_NAME,CUS_CITY,AGE) VALUES('CUS21','KAVI','MADURAI',43);
+INSERT INTO CUSTOMER('CUSTOMER_ID',CUSTOMER_NAME,CUS_CITY,AGE) VALUES('CUS21','KAVI','MADURAI',43)
+                     *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE) VALUES('CUS21','KAVI','MADURAI',43);
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE) VALUES('CUS22','RAVI','SIVAKASI',35);
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_NAME,CUS_CITY,AGE) VALUES('CUS23','PAVI','CHENNAI',45);
+INSERT INTO CUSTOMER(CUSTOMER_NAME,CUS_CITY,AGE) VALUES('CUS23','PAVI','CHENNAI',45)
+            *
+ERROR at line 1:
+ORA-00913: too many values
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE,SUP_NAME) VALUES('CUS24','ARUN','MADURAI',23,'KAVI');
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER(,CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE,SUP_NAME) VALUES('CUS25','VARUN','MADURAI',28,'KAVI');
+INSERT INTO CUSTOMER(,CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE,SUP_NAME) VALUES('CUS25','VARUN','MADURAI',28,'KAVI')
+                     *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE,SUP_NAME) VALUES('CUS25','VARUN','MADURAI',28,'KAVI');
+
+1 row created.
+
+SQL> INSERT INTO CUSTOMER(CUSTOMER_ID,CUSTOMER_NAME,CUS_CITY,AGE,SUP_NAME) VALUES('CUS27','PARUN','CHENNAI',32,'PAVI');
+
+1 row created.
+
+SQL> SELECT C1.CUSTOMER_NAME AS CUS_NAME,C1.CUS_CITY AS CUSTOMER_CITY,C2.CUSTOMER_NAME AS SUPERVISOR_NAME,C2.CUS_CITY AS SUPERVISOR_CITY FROM CUSTOMER C1 JOIN CUSTOMER C2 ON C1.SUP_NAME = C2.CUSTOMER_NAME AND C1.CUS_CITY = C2.CUS_CITY;
+
+CUS_NAME             CUSTOMER_CITY        SUPERVISOR_NAME      SUPERVISOR_CITY
+-------------------- -------------------- -------------------- --------------------
+PARUN                CHENNAI              PAVI                 CHENNAI
+ARUN                 MADURAI              KAVI                 MADURAI
+VARUN                MADURAI              KAVI                 MADURAI
+
+SQL>                                                                                                                                                                                            
+===========================================================================================================================
+SQL> select product_id,product_name, category_name, product_price from product join category using (category_id);
+
+PRODU PRODUCT_NAME         CATEGORY_NAME        PRODUCT_PRICE
+----- -------------------- -------------------- -------------
+pro01 milk                 dairy                        10000
+pro02 dhal                 grocery                       1000
+
+
+SQL> select supplier_id,supplier_name,customer_name from supplier s left outer join customer c on s.supplier_name = c.customer_name;
+
+SUPPL SUPPLIER_NAME        CUSTOMER_NAME
+----- -------------------- --------------------
+sup04 ram                  ram
+sup02 murugen
+sup03 ravi
+sup01 dhivya
+sup06 dhivya
+
+ QL> select supplier_id,supplier_name,customer_name from supplier s right outer join customer c on s.supplier_name = c.customer_name;
+
+SUPPL SUPPLIER_NAME        CUSTOMER_NAME
+----- -------------------- --------------------
+sup04 ram                  ram
+                           shiva
+                           shiva
+                           akshaya
+                           PARUN
+                           RAVI
+                           PAVI
+                           nathiya
+                           DHIVI
+                           ARUN
+                           ARUN
+
+SUPPL SUPPLIER_NAME        CUSTOMER_NAME
+----- -------------------- --------------------
+                           VARUN
+                           KAVI
+                           devi
+                           kavi
+                           amutha
+
+16 rows selected.
+
+SQL> select supplier_id,supplier_name,customer_name from supplier s full outer join customer c on s.supplier_name = c.customer_name;
+
+SUPPL SUPPLIER_NAME        CUSTOMER_NAME
+----- -------------------- --------------------
+                           shiva
+                           kavi
+                           PAVI
+                           ARUN
+                           DHIVI
+                           devi
+                           amutha
+                           akshaya
+                           nathiya
+                           shiva
+                           KAVI
+
+SUPPL SUPPLIER_NAME        CUSTOMER_NAME
+----- -------------------- --------------------
+                           RAVI
+                           ARUN
+                           VARUN
+                           PARUN
+sup04 ram                  ram
+sup02 murugen
+sup03 ravi
+sup01 dhivya
+sup06 dhivya
+
+20 rows selected.
+ 
