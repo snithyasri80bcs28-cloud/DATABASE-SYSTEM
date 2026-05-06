@@ -1,0 +1,1132 @@
+//CREATE COLLECTION FOR SQL TABLES
+db.createCollection("customer")
+
+db.createCollection("customer_phone")
+
+db.createCollection("category")
+
+
+db.createCollection("supplier")
+
+
+db.createCollection("supplier_phone")
+
+
+db.createCollection("product")
+
+
+db.createCollection("sales")
+
+
+db.createCollection("sale_detail")
+
+
+db.createCollection("sales_product")
+
+
+db.createCollection("bill")
+
+db.createCollection("payment")
+
+db.createCollection("discount")
+
+db.createCollection("users")
+
+db.createCollection("admins")
+
+db.createCollection("workers")
+
+db.createCollection("cashier")
+
+db.customer.findOne()
+
+db.product.findOne()
+
+db.bill.findOne()
+
+db.users.findOne()
+
+Output:
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+
+{ ok: 1 }
+
+//UPDATE MANY
+db.users.updateMany({}, { $set: { email: null } })
+//UPDATE ONE
+db.customer.updateMany({}, { $set: { phone_no: null } })
+
+null
+
+
+null
+
+
+null
+
+
+null
+
+db.product.updateMany({}, { $set: { stock_status: "available" } })
+
+db.product.updateMany({}, { $rename: { "price": "product_price" } })
+
+db.customer.updateMany({}, { $rename: { "customer_name": "name" } })
+
+db.product.updateMany({}, { $unset: { expiry_date: "" } })
+
+db.discount.updateMany({}, { $unset: { description: "" } })
+
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+//INSERT OE
+db.supplier.insertOne({
+   supplier_id: "S001",
+   supplier_name: "Fresh Farm",
+   address_city: "Virudhunagar",
+   address_pincode: 626001
+});
+
+{
+  acknowledged: true,
+  insertedId: ObjectId('69eeae754dcddef8d68ce5af')
+}
+//INSERT MANY
+db.product.insertMany([
+ { product_id: "P001", product_name: "Milk", product_price: 50, quantity: 100 },
+ { product_id: "P002", product_name: "Rice", product_price: 60, quantity: 200 },
+ { product_id: "P003", product_name: "Oil", product_price: 120, quantity: 50 }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5b0'),
+    '1': ObjectId('69eeae754dcddef8d68ce5b1'),
+    '2': ObjectId('69eeae754dcddef8d68ce5b2')
+  }
+}
+
+db.product.find()
+db.customer.find()
+db.bill.find()
+
+
+[
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b0'),
+    product_id: 'P001',
+    product_name: 'Milk',
+    product_price: 50,
+    quantity: 100
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b1'),
+    product_id: 'P002',
+    product_name: 'Rice',
+    product_price: 60,
+    quantity: 200
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b2'),
+    product_id: 'P003',
+    product_name: 'Oil',
+    product_price: 120,
+    quantity: 50
+  }
+]
+
+db.customer.deleteMany({})
+
+db.customer.deleteOne({ customer_id: "C001" })
+
+db.supplier.deleteMany({ address_city: /Madurai/ })
+
+db.supplier.deleteMany({ supplier_name: /^A/ })
+
+
+{ acknowledged: true, deletedCount: 0 }
+
+{ acknowledged: true, deletedCount: 0 }
+
+
+{ acknowledged: true, deletedCount: 0 }
+
+
+{ acknowledged: true, deletedCount: 0 }
+
+db.customer.insertMany([
+  {
+    customer_id: "C001",
+    customer_name: "Ravi",
+    address_city: "Madurai"
+  },
+  {
+    customer_id: "C002",
+    customer_name: "Ramesh",
+    address_city: "Madurai"
+  },
+  {
+    customer_id: "C003",
+    customer_name: "Suresh",
+    address_city: "Chennai"
+  }
+])
+
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5b3'),
+    '1': ObjectId('69eeae754dcddef8d68ce5b4'),
+    '2': ObjectId('69eeae754dcddef8d68ce5b5')
+  }
+}
+
+db.customer.deleteMany({ address_city: "Madurai" })
+
+{ acknowledged: true, deletedCount: 2 }
+
+db.customer_phone.insertMany([
+ { customer_id: "C001", phone: "9876543210" },
+ { customer_id: "C001", phone: "9123456780" },
+ { customer_id: "C002", phone: "9988776655" }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5b6'),
+    '1': ObjectId('69eeae754dcddef8d68ce5b7'),
+    '2': ObjectId('69eeae754dcddef8d68ce5b8')
+  }
+}
+
+db.category.insertMany([
+ { category_id: "CAT1", category_name: "Dairy" },
+ { category_id: "CAT2", category_name: "Groceries" },
+ { category_id: "CAT3", category_name: "Beverages" }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5b9'),
+    '1': ObjectId('69eeae754dcddef8d68ce5ba'),
+    '2': ObjectId('69eeae754dcddef8d68ce5bb')
+  }
+}
+
+db.supplier.insertMany([
+ { supplier_id: "S001", supplier_name: "Fresh Farm", city: "Madurai" },
+ { supplier_id: "S002", supplier_name: "ABC Traders", city: "Chennai" },
+ { supplier_id: "S003", supplier_name: "Arun Dairy", city: "Coimbatore" }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5bc'),
+    '1': ObjectId('69eeae754dcddef8d68ce5bd'),
+    '2': ObjectId('69eeae754dcddef8d68ce5be')
+  }
+}
+
+db.supplier_phone.insertMany([
+ { supplier_id: "S001", phone: "9825167128" },
+ { supplier_id: "S002", phone: "8765434511" },
+ { supplier_id: "S003", phone: "9181235680" }
+]);
+
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5bf'),
+    '1': ObjectId('69eeae754dcddef8d68ce5c0'),
+    '2': ObjectId('69eeae754dcddef8d68ce5c1')
+  }
+}
+
+db.product.insertMany([
+ { product_id: "P001", product_name: "Milk", category_id: "CAT1", price: 50, stock: 100 },
+ { product_id: "P002", product_name: "Rice", category_id: "CAT2", price: 60, stock: 200 },
+ { product_id: "P003", product_name: "Tea", category_id: "CAT3", price: 20, stock: 150 }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5c2'),
+    '1': ObjectId('69eeae754dcddef8d68ce5c3'),
+    '2': ObjectId('69eeae754dcddef8d68ce5c4')
+  }
+}
+
+db.sales.insertMany([
+ { sale_id: "SA001", customer_id: "C001", sale_date: ISODate("2026-04-01") },
+ { sale_id: "SA002", customer_id: "C002", sale_date: ISODate("2026-04-02") }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5c5'),
+    '1': ObjectId('69eeae754dcddef8d68ce5c6')
+  }
+}
+
+db.sales_product.insertMany([
+ { sale_id: "SA001", product_id: "P001" },
+ { sale_id: "SA001", product_id: "P002" },
+ { sale_id: "SA002", product_id: "P003" }
+]);
+
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5c7'),
+    '1': ObjectId('69eeae754dcddef8d68ce5c8'),
+    '2': ObjectId('69eeae754dcddef8d68ce5c9')
+  }
+}
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5ca'),
+    '1': ObjectId('69eeae754dcddef8d68ce5cb'),
+    '2': ObjectId('69eeae754dcddef8d68ce5cc')
+  }
+}
+
+db.bill.insertMany([
+ { bill_id: "B001", sale_id: "SA001", total_amount: 160 },
+ { bill_id: "B002", sale_id: "SA002", total_amount: 60 }
+]);
+
+db.payment.insertMany([
+ { payment_id: "PAY1", bill_id: "B001", payment_type: "Cash", amount: 160 },
+ { payment_id: "PAY2", bill_id: "B002", payment_type: "Card", amount: 60 }
+]);
+
+db.discount.insertMany([
+ { discount_id: "D001", product_id: "P001", discount_percent: 10 },
+ { discount_id: "D002", product_id: "P003", discount_percent: 5 }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5cd'),
+    '1': ObjectId('69eeae754dcddef8d68ce5ce')
+  }
+}
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5cf'),
+    '1': ObjectId('69eeae754dcddef8d68ce5d0')
+  }
+}
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5d1'),
+    '1': ObjectId('69eeae754dcddef8d68ce5d2')
+  }
+}
+
+db.admins.insertMany([
+ { admin_id: "A001", user_id: "U001" }
+]);
+
+db.users.insertMany([
+ { user_id: "U001", username: "admin1", password: "pass123", role: "Admin" },
+ { user_id: "U002", username: "worker1", password: "pass456", role: "Worker" }
+]);
+
+db.workers.insertMany([
+ { worker_id: "W001", user_id: "U002", worker_name: "Kumar" }
+]);
+
+db.cashier.insertMany([
+ { cashier_id: "CASH1", worker_id: "W001" }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('69eeae754dcddef8d68ce5d3') }
+}
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeae754dcddef8d68ce5d4'),
+    '1': ObjectId('69eeae754dcddef8d68ce5d5')
+  }
+}
+
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('69eeae754dcddef8d68ce5d6') }
+}
+
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('69eeae754dcddef8d68ce5d7') }
+}
+
+db.customer.find()
+db.product.find()
+db.sales.find()
+
+[
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b5'),
+    customer_id: 'C003',
+    customer_name: 'Suresh',
+    address_city: 'Chennai'
+  }
+]
+[
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b0'),
+    product_id: 'P001',
+    product_name: 'Milk',
+    product_price: 50,
+    quantity: 100
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b1'),
+    product_id: 'P002',
+    product_name: 'Rice',
+    product_price: 60,
+    quantity: 200
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5b2'),
+    product_id: 'P003',
+    product_name: 'Oil',
+    product_price: 120,
+    quantity: 50
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5c2'),
+    product_id: 'P001',
+    product_name: 'Milk',
+    category_id: 'CAT1',
+    price: 50,
+    stock: 100
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5c3'),
+    product_id: 'P002',
+    product_name: 'Rice',
+    category_id: 'CAT2',
+    price: 60,
+    stock: 200
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5c4'),
+    product_id: 'P003',
+    product_name: 'Tea',
+    category_id: 'CAT3',
+    price: 20,
+    stock: 150
+  }
+]
+
+[
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5c5'),
+    sale_id: 'SA001',
+    customer_id: 'C001',
+    sale_date: ISODate('2026-04-01T00:00:00.000Z')
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5c6'),
+    sale_id: 'SA002',
+    customer_id: 'C002',
+    sale_date: ISODate('2026-04-02T00:00:00.000Z')
+  }
+]
+
+db.supplier.deleteMany({ city: /Nagercoil/ })
+
+db.supplier.deleteMany({ city: /^S/ })
+
+{ acknowledged: true, deletedCount: 0 }
+
+{ acknowledged: true, deletedCount: 0 }
+
+db.bill.updateMany(
+ {},
+ { $inc: { total_amount: 100 } }
+)
+
+db.bill.updateMany(
+ { total_amount: { $gt: 100 } },
+ { $inc: { total_amount: 50 } }
+)
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+
+db.customer.updateOne(
+ { customer_id: "C010" },
+ {
+   $set: {
+     customer_name: "New Customer",
+     city: "Madurai"
+   }
+ },
+ { upsert: true }
+)
+
+db.customer.find({ customer_name: /ra/i })
+
+db.product.find({ product_name: /^M/ })
+
+
+db.supplier.find({ city: /i$/ })
+
+[
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5bc'),
+    supplier_id: 'S001',
+    supplier_name: 'Fresh Farm',
+    city: 'Madurai'
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5bd'),
+    supplier_id: 'S002',
+    supplier_name: 'ABC Traders',
+    city: 'Chennai'
+  }
+]
+
+db.customer.bulkWrite([
+ {
+  updateOne: {
+   filter: { customer_id: "C100" },
+   update: { $set: { customer_name: "Test1", city: "Madurai" } },
+   upsert: true
+  }
+ },
+ {
+  updateOne: {
+   filter: { customer_id: "C101" },
+   update: { $set: { customer_name: "Test2", city: "Chennai" } },
+   upsert: true
+  }
+ }
+]);
+
+{
+  acknowledged: true,
+  insertedCount: 0,
+  insertedIds: {},
+  matchedCount: 0,
+  modifiedCount: 0,
+  deletedCount: 0,
+  upsertedCount: 2,
+  upsertedIds: {
+    '0': ObjectId('69eeae7696fac697135a97b3'),
+    '1': ObjectId('69eeae7696fac697135a97b4')
+  }
+}
+
+db.product.updateMany(
+ { price: { $gt: 30 } },
+ { $inc: { price: 10 } }
+)
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+
+db.product.updateOne(
+ { product_id: "P999" },
+ {
+   $set: {
+     product_id: "P999",
+     product_name: "New Product",
+     price: 100,
+     stock: 50
+   }
+ },
+ { upsert: true }
+)
+
+{
+  acknowledged: true,
+  insertedId: ObjectId('69eeae7696fac697135a97b5'),
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 1
+}
+
+
+db.customer.deleteMany({ city: "Chennai" })
+
+{ acknowledged: true, deletedCount: 1 }
+
+db.bill.aggregate([
+  {
+    $project: {
+      bill_id: 1,
+      year: { $year: new Date() },
+      month: { $month: new Date() }
+    }
+  }
+]);
+
+[
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5cd'),
+    bill_id: 'B001',
+    year: 2026,
+    month: 4
+  },
+  {
+    _id: ObjectId('69eeae754dcddef8d68ce5ce'),
+    bill_id: 'B002',
+    year: 2026,
+    month: 4
+  }
+]
+
+db.sales.aggregate([
+  {
+    $project: {
+      result: {
+        $concat: [
+          "$sale_id",
+          " HAS TOTAL RS. ",
+          { $toString: "$total_amount" }
+        ]
+      }
+    }
+  }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeb51c727e562e6c8ce5af'),
+    '1': ObjectId('69eeb51c727e562e6c8ce5b0')
+  }
+}
+
+db.bill.aggregate([
+  {
+    $project: {
+      result: {
+        $concat: [
+          { $toString: "$bill_id" },
+          " HAS RS. ",
+          { $toString: "$total_amount" }
+        ]
+      }
+    }
+  }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeb51c727e562e6c8ce5b1'),
+    '1': ObjectId('69eeb51c727e562e6c8ce5b2'),
+    '2': ObjectId('69eeb51c727e562e6c8ce5b3')
+  }
+}
+
+db.sales.aggregate([
+  {
+    $project: {
+      sale_id: 1,
+      new_amount: { $subtract: ["$total_amount", 1000] }
+    }
+  }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeb51c727e562e6c8ce5b4'),
+    '1': ObjectId('69eeb51c727e562e6c8ce5b5')
+  }
+}
+
+db.sales.aggregate([
+  {
+    $project: {
+      sale_id: 1,
+      new_amount: { $add: ["$total_amount", 1000] }
+    }
+  }
+]);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69eeb51c727e562e6c8ce5b6'),
+    '1': ObjectId('69eeb51c727e562e6c8ce5b7')
+  }
+}
+
+
+
+db.sales.aggregate([
+  {
+    $project: {
+      result: {
+        $concat: [
+          "$sale_id",
+          " HAS TOTAL RS. ",
+          { $toString: "$total_amount" }
+        ]
+      }
+    }
+  }
+]);
+
+[
+  { _id: ObjectId('69eeb51c727e562e6c8ce5af'), result: null },
+  { _id: ObjectId('69eeb51c727e562e6c8ce5b0'), result: null }
+]
+
+
+db.bill.aggregate([
+  {
+    $project: {
+      result: {
+        $concat: [
+          { $toString: "$bill_id" },
+          " HAS RS. ",
+          { $toString: "$total_amount" }
+        ]
+      }
+    }
+  }
+]);
+
+[
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b4'),
+    result: 'B001 HAS RS. 160'
+  },
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b5'),
+    result: 'B002 HAS RS. 60'
+  }
+]
+
+db.sales.aggregate([
+  {
+    $project: {
+      sale_id: 1,
+      new_amount: { $subtract: ["$total_amount", 1000] }
+    }
+  }
+]);
+
+[
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5af'),
+    sale_id: 'SA001',
+    new_amount: null
+  },
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b0'),
+    sale_id: 'SA002',
+    new_amount: null
+  }
+]
+
+
+db.sales.aggregate([
+  {
+    $project: {
+      sale_id: 1,
+      new_amount: { $add: ["$total_amount", 1000] }
+    }
+  }
+]);
+
+[
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5af'),
+    sale_id: 'SA001',
+    new_amount: null
+  },
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b0'),
+    sale_id: 'SA002',
+    new_amount: null
+  }
+]
+
+db.bill.aggregate([
+  {
+    $project: {
+      bill_id: 1,
+      new_total: { $subtract: ["$total_amount", 500] }
+    }
+  }
+]);
+
+[
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b4'),
+    bill_id: 'B001',
+    new_total: -340
+  },
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b5'),
+    bill_id: 'B002',
+    new_total: -440
+  }
+]
+
+
+db.bill.aggregate([
+  {
+    $project: {
+      bill_id: 1,
+      new_total: { $add: ["$total_amount", 500] }
+    }
+  }
+]);
+
+[
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b4'),
+    bill_id: 'B001',
+    new_total: 660
+  },
+  {
+    _id: ObjectId('69eeb51c727e562e6c8ce5b5'),
+    bill_id: 'B002',
+    new_total: 560
+  }
+]
+
+db.customer.aggregate([
+  {
+    $project: {
+      sub: { $substr: ["$customer_name", 0, 3] }
+    }
+  }
+]);
+
+[
+  { _id: ObjectId('69eeb51d727e562e6c8ce5b8'), sub: 'Rav' },
+  { _id: ObjectId('69eeb51d727e562e6c8ce5b9'), sub: 'Sur' },
+  { _id: ObjectId('69eeb51d727e562e6c8ce5ba'), sub: 'Anu' }
+]
+
+
+db.customer.aggregate([
+  {
+    $project: {
+      length: { $strLenCP: "$customer_name" }
+    }
+  }
+]);
+
+[
+  { _id: ObjectId('69eeb51d727e562e6c8ce5b8'), length: 4 },
+  { _id: ObjectId('69eeb51d727e562e6c8ce5b9'), length: 6 },
+  { _id: ObjectId('69eeb51d727e562e6c8ce5ba'), length: 3 }
+]
+
+db.customer.aggregate([
+  {
+    $project: {
+      upperName: { $toUpper: "$customer_name" },
+      lowerName: { $toLower: "$customer_name" }
+    }
+  }
+]);db.customer.find({ customer_name: { $ne: null } });
+
+[
+  {
+    _id: ObjectId('69eeb51d727e562e6c8ce5b8'),
+    customer_id: 'C001',
+    customer_name: 'Ravi',
+    city: 'Madurai'
+  },
+  {
+    _id: ObjectId('69eeb51d727e562e6c8ce5b9'),
+    customer_id: 'C002',
+    customer_name: 'Suresh',
+    city: 'Chennai'
+  },
+  {
+    _id: ObjectId('69eeb51d727e562e6c8ce5ba'),
+    customer_id: 'C003',
+    customer_name: 'Anu',
+    city: 'Nagercoil'
+  }
+]
+
+db.customer.countDocuments();
+
+3
+
+db.sales.find(
+  {},
+  { sale_id: 1, customer_id: 1, total_amount: 1, _id: 0 }
+);
+
+[
+  { sale_id: 'SA001', customer_id: 'C001' },
+  { sale_id: 'SA002', customer_id: 'C002' }
+]
+
+db.customer.find({ city: "Madurai" });
+
+[
+  {
+    _id: ObjectId('69eeb51d727e562e6c8ce5b8'),
+    customer_id: 'C001',
+    customer_name: 'Ravi',
+    city: 'Madurai'
+  }
+]
+
+db.product.find({
+  price: { $gte: 50, $lte: 500 }
+});
+
+db.bill.aggregate([
+  { $group: { _id: null, avgAmount: { $avg: "$total_amount" } } }
+]);
+
+db.bill.aggregate([
+  { $group: { _id: null, total: { $sum: "$total_amount" } } }
+]);
+
+db.bill.aggregate([
+  { $group: { _id: null, minValue: { $min: "$total_amount" } } }
+]);
+
+db.bill.aggregate([
+  { $group: { _id: null, maxValue: { $max: "$total_amount" } } }
+]);
+
+[ { _id: null, avgAmount: 110 } ]
+
+[ { _id: null, total: 220 } ]
+
+[ { _id: null, minValue: 60 } ]
+
+[ { _id: null, maxValue: 160 } ]
+
+[ { _id: null, variance: 50 } ]
+
+db.bill.aggregate([
+  { $group: { _id: null, stdDev: { $stdDevPop: "$total_amount" } } }
+  
+  db.sales.aggregate([
+  {
+    $group: {
+      _id: "$customer_id",
+      total: { $sum: "$total_amount" }
+    }
+  }
+]);
+
+
+db.payment.aggregate([
+  {
+    $group: {
+      _id: null,
+      variance: { $stdDevPop: "$amount" }
+    }
+  }
+]);
+
+db.product.find().sort({ price: 1 });
+
+db.product.find().sort({ price: -1 });
+
+db.product.distinct("category_id");
+
+db.supplier.find({ city: /^S/ });
+
+db.supplier.find({ city: /e$/ });
+
+db.supplier.find({ city: /co/i });
+
+db.supplier.find().sort({ supplier_name: 1, city: -1 });
+
+db.sales.aggregate([
+  {
+    $group: {
+      _id: "$sale_id",
+      total_amt: { $sum: "$total_amount" }
+    }
+  },
+  {
+    $match: { total_amt: { $gt: 3000 } }
+  }
+]);
+
+db.supplier.find({ supplier_name: { $ne: null } });
+
+db.suppliers.find().sort({ supplier_name: 1, supplier_address: -1 });
+
+[
+  {
+    supplier_id: 1,
+    supplier_name: "Anand Traders",
+    supplier_address: "Chennai"
+  },
+  {
+    supplier_id: 3,
+    supplier_name: "Anand Traders",
+    supplier_address: "Coimbatore"
+  },
+  {
+    supplier_id: 2,
+    supplier_name: "Bala Stores",
+    supplier_address: "Madurai"
+  },
+  {
+    supplier_id: 5,
+    supplier_name: "Bala Stores",
+    supplier_address: "Salem"
+  },
+  {
+    supplier_id: 4,
+    supplier_name: "Dinesh Suppliers",
+    supplier_address: "Trichy"
+  }
+]
+
+db.workers.drop();
+
+db.workers.deleteMany({});
+
+{ acknowledged: true, deletedCount: 0 }
+
+
+
