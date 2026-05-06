@@ -1,0 +1,526 @@
+***************************************************************************************
+                                CREATE TABLE COMMANDS
+***************************************************************************************
+
+SQL> create table discount(discount_id varchar(5) primary key,discount_percent float,status varchar(10),start_date date,end_date date,min_bill_amount float,description varchar(25));
+
+Table created.
+
+SQL> create table bill(bill_id varchar(5) primary key,bill_date date,final_amount float,bill_status varchar(10),customer_id varchar(5),foreign key(customer_id) references customer(customer_id),discount_id varchar(5),foreign key(discount_id) references discount(discount_id));
+
+Table created.
+
+SQL> desc discount
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DISCOUNT_ID                               NOT NULL VARCHAR2(5)
+ DISCOUNT_PERCENT                                   FLOAT(126)
+ STATUS                                             VARCHAR2(10)
+ START_DATE                                         DATE
+ END_DATE                                           DATE
+ MIN_BILL_AMOUNT                                    FLOAT(126)
+ DESCRIPTION                                        VARCHAR2(25)
+
+SQL> desc bill
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BILL_ID                                   NOT NULL VARCHAR2(5)
+ BILL_DATE                                          DATE
+ FINAL_AMOUNT                                       FLOAT(126)
+ BILL_STATUS                                        VARCHAR2(10)
+ CUSTOMER_ID                                        VARCHAR2(5)
+ DISCOUNT_ID                                        VARCHAR2(5)
+
+SQL> create table payment(payment_id varchar(5) primary key,bill_id varchar(5),foreign key(bill_id) references bill(bill_id),amount_paid varchar(10),payment_mode varchar(20),payment_status varchar(20));
+
+Table created.
+
+SQL> desc payment
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PAYMENT_ID                                NOT NULL VARCHAR2(5)
+ BILL_ID                                            VARCHAR2(5)
+ AMOUNT_PAID                                        VARCHAR2(10)
+ PAYMENT_MODE                                       VARCHAR2(20)
+ PAYMENT_STATUS                                     VARCHAR2(20)
+
+
+SQL> create table sales_product(sale_id varchar(5) primary key,foreign key(sale_id) references sale(sale_id),product_id varchar(5) unique,foreign key(product_id) references product(product_id),total_amount float);
+
+Table created.
+
+SQL> desc sales_product
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SALE_ID                                   NOT NULL VARCHAR2(5)
+ PRODUCT_ID                                         VARCHAR2(5)
+ TOTAL_AMOUNT                                       FLOAT(126)
+
+SQL>create table users(user_id varchar(5) primary key,user_name varchar(20),password varchar(8));
+
+Table created.
+
+SQL> desc users
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL VARCHAR2(5)
+ USER_NAME                                          VARCHAR2(20)
+ PASSWORD                                           VARCHAR2(8)
+
+SQL>create table admins(user_id varchar(5) primary key,foreign key(user_id) references user(user_id),last_login_time timestamp);
+
+Table created.
+
+SQL> desc admins
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL VARCHAR2(5)
+ STATUS                                             VARCHAR2(10)
+ LAST_LOGIN_TIME                                    TIMESTAMP(6)
+
+SQL>create table workers(user_id varchar(5) primary key,foreign key(user_id) references user(user_id),salary float,work_shift varchar(10));
+
+Table created.
+
+SQL> desc workers
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL VARCHAR2(5)
+ SALARY                                             FLOAT(126)
+ WORK_SHIFT                                         VARCHAR2(10)
+
+SQL>create table cashier(user_id varchar(5) primary key,foreign key(user_id) references user(user_id),counter_no int,shift_time varchar(10) salary float);
+
+Table created.
+
+SQL> desc cashier
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL VARCHAR2(5)
+ COUNTER_NO                                         NUMBER(38)
+ SHIFT_TIME                                         VARCHAR2(10)
+ SALARY                                             FLOAT(126)
+
+
+SQL>create table sale(sale_id varchar(5) primary key,payment_mode varchar(10),sale_status varchar(10),customer_id varchar(5),foreign key(customer_id) references customer(customer_id));
+
+Table created.
+
+SQL> desc sale;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SALE_ID                                   NOT NULL VARCHAR2(5)
+ PAYMENT_MODE                                       VARCHAR2(10)
+ SALE_STATUS                                        VARCHAR2(10)
+ CUSTOMER_ID                                        VARCHAR2(5)
+
+SQL>create table sale_detail(sale_detail_id varchar(5) primary key,sale_id varchar(5),foreign key(sale_id) references sale(sale_id),product_id varchar(5),foreign key(product_id) references product(product_id),total_price float,selling_price float,quantity_sold int);
+
+Table created.
+
+SQL> desc sale_detail;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SALE_DETAIL_ID                            NOT NULL VARCHAR2(5)
+ SALE_ID                                            VARCHAR2(5)
+ PRODUCT_ID                                         VARCHAR2(5)
+ TOTAL_PRICE                                        FLOAT(126)
+ SELLING_PRICE                                      FLOAT(126)
+ QUANTITY_SOLD                                      NUMBER(38)
+
+SQL>create table product(product_id varchar(5) primary key,category_id varchar(5),foreign key(category_id) references category(category_id),price float,supplier_id varchar(5),foreign key(supplier_id) references supplier(supplier_id),quantity int,product_name varchar(20) not null,expiry_date date);
+
+Table created.
+
+SQL> desc product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PRODUCT_ID                                NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                        VARCHAR2(5)
+ PRICE                                              FLOAT(126)
+ SUPPLIER_ID                                        VARCHAR2(5)
+ QUANTITY                                           NUMBER(38)
+ PRODUCT_NAME                              NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                        DATE
+
+SQL>create table category(category_id varchar(5) primary key,category_name varchar(20));
+
+Table created.
+
+SQL> desc category;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CATEGORY_ID                               NOT NULL VARCHAR2(5)
+ CATEGORY_NAME                                      VARCHAR2(20)
+
+SQL> create table category(category_id varchar(5) primary key,category_name varchar(20));
+create table category(category_id varchar(5) primary key,category_name varchar(20))
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+SQL>create table supplier(supplier_id varchar(5) primary key,supplier_name varchar(20),address_pincode int,address_city varchar(20),address_street varchar(20));
+
+Table created.
+
+SQL> desc supplier;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SUPPLIER_ID                               NOT NULL VARCHAR2(5)
+ SUPPLIER_NAME                                      VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_STREET                                     VARCHAR2(20)
+
+SQL> desc sales_product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SALE_ID                                   NOT NULL VARCHAR2(5)
+ PRODUCT_ID                                         VARCHAR2(5)
+ TOTAL_AMOUNT                                       FLOAT(126)
+
+
+==============================================================
+---CREATE TABLE WITH CHECK CONSTRAINT---
+==============================================================
+
+SQL>create table customer(customer_id varchar(5) primary key,customer_name varchar(20),loyalty_points int,address_street varchar(20),address_city varchar(20),address_pincode int,constraint c1 check(loyalty_points>=0);
+
+Table created.
+
+SQL> desc customer
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                      VARCHAR2(20)
+ LOYALTY_POINTS                                     NUMBER(38)
+ ADDRESS_STREET                                     VARCHAR2(20)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+
+==============================================================
+---MULTIVALUED ATTRIBUTE TABLE---
+==============================================================
+
+SQL>create table customer_phone(customer_id varchar(5) primary key,phone_no int);
+
+Table created.
+
+SQL> desc customer_phone;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL VARCHAR2(5)
+ PHONE_NO                                           NUMBER(38)
+
+SQL> drop table customer_phone;
+
+Table dropped.
+
+SQL> create table customer_phone(customer_id varchar(5) primary key,phone_no int primary key);
+create table customer_phone(customer_id varchar(5) primary key,phone_no int primary key)
+                                                                            *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> create table customer_phone(customer_id varchar(5),phone_no int,constraint c1 primary key(customer_id,phone_no));
+create table customer_phone(customer_id varchar(5),phone_no int,constraint c1 primary key(customer_id,phone_no))
+                                                                           *
+ERROR at line 1:
+ORA-02264: name already used by an existing constraint
+
+
+SQL> create table customer_phone(customer_id varchar(5),phone_no int,constraint c4 primary key(customer_id,phone_no));
+
+Table created.
+
+SQL> desc customer_phone;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL VARCHAR2(5)
+ PHONE_NO                                  NOT NULL NUMBER(38)
+
+SQL> create table supplier_phone(supplier_id varchar(5),phone_no int,constraint c5 primary key(supplier_id,phone_no));
+
+Table created.
+
+SQL> desc supplier_phone;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SUPPLIER_ID                               NOT NULL VARCHAR2(5)
+ PHONE_NO                                  NOT NULL NUMBER(38)
+
+
+********************************************************************************************
+                                          ALTER COMMANDS
+********************************************************************************************
+
+========================================================
+---ADD COLUMN---
+========================================================
+
+SQL> alter table users add phone_no varchar(10);
+
+Table altered.
+
+SQL> desc users
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL VARCHAR2(5)
+ USER_NAME                                          VARCHAR2(20)
+ PASSWORD                                           VARCHAR2(8)
+ PHONE_NO                                           VARCHAR2(10)
+
+=======================================================
+---DROP COLUMN---
+=======================================================
+
+SQL> alter table users drop column phone_no;
+
+Table altered.
+
+SQL> desc users
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL VARCHAR2(5)
+ USER_NAME                                          VARCHAR2(20)
+ PASSWORD                                           VARCHAR2(8)
+
+========================================================
+---RENAME TABLE---
+========================================================
+
+SQL> rename sale to sales;
+
+Table renamed.
+
+SQL> desc sale;
+ERROR:
+ORA-04043: object sale does not exist
+
+SQL> desc sales;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SALE_ID                                   NOT NULL VARCHAR2(5)
+ PAYMENT_MODE                                       VARCHAR2(10)
+ SALE_STATUS                                        VARCHAR2(10)
+ CUSTOMER_ID                                        VARCHAR2(5)
+
+========================================================
+---RENAME COLUMN---
+========================================================
+
+SQL> alter table product rename column price to product_price;
+
+Table altered.
+
+SQL> desc product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PRODUCT_ID                                NOT NULL VARCHAR2(5)
+ CATEGORY_ID                                        VARCHAR2(5)
+ PRODUCT_PRICE                                      FLOAT(126)
+ SUPPLIER_ID                                        VARCHAR2(5)
+ QUANTITY                                           NUMBER(38)
+ PRODUCT_NAME                              NOT NULL VARCHAR2(20)
+ EXPIRY_DATE                                        DATE
+
+========================================================
+---ADD CONSTRAINTS---
+========================================================
+
+SQL> alter table customer_phone add constraint c2 check(phone_no between 10000000000 and 99999999999);
+
+Table altered.
+
+SQL> desc customer_phone;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL VARCHAR2(5)
+ PHONE_NO                                           NUMBER(38)
+
+========================================================
+---DROP CONSTRAINT---
+========================================================
+
+SQL> alter table customer_phone drop constraint c2;
+
+Table altered.
+
+=========================================================
+---MODIFY DOMAIN---
+=========================================================
+
+SQL> alter table customer modify address_street varchar(25);
+
+Table altered.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                      VARCHAR2(20)
+ LOYALTY_POINTS                                     NUMBER(38)
+ ADDRESS_STREET                                     VARCHAR2(25)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+
+=======================================================
+---DROP PRIMARY KEY---
+=======================================================
+SQL> desc payment
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PAYMENT_ID                                NOT NULL VARCHAR2(5)
+ BILL_ID                                            VARCHAR2(5)
+ AMOUNT_PAID                                        VARCHAR2(10)
+ PAYMENT_MODE                                       VARCHAR2(20)
+ PAYMENT_STATUS                                     VARCHAR2(20)
+
+SQL> alter table payment drop primary key;
+
+Table altered.
+
+SQL> desc payment;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PAYMENT_ID                                         VARCHAR2(5)
+ BILL_ID                                            VARCHAR2(5)
+ AMOUNT_PAID                                        VARCHAR2(10)
+ PAYMENT_MODE                                       VARCHAR2(20)
+ PAYMENT_STATUS                                     VARCHAR2(20)
+
+====================================================
+---ADD PRIMARY KEY---
+====================================================
+
+SQL> alter table payment add primary key(payment_id);
+
+Table altered.
+
+SQL> desc payment;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PAYMENT_ID                                NOT NULL VARCHAR2(5)
+ BILL_ID                                            VARCHAR2(5)
+ AMOUNT_PAID                                        VARCHAR2(10)
+ PAYMENT_MODE                                       VARCHAR2(20)
+ PAYMENT_STATUS                                     VARCHAR2(20)
+
+SQL> alter table payment add primary key(payment_id);
+alter table payment add primary key(payment_id)
+                        *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+====================================================
+---COPY TABLE---
+====================================================
+
+SQL> create table customer_copy as select * from customer;
+
+Table created.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                      VARCHAR2(20)
+ LOYALTY_POINTS                                     NUMBER(38)
+ ADDRESS_STREET                                     VARCHAR2(25)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+
+SQL> desc customer_copy;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                                        VARCHAR2(5)
+ CUSTOMER_NAME                                      VARCHAR2(20)
+ LOYALTY_POINTS                                     NUMBER(38)
+ ADDRESS_STREET                                     VARCHAR2(25)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+
+======================================================
+---ADD CONSTRAINT IN FOREIGN KEY---
+======================================================
+
+SQL> alter table sales add product_id varchar(5);
+
+Table altered.
+
+SQL> alter table sales add constraint c3 foreign key(product_id)references product(product_id);
+
+Table altered.
+
+SQL> alter table sales drop constraint c3;
+
+Table altered.
+
+SQL> desc sales;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SALE_ID                                   NOT NULL VARCHAR2(5)
+ PAYMENT_MODE                                       VARCHAR2(10)
+ SALE_STATUS                                        VARCHAR2(10)
+ CUSTOMER_ID                                        VARCHAR2(5)
+ PRODUCT_ID                                         VARCHAR2(5)
+
+======================================================
+---DROP COPY TABLE---
+======================================================
+
+SQL> drop table customer_copy;
+
+Table dropped.
+
+====================================================
+---COPY TABLE WITH CONDITIONS---
+====================================================
+
+SQL> create table customer_copy as select * from customer where 1=0;
+
+Table created.
+
+SQL> desc customer_copy;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                                        VARCHAR2(5)
+ CUSTOMER_NAME                                      VARCHAR2(20)
+ LOYALTY_POINTS                                     NUMBER(38)
+ ADDRESS_STREET                                     VARCHAR2(25)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+
+============================
+---TRUNCATE TABLE---
+============================
+
+SQL> truncate table customer_copy;
+
+Table truncated.
+
+SQL> desc customer_copy;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                                        VARCHAR2(5)
+ CUSTOMER_NAME                                      VARCHAR2(20)
+ LOYALTY_POINTS                                     NUMBER(38)
+ ADDRESS_STREET                                     VARCHAR2(25)
+ ADDRESS_CITY                                       VARCHAR2(20)
+ ADDRESS_PINCODE                                    NUMBER(38)
+
+============================
+---DROP TABLE---
+============================
+
+SQL> drop table customer_copy;
+
+Table dropped.
+
+SQL> desc customer_copy;
+ERROR:
+ORA-04043: object customer_copy does not exist
+
+SQL> spool off;
+
