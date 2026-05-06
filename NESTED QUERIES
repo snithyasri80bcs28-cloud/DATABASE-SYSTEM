@@ -1,0 +1,635 @@
+SQL> select max(age) from customer;
+
+  MAX(AGE)
+----------
+        45
+
+SQL> select cus_name,age from customer where age = select max(age) from customer;
+select cus_name,age from customer where age = select max(age) from customer
+                                              *
+ERROR at line 1:
+ORA-00936: missing expression
+
+
+SQL> select cus_name,age from customer where age = (select max(age) from customer);
+select cus_name,age from customer where age = (select max(age) from customer)
+       *
+ERROR at line 1:
+ORA-00904: "CUS_NAME": invalid identifier
+
+
+SQL> select customer_name,age from customer where age = (select max(age) from customer);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+PAVI                         45
+
+SQL> select avg(age) from customer;
+
+  AVG(AGE)
+----------
+      28.3
+
+SQL> select customer_name,age from customer where age > (select avg(age) from customer);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+PAVI                         45
+ARUN                         34
+KAVI                         43
+RAVI                         35
+PARUN                        32
+
+SQL> select cus_city from customer where age >= 40;
+
+CUS_CITY
+--------------------
+CHENNAI
+MADURAI
+
+SQL> select customer_name,cus_city from customer where cus_city in (select cus_city from customer where age >= 40);
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+PAVI                 CHENNAI
+PARUN                CHENNAI
+DHIVI                MADURAI
+KAVI                 MADURAI
+ARUN                 MADURAI
+VARUN                MADURAI
+
+6 rows selected.
+
+SQL> select customer_name,cus_city from customer where cus_city in (select cus_city from customer where customer_name = 'kavi');
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+kavi                 madurai
+
+SQL> select cus_name, age from customer where age < any (select age from customer where age > 30);
+select cus_name, age from customer where age < any (select age from customer where age > 30)
+       *
+ERROR at line 1:
+ORA-00904: "CUS_NAME": invalid identifier
+
+
+SQL> select customer_name, age from customer where age < any (select age from customer where age > 30);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+shiva                        21
+kavi                          0
+ARUN                         34
+DHIVI                        22
+KAVI                         43
+RAVI                         35
+ARUN                         23
+VARUN                        28
+PARUN                        32
+
+9 rows selected.
+
+SQL> select age from customer where age > 30;
+
+       AGE
+----------
+        45
+        34
+        43
+        35
+        32
+
+SQL> select customer_name, age from customer where age > any (select age from customer where age > 30);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+PAVI                         45
+ARUN                         34
+KAVI                         43
+RAVI                         35
+
+SQL> select customer_name, age from customer where age = any (select age from customer where age > 30);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+PAVI                         45
+ARUN                         34
+KAVI                         43
+RAVI                         35
+PARUN                        32
+
+SQL> select customer_name, age from customer where age <> any (select age from customer where age > 30);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+shiva                        21
+kavi                          0
+PAVI                         45
+ARUN                         34
+DHIVI                        22
+KAVI                         43
+RAVI                         35
+ARUN                         23
+VARUN                        28
+PARUN                        32
+
+10 rows selected.
+
+SQL> select customer_name, age from customer where age < all (select age from customer where age > 30);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+VARUN                        28
+ARUN                         23
+DHIVI                        22
+shiva                        21
+kavi                          0
+
+SQL> select customer_name, age from customer where age > all (select age from customer where age > 30);
+
+no rows selected
+
+SQL> select customer_name, age from customer where age = all (select age from customer where age > 30);
+
+no rows selected
+
+SQL> select customer_name, age from customer where age = all (select age from customer where age < 30);
+
+no rows selected
+
+SQL> select customer_name, age from customer where age <> all (select age from customer where age < 30);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+KAVI                         43
+ARUN                         34
+PAVI                         45
+RAVI                         35
+PARUN                        32
+
+SQL> select c1.customer_name,c1.cus_city from customer c1 where (c1.cus_city) in (select c2.cus_city from customer c2 where c2.customer_name = 'kavi');
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+kavi                 madurai
+
+SQL> select c2.cus_city from customer c2 where c2.customer_name = 'kavi';
+
+CUS_CITY
+--------------------
+madurai
+
+SQL> select c2.cus_city,c2.customer_name from customer c2 where c1.sup_name = c2.customer_name;
+select c2.cus_city,c2.customer_name from customer c2 where c1.sup_name = c2.customer_name
+                                                           *
+ERROR at line 1:
+ORA-00904: "C1"."SUP_NAME": invalid identifier
+
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select c2.cus_city,c2.customer_name from customer c2 where c1.sup_name = c2.customer_name;
+select c2.cus_city,c2.customer_name from customer c2 where c1.sup_name = c2.customer_name
+                                                           *
+ERROR at line 1:
+ORA-00904: "C1"."SUP_NAME": invalid identifier
+
+
+SQL> desc customer;
+ Name                                                             Null?    Type
+ ----------------------------------------------------------------- -------- --------------------------------------------
+ CUSTOMER_ID                                                      NOT NULL VARCHAR2(5)
+ CUSTOMER_NAME                                                     VARCHAR2(20)
+ LOYALTY_POINTS                                                    NUMBER(38)
+ ADDRESS_STREET                                                    VARCHAR2(25)
+ CUS_CITY                                                          VARCHAR2(20)
+ ADDRESS_PINCODE                                                   NUMBER(38)
+ DOB                                                               DATE
+ AGE                                                               NUMBER
+ SUP_NAME                                                          VARCHAR2(20)
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+cus09 shiva                            88 north street             sivagangai                     630551 25-FEB-26
+        21
+
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+CUS11 PAVI                                                         CHENNAI
+        45
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+CUS12 ARUN                                                         SIVAKASI
+        34
+
+CUS13 DHIVI                                                        MADURAI
+        22
+
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+cus05 shiva                            77 rose nagar               sivagangai                     630551
+
+
+CUS21 KAVI                                                         MADURAI
+        43
+
+CUS22 RAVI                                                         SIVAKASI
+        35
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+CUS24 ARUN                                                         MADURAI
+        23 KAVI
+
+CUS25 VARUN                                                        MADURAI
+        28 KAVI
+
+CUS27 PARUN                                                        CHENNAI
+        32 PAVI
+
+
+15 rows selected.
+
+SQL> select c1.customer_name,c1.cus_city,c1.sup_name from customer c1 where (c1.cus_city,c1.sup_name) in (select c2.cus_city,c2.customer_name from customer c2 where c1.sup_name = c2.customer_name);
+
+CUSTOMER_NAME        CUS_CITY             SUP_NAME
+-------------------- -------------------- --------------------
+PARUN                CHENNAI              PAVI
+ARUN                 MADURAI              KAVI
+VARUN                MADURAI              KAVI
+
+SQL> select c1.customer_name,c1.age from customer c1 where c1.age < ( select c2.age from customer c2 where c1.sup_name = c2.cus_name);
+select c1.customer_name,c1.age from customer c1 where c1.age < ( select c2.age from customer c2 where c1.sup_name = c2.cus_name)
+                                                                                                                    *
+ERROR at line 1:
+ORA-00904: "C2"."CUS_NAME": invalid identifier
+
+
+SQL> select c1.customer_name,c1.age from customer c1 where c1.age < ( select c2.age from customer c2 where c1.sup_name = c2.customer_name);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+ARUN                         23
+VARUN                        28
+PARUN                        32
+
+SQL> update customer set age=50 where customer_name = 'allen';
+
+0 rows updated.
+
+SQL> update customer set age=34 where customer_name = 'allen';
+
+0 rows updated.
+
+SQL> update customer set age=35 where customer_name = 'allen';
+
+0 rows updated.
+
+SQL> select c1.customer_name,c1.age from customer c1 where c1.age < (select c2.age from customer c2 where c1.sup.name = c2.cus_name);
+select c1.customer_name,c1.age from customer c1 where c1.age < (select c2.age from customer c2 where c1.sup.name = c2.cus_name)
+                                                                                                                   *
+ERROR at line 1:
+ORA-00904: "C2"."CUS_NAME": invalid identifier
+
+
+SQL> select c1.customer_name,c1.age from customer c1 where c1.age < (select c2.age from customer c2 where c1.sup.name = c2.customer_name);
+select c1.customer_name,c1.age from customer c1 where c1.age < (select c2.age from customer c2 where c1.sup.name = c2.customer_name)
+                                                                                                     *
+ERROR at line 1:
+ORA-00904: "C1"."SUP"."NAME": invalid identifier
+
+
+SQL> select c1.customer_name,c1.age from customer c1 where c1.age < (select c2.age from customer c2 where c1.sup_name = c2.customer_name);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+ARUN                         23
+VARUN                        28
+PARUN                        32
+
+SQL> select cus_city from customer;
+
+CUS_CITY
+--------------------
+sivagangai
+madurai
+CHENNAI
+SIVAKASI
+MADURAI
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+kalaiyarkovil
+sivagangai
+MADURAI
+
+CUS_CITY
+--------------------
+SIVAKASI
+MADURAI
+MADURAI
+CHENNAI
+
+15 rows selected.
+
+SQL> select cus_city, count(*) as num_customers from (select cus_city from customer) c group by cus_city;
+
+CUS_CITY             NUM_CUSTOMERS
+-------------------- -------------
+sivagangai                       2
+madurai                          1
+CHENNAI                          2
+SIVAKASI                         2
+MADURAI                          4
+kalaiyarkovil                    4
+
+6 rows selected.
+
+SQL> select c1.customer_name,c1.cus_city,c1.age,(select avg(age) from customer c2 where c2.cus_city = c1.cus_city) as avg_city_age from customer c1;
+
+CUSTOMER_NAME        CUS_CITY                    AGE AVG_CITY_AGE
+-------------------- -------------------- ---------- ------------
+shiva                sivagangai                   21           21
+shiva                sivagangai                                21
+kavi                 madurai                       0           0
+PAVI                 CHENNAI                      45         38.5
+PARUN                CHENNAI                      32         38.5
+ARUN                 SIVAKASI                     34         34.5
+RAVI                 SIVAKASI                     35         34.5
+DHIVI                MADURAI                      22           29
+KAVI                 MADURAI                      43           29
+ARUN                 MADURAI                      23           29
+VARUN                MADURAI                      28           29
+
+CUSTOMER_NAME        CUS_CITY                    AGE AVG_CITY_AGE
+-------------------- -------------------- ---------- ------------
+devi                 kalaiyarkovil
+amutha               kalaiyarkovil
+akshaya              kalaiyarkovil
+nathiya              kalaiyarkovil
+
+15 rows selected.
+
+SQL> select cus_city,avg(age) as avg_age from customer group by cus_city having avg(age) > (select avg(age) from customer;
+select cus_city,avg(age) as avg_age from customer group by cus_city having avg(age) > (select avg(age) from customer
+                                                                                       *
+ERROR at line 1:
+ORA-00921: unexpected end of SQL command
+
+
+SQL> select cus_city,avg(age) as avg_age from customer group by cus_city having avg(age) > (select avg(age) from customer);
+
+CUS_CITY                AVG_AGE
+-------------------- ----------
+CHENNAI                    38.5
+SIVAKASI                   34.5
+MADURAI                      29
+
+SQL> select customer_name,sup_name from customer c1 where exists (select 1 from customer c2 where c1.sup_name = c2.cus_name);
+select customer_name,sup_name from customer c1 where exists (select 1 from customer c2 where c1.sup_name = c2.cus_name)
+                                                                                                           *
+ERROR at line 1:
+ORA-00904: "C2"."CUS_NAME": invalid identifier
+
+
+SQL> select customer_name,sup_name from customer c1 where exists (select 1 from customer c2 where c1.sup_name = c2.customer_name);
+
+CUSTOMER_NAME        SUP_NAME
+-------------------- --------------------
+PARUN                PAVI
+ARUN                 KAVI
+VARUN                KAVI
+
+SQL> select c1.customer_name,c1.cus_city from customer c1 where exists (select 1 from customer c2 where c1.cus_city = c2.cus_city and c1.customer_name != c2.customer_name);
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+PARUN                CHENNAI
+RAVI                 SIVAKASI
+KAVI                 MADURAI
+ARUN                 MADURAI
+VARUN                MADURAI
+amutha               kalaiyarkovil
+akshaya              kalaiyarkovil
+nathiya              kalaiyarkovil
+devi                 kalaiyarkovil
+DHIVI                MADURAI
+ARUN                 SIVAKASI
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+PAVI                 CHENNAI
+
+12 rows selected.
+
+
+SQL> select customer_name,cus_city from customer c1 where not exists (select 1 from customer c2 where c1.sup_name = c2.cus_name);
+select customer_name,cus_city from customer c1 where not exists (select 1 from customer c2 where c1.sup_name = c2.cus_name)
+                                                                                                               *
+ERROR at line 1:
+ORA-00904: "C2"."CUS_NAME": invalid identifier
+
+
+SQL> select customer_name,cus_city from customer c1 where not exists (select 1 from customer c2 where c1.sup_name = c2.customer_name);
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+shiva                sivagangai
+kavi                 madurai
+PAVI                 CHENNAI
+ARUN                 SIVAKASI
+DHIVI                MADURAI
+devi                 kalaiyarkovil
+amutha               kalaiyarkovil
+akshaya              kalaiyarkovil
+nathiya              kalaiyarkovil
+shiva                sivagangai
+KAVI                 MADURAI
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+RAVI                 SIVAKASI
+
+12 rows selected.
+
+SQL> with aveage as (select avg(age) as avg_age from customer) select customer_name,age from customer where age > (select avg_age from avgage);
+with aveage as (select avg(age) as avg_age from customer) select customer_name,age from customer where age > (select avg_age from avgage)
+                                                                                                                                  *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> with aveage as (select avg(age) as avg_age from customer) select customer_name,age from customer where age > (select avg_age from customer);
+with aveage as (select avg(age) as avg_age from customer) select customer_name,age from customer where age > (select avg_age from customer)
+                                                                                                                     *
+ERROR at line 1:
+ORA-00904: "AVG_AGE": invalid identifier
+
+
+SQL> commit;
+
+Commit complete.
+
+SQL> with aveage as (select avg(age) as avg_age from customer) select customer_name,age from customer where age > (select avg_age from customer);
+with aveage as (select avg(age) as avg_age from customer) select customer_name,age from customer where age > (select avg_age from customer)
+                                                                                                                     *
+ERROR at line 1:
+ORA-00904: "AVG_AGE": invalid identifier
+
+
+SQL> select sup_name from customer where customer_name = 'kavi';
+
+SUP_NAME
+--------------------
+
+
+SQL> select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'sivagangai';
+select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'sivagangai'
+                       *
+ERROR at line 1:
+ORA-01427: single-row subquery returns more than one row
+
+
+SQL> select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'madurai';
+select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'madurai'
+                       *
+ERROR at line 1:
+ORA-01427: single-row subquery returns more than one row
+
+
+SQL> select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'chennai';
+
+no rows selected
+
+SQL> select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'kalaiyar kovil';
+
+no rows selected
+
+SQL> select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'madurai';
+select customer_name, (select sup_name from customer where customer_name = 'shiva') as sup_name from customer where cus_city = 'madurai'
+                       *
+ERROR at line 1:
+ORA-01427: single-row subquery returns more than one row
+
+
+SQL> select customer_name, (select sup_name from customer where customer_name = 'shiva') as superviser_name from customer where cus_city = 'madurai';
+select customer_name, (select sup_name from customer where customer_name = 'shiva') as superviser_name from customer where cus_city = 'madurai'
+                       *
+ERROR at line 1:
+ORA-01427: single-row subquery returns more than one row
+
+
+SQL> SELECT CUSTOMER_NAME, (SELECT SUP_NAME FROM CUSTOMER WHERE CUSTOMER_NAME = 'KAVI') AS SUPERVISOR_NAME FROM CUSTOMER WHERE CUS_CITY = 'MADURAI';
+
+CUSTOMER_NAME        SUPERVISOR_NAME
+-------------------- --------------------
+DHIVI
+KAVI
+ARUN
+VARUN
+
+SQL> SELECT CUS_NAME, (SELECT SUP_NAME FROM CUSTOMER WHERE CUS_NAME = 'PAVI') AS SUPERVISOR_NAME FROM CUSTOMER WHERE CUS_CITY = 'MADURAI';
+SELECT CUS_NAME, (SELECT SUP_NAME FROM CUSTOMER WHERE CUS_NAME = 'PAVI') AS SUPERVISOR_NAME FROM CUSTOMER WHERE CUS_CITY = 'MADURAI'
+       *
+ERROR at line 1:
+ORA-00904: "CUS_NAME": invalid identifier
+
+
+SQL> SELECT CUSTOMER_NAME, (SELECT SUP_NAME FROM CUSTOMER WHERE CUSTOMER_NAME = 'PAVI') AS SUPERVISOR_NAME FROM CUSTOMER WHERE CUS_CITY = 'MADURAI';
+
+CUSTOMER_NAME        SUPERVISOR_NAME
+-------------------- --------------------
+DHIVI
+KAVI
+ARUN
+VARUN
+
+SQL> SELECT CUSTOMER_NAME, (SELECT SUP_NAME FROM CUSTOMER WHERE CUSTOMER_NAME = 'AKSHAYA') AS SUPERVISOR_NAME FROM CUSTOMER WHERE CUS_CITY = 'KALAIYAR KOVIL';
+
+no rows selected
+
+SQL> SELECT CUSTOMER_NAME, (SELECT SUP_NAME FROM CUSTOMER WHERE CUSTOMER_NAME = 'KAVI') AS SUPERVISOR_NAME FROM CUSTOMER WHERE CUS_CITY = 'MADURAI';
+
+CUSTOMER_NAME        SUPERVISOR_NAME
+-------------------- --------------------
+DHIVI
+KAVI
+ARUN
+VARUN
+
+SQL> SELECT CUSTOMER_NAME, AGE FROM CUSTOMER WHERE AGE > (SELECT AVG(AGE) FROM CUSTOMER);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+PAVI                         45
+ARUN                         34
+KAVI                         43
+RAVI                         35
+PARUN                        32
+
+SQL>
+
+
+SQL> WITH AvgAge AS (SELECT AVG(AGE) AS avg_age FROM CUSTOMER) SELECT CUSTOMER_NAME, AGE FROM CUSTOMER WHERE AGE > (SELECT avg_age FROM AvgAge);
+
+CUSTOMER_NAME               AGE
+-------------------- ----------
+PAVI                         45
+ARUN                         34
+KAVI                         43
+RAVI                         35
+PARUN                        32
+
+SQL> WITH AvgAge AS (
+  2  SELECT AVG(AGE) AS avg_age
+  3  FROM CUSTOMER
+  4  ),
+  5   CityCount AS (
+  6  SELECT CUS_CITY, COUNT(*) AS city_count
+  7  FROM CUSTOMER
+  8  GROUP BY CUS_CITY
+  9  )
+ 10  SELECT C1.CUSTOMER_NAME, C1.AGE, C2.CUS_CITY, C2.city_counT
+ 11  FROM CUSTOMER C1
+ 12  JOIN CityCount C2 ON C1.CUS_CITY = C2.CUS_CITY
+ 13  WHERE C1.AGE > (SELECT avg_age FROM AvgAge)
+ 14  AND C2.city_count > 2;
+
+CUSTOMER_NAME               AGE CUS_CITY             CITY_COUNT
+-------------------- ---------- -------------------- ----------
+KAVI                         43 MADURAI                       4
+
