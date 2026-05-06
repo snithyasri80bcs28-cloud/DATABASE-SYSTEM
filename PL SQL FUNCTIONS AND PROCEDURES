@@ -1,0 +1,1083 @@
+SQL> set serveroutput on;
+SQL> CREATE OR REPLACE TRIGGER before_insert_customer
+  2       BEFORE INSERT ON customer
+  3       FOR EACH ROW
+  4       BEGIN
+  5           IF :NEW.cus_city IS NULL THEN
+  6               RAISE_APPLICATION_ERROR(-20001,'Customer city cannot be NULL');
+  7           END IF;
+  8       END;
+  9       /
+
+Trigger created.
+
+SQL> CREATE OR REPLACE FUNCTION total_products
+  2  RETURN NUMBER
+  3  IS
+  4      v_count NUMBER;
+  5  BEGIN
+  6      SELECT COUNT(*) INTO v_count
+  7      FROM product;
+  8
+  9      RETURN v_count;
+ 10  END;
+ 11  /
+
+Function created.
+
+SQL> BEGIN
+  2  DBMS_OUTPUT.PUT_LINE('Total Products: ' || total_products);
+  3  END;
+  4  /
+Total Products: 6
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION get_product_price(p_id VARCHAR2)
+  2  RETURN NUMBER
+  3  IS
+  4      v_price NUMBER;
+  5  BEGIN
+  6      SELECT product_price INTO v_price
+  7      FROM product
+  8      WHERE product_id = p_id;
+  9
+ 10      RETURN v_price;
+ 11  END;
+ 12  /
+
+Function created.
+
+SQL> BEGIN
+  2  DBMS_OUTPUT.PUT_LINE('Price: ' || get_product_price('pro01'));
+  3  END;
+  4  /
+Price: 500
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION get_product_price(p_id IN VARCHAR2)
+  2  RETURN NUMBER
+  3  IS
+  4      v_price NUMBER;
+  5  BEGIN
+  6      SELECT product_price INTO v_price
+  7      FROM product
+  8      WHERE product_id = p_id;
+  9
+ 10      RETURN v_price;
+ 11
+ 12  EXCEPTION
+ 13      WHEN NO_DATA_FOUND THEN
+ 14          RETURN 0;
+ 15  END;
+ 16  /
+
+Function created.
+
+SQL> BEGIN
+  2  DBMS_OUTPUT.PUT_LINE(get_product_price('pro01'));
+  3  END;
+  4  /
+500
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION get_products_by_price(
+  2      p_category IN VARCHAR2,
+  3      p_price IN NUMBER
+  4  )
+  5  RETURN NUMBER
+  6  IS
+  7      v_count NUMBER;
+  8  BEGIN
+  9      SELECT COUNT(*) INTO v_count
+ 10      FROM product
+ 11      WHERE category_id = p_category
+ 12      AND product_price > p_price;
+ 13
+ 14      RETURN v_count;
+ 15  END;
+ 16  /
+
+Function created.
+
+SQL> SELECT get_products_by_price('cat01',50) FROM dual;
+
+GET_PRODUCTS_BY_PRICE('CAT01',50)
+---------------------------------
+                                3
+
+SQL> CREATE OR REPLACE FUNCTION get_product_record(
+  2      p_id IN VARCHAR2
+  3  )
+  4  RETURN product%ROWTYPE
+  5  IS
+  6      v_product product%ROWTYPE;
+  7  BEGIN
+  8      SELECT * INTO v_product
+  9      FROM product
+ 10      WHERE product_id = p_id;
+ 11
+ 12      RETURN v_product;
+ 13
+ 14  EXCEPTION
+ 15      WHEN NO_DATA_FOUND THEN
+ 16          RETURN NULL;
+ 17  END;
+ 18  /
+
+Function created.
+
+SQL> DECLARE
+  2      v_rec product%ROWTYPE;
+  3  BEGIN
+  4      v_rec := get_product_record('PRO01');
+  5
+  6      DBMS_OUTPUT.PUT_LINE('Product ID: '||v_rec.product_id);
+  7      DBMS_OUTPUT.PUT_LINE('Product Name: '||v_rec.product_name);
+  8      DBMS_OUTPUT.PUT_LINE('Price: '||v_rec.product_price);
+  9  END;
+ 10  /
+Product ID:
+Product Name:
+Price:
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2      v_rec product%ROWTYPE;
+  3  BEGIN
+  4      v_rec := get_product_record('pro01');
+  5
+  6      DBMS_OUTPUT.PUT_LINE('Product ID: '||v_rec.product_id);
+  7      DBMS_OUTPUT.PUT_LINE('Product Name: '||v_rec.product_name);
+  8      DBMS_OUTPUT.PUT_LINE('Price: '||v_rec.product_price);
+  9  END;
+ 10  /
+Product ID: pro01
+Product Name: milk
+Price: 500
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION get_product_cursor
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4      v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6      OPEN v_cursor FOR
+  7      SELECT * FROM product;
+  8
+  9      RETURN v_cursor;
+ 10  END;
+ 11  /
+
+Function created.
+
+SQL> DECLARE
+  2      v_cursor SYS_REFCURSOR;
+  3      v_id product.product_id%TYPE;
+  4      v_name product.product_name%TYPE;
+  5      v_price product.product_price%TYPE;
+  6  BEGIN
+  7      v_cursor := get_product_cursor;
+  8
+  9      LOOP
+ 10          FETCH v_cursor INTO v_id,v_name,v_price;
+ 11          EXIT WHEN v_cursor%NOTFOUND;
+ 12
+ 13          DBMS_OUTPUT.PUT_LINE(v_id||' '||v_name||' '||v_price);
+ 14      END LOOP;
+ 15
+ 16      CLOSE v_cursor;
+ 17  END;
+ 18  /
+DECLARE
+*
+ERROR at line 1:
+ORA-06504: PL/SQL: Return types of Result Set variables or query do not match
+ORA-06512: at line 10
+
+
+SQL> CREATE OR REPLACE FUNCTION get_product_cursor
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4      v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6      OPEN v_cursor FOR
+  7      SELECT product_id, product_name, product_price
+  8      FROM product;
+  9
+ 10      RETURN v_cursor;
+ 11  END;
+ 12  /
+
+Function created.
+
+SQL> SET SERVEROUTPUT ON
+SQL>
+SQL> DECLARE
+  2      v_cursor SYS_REFCURSOR;
+  3      v_id product.product_id%TYPE;
+  4      v_name product.product_name%TYPE;
+  5      v_price product.product_price%TYPE;
+  6  BEGIN
+  7      v_cursor := get_product_cursor;
+  8
+  9      LOOP
+ 10          FETCH v_cursor INTO v_id, v_name, v_price;
+ 11          EXIT WHEN v_cursor%NOTFOUND;
+ 12
+ 13          DBMS_OUTPUT.PUT_LINE(v_id || ' ' || v_name || ' ' || v_price);
+ 14      END LOOP;
+ 15
+ 16      CLOSE v_cursor;
+ 17  END;
+ 18  /
+pro01 milk 500
+pro04 butter 5
+pro02 dhal 6500
+pro05 milkshake 30
+pro07 Milk Packet 100
+pro06 milk powder 66
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION get_product_ref_cursor
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4      v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6      OPEN v_cursor FOR
+  7          SELECT product_id, product_name, product_price
+  8          FROM product;
+  9
+ 10      RETURN v_cursor;
+ 11  END;
+ 12  /
+
+Function created.
+
+SQL> SET SERVEROUTPUT ON;
+SQL> DECLARE
+  2      v_cursor SYS_REFCURSOR;
+  3      v_id product.product_id%TYPE;
+  4      v_name product.product_name%TYPE;
+  5      v_price product.product_price%TYPE;
+  6  BEGIN
+  7      v_cursor := get_product_ref_cursor;
+  8
+  9      LOOP
+ 10          FETCH v_cursor INTO v_id, v_name, v_price;
+ 11          EXIT WHEN v_cursor%NOTFOUND;
+ 12
+ 13          DBMS_OUTPUT.PUT_LINE('Product ID: ' || v_id);
+ 14          DBMS_OUTPUT.PUT_LINE('Product Name: ' || v_name);
+ 15          DBMS_OUTPUT.PUT_LINE('Price: ' || v_price);
+ 16          DBMS_OUTPUT.PUT_LINE('---------------------');
+ 17      END LOOP;
+ 18
+ 19      CLOSE v_cursor;
+ 20  END;
+ 21  /
+Product ID: pro01
+Product Name: milk
+Price: 500
+---------------------
+Product ID: pro04
+Product Name: butter
+Price: 5
+---------------------
+Product ID: pro02
+Product Name: dhal
+Price: 6500
+---------------------
+Product ID: pro05
+Product Name: milkshake
+Price: 30
+---------------------
+Product ID: pro07
+Product Name: Milk Packet
+Price: 100
+---------------------
+Product ID: pro06
+Product Name: milk powder
+Price: 66
+---------------------
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE insert_customer
+  2  IS
+  3  BEGIN
+  4      INSERT INTO customer(customer_id,customer_name,cus_city)
+  5      VALUES('cus31','Arun','Madurai');
+  6
+  7      COMMIT;
+  8  END;
+  9  /
+
+Procedure created.
+
+SQL> EXEC insert_customer;
+BEGIN insert_customer; END;
+
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008325) violated
+ORA-06512: at "SYSTEM.INSERT_CUSTOMER", line 4
+ORA-06512: at line 1
+
+
+SQL> select * from customer;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+cus09 shiva                            88 north street
+sivagangai                    630551 25-FEB-26         21
+
+
+cus06 kavi                             23 ddnagar
+madurai                       654789 21-MAR-26          0
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+CUS11 PAVI
+CHENNAI                                                45
+
+
+CUS12 ARUN
+SIVAKASI                                               34
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+
+CUS13 DHIVI
+MADURAI                                                22
+
+
+cus01 devi                             30 moorthy nagar
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+kalaiyarkovil                 630551
+
+
+cus02 amutha                           50 ss nagar
+kalaiyarkovil                 630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+cus03 akshaya                          34 thiru nagar
+kalaiyarkovil                 630551
+
+
+cus04 nathiya                          60 vip nagar
+kalaiyarkovil                 630551
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+cus05 shiva                            77 rose nagar
+sivagangai                    630551
+
+
+CUS21 KAVI
+MADURAI                                                43
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+
+CUS22 RAVI
+SIVAKASI                                               35
+
+
+CUS24 ARUN
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+MADURAI                                                23 KAVI
+
+
+CUS25 VARUN
+MADURAI                                                28 KAVI
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+CUS27 PARUN
+CHENNAI                                                32 PAVI
+
+
+cus31 ram                              32 west street
+chennai                       654322
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+cus44 abi
+theni                                                  32
+abi90_nb@mep.ac
+
+cus30 ramesh
+theni
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+
+
+18 rows selected.
+
+SQL> CREATE OR REPLACE PROCEDURE insert_customer
+  2  IS
+  3  BEGIN
+  4      INSERT INTO customer(customer_id,customer_name,cus_city)
+  5      VALUES('cus51','Arun','Madurai');
+  6
+  7      COMMIT;
+  8  END;
+  9  /
+
+Procedure created.
+
+SQL> EXEC insert_customer;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from category;
+
+CATEG CATEGORY_NAME
+----- --------------------
+cat01 dairy
+cat02 statinary
+cat04 grocery
+
+SQL> CREATE OR REPLACE PROCEDURE insert_product
+  2  IS
+  3  BEGIN
+  4      INSERT INTO product(product_id,category_id,product_price,supplier_id,quantity,product_name)
+  5      VALUES('pro03','cus02',200,'sup04',20,'eraser');
+  6
+  7      COMMIT;
+  8  END;
+  9  /
+
+Procedure created.
+
+SQL> EXEC insert_product;
+New Product Added: eraser
+BEGIN insert_product; END;
+
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.SYS_C008336) violated - parent key not
+found
+ORA-06512: at "SYSTEM.INSERT_PRODUCT", line 4
+ORA-06512: at line 1
+
+
+SQL> CREATE OR REPLACE PROCEDURE insert_product
+  2  IS
+  3  BEGIN
+  4      INSERT INTO product(product_id,category_id,product_price,supplier_id,quantity,product_name)
+  5      VALUES('pro03','cat02',200,'sup04',20,'eraser');
+  6
+  7      COMMIT;
+  8  END;
+  9  /
+
+Procedure created.
+
+SQL> EXEC insert_product;
+New Product Added: eraser
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE add_product(
+  2      p_id VARCHAR2,
+  3      p_name VARCHAR2,
+  4      p_price NUMBER
+  5  )
+  6  IS
+  7  BEGIN
+  8      INSERT INTO product(product_id,product_name,product_price)
+  9      VALUES(p_id,p_name,p_price);
+ 10
+ 11      COMMIT;
+ 12  END;
+ 13  /
+
+Procedure created.
+
+SQL> EXEC add_product('pro09','Sugar',45);
+New Product Added: Sugar
+
+PL/SQL procedure successfully completed.
+
+SQL> set serveroutput on;
+SQL> CREATE OR REPLACE PROCEDURE get_customer_city(
+  2           p_id IN VARCHAR2,
+  3           p_city OUT VARCHAR2
+  4       )
+  5       IS
+  6       BEGIN
+  7           SELECT cus_city INTO p_city
+  8           FROM customer
+  9           WHERE customer_id = p_id;
+ 10       END get_customer_city;
+ 11       /
+
+Procedure created.
+
+SQL>
+SQL> DECLARE
+  2      v_city VARCHAR2(20);
+  3  BEGIN
+  4      get_customer_city('cus51',v_city);
+  5      DBMS_OUTPUT.PUT_LINE('City: '||v_city);
+  6  END;
+  7  /
+City: Madurai
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE proc_update_reorder_level (
+  2    p_id    IN VARCHAR2,
+  3    p_level IN OUT NUMBER
+  4  )
+  5  IS
+  6  BEGIN
+  7    UPDATE stock
+  8    SET reorder_level = p_level + 10
+  9    WHERE stock_id = p_id;
+ 10
+ 11    SELECT reorder_level INTO p_level
+ 12    FROM stock
+ 13    WHERE stock_id = p_id;
+ 14
+ 15    COMMIT;
+ 16  END;
+ 17  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    v_level NUMBER := 20;
+  3  BEGIN
+  4    proc_update_reorder_level('ST01', v_level);
+  5    DBMS_OUTPUT.PUT_LINE('Updated Level: ' || v_level);
+  6  END;
+  7  /
+Updated Level: 30
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE proc_update_location (
+  2    p_id       IN VARCHAR2,
+  3    p_location IN VARCHAR2
+  4  )
+  5  IS
+  6  BEGIN
+  7    UPDATE stock
+  8    SET location = p_location
+  9    WHERE stock_id = p_id;
+ 10
+ 11    COMMIT;
+ 12
+ 13    DBMS_OUTPUT.PUT_LINE('Location updated');
+ 14  END;
+ 15  /
+
+Procedure created.
+
+SQL> CREATE OR REPLACE PROCEDURE proc_delete_stock (
+  2    p_id IN VARCHAR2
+  3  )
+  4  IS
+  5  BEGIN
+  6    DELETE FROM stock
+  7    WHERE stock_id = p_id;
+  8
+  9    COMMIT;
+ 10
+ 11    DBMS_OUTPUT.PUT_LINE('Stock deleted: ' || p_id);
+ 12  END;
+ 13  /
+
+Procedure created.
+
+SQL> set serveroutput on;
+SQL> CREATE OR REPLACE PROCEDURE proc_low_stock
+  2  IS
+  3  BEGIN
+  4    FOR rec IN (
+  5      SELECT * FROM stock WHERE reorder_level < 40
+  6    )
+  7    LOOP
+  8      DBMS_OUTPUT.PUT_LINE(rec.stock_id || ' - ' || rec.stock_name);
+  9    END LOOP;
+ 10  END;
+ 11  /
+
+Procedure created.
+
+12 rows selected.
+
+SQL> EXEC proc_low_stock;
+ST01 - dhal
+ST03 - ice cream
+ST05 - milk
+ST06 - curd
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE proc_stock_ref_cursor (
+  2    p_cursor OUT SYS_REFCURSOR
+  3  )
+  4  IS
+  5  BEGIN
+  6    OPEN p_cursor FOR
+  7      SELECT stock_id, stock_name, location, reorder_level
+  8      FROM stock;
+  9  END;
+ 10  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    v_cursor SYS_REFCURSOR;
+  3
+  4    v_id    stock.stock_id%TYPE;
+  5    v_name  stock.stock_name%TYPE;
+  6    v_loc   stock.location%TYPE;
+  7    v_level stock.reorder_level%TYPE;
+  8
+  9  BEGIN
+ 10    proc_stock_ref_cursor(v_cursor);
+ 11
+ 12    LOOP
+ 13      FETCH v_cursor INTO v_id, v_name, v_loc, v_level;
+ 14      EXIT WHEN v_cursor%NOTFOUND;
+ 15
+ 16      DBMS_OUTPUT.PUT_LINE('Stock ID: ' || v_id);
+ 17      DBMS_OUTPUT.PUT_LINE('Name: ' || v_name);
+ 18      DBMS_OUTPUT.PUT_LINE('Location: ' || v_loc);
+ 19      DBMS_OUTPUT.PUT_LINE('Level: ' || v_level);
+ 20      DBMS_OUTPUT.PUT_LINE('----------------------');
+ 21    END LOOP;
+ 22
+ 23    CLOSE v_cursor;
+ 24  END;
+ 25  /
+
+Stock ID: ST21
+Name: sugar
+Location: Madurai
+Level: 40
+----------------------
+Stock ID: ST99
+Name: wheat
+Location: Chennai
+Level: 10
+----------------------
+Stock ID: ST50
+Name: milk
+Location: Madurai
+Level: 25
+----------------------
+
+PL/SQL procedure successfully completed.
+
+
+SQL> CREATE OR REPLACE PROCEDURE proc_stock_exception (
+  2    p_id       IN VARCHAR2,
+  3    p_name     IN VARCHAR2,
+  4    p_location IN VARCHAR2,
+  5    p_level    IN NUMBER
+  6  )
+  7  IS
+  8  BEGIN
+  9    INSERT INTO stock (stock_id, stock_name, location, reorder_level)
+ 10    VALUES (p_id, p_name, p_location, p_level);
+ 11
+ 12    COMMIT;
+ 13
+ 14    DBMS_OUTPUT.PUT_LINE('Stock inserted successfully');
+ 15
+ 16  EXCEPTION
+ 17    WHEN DUP_VAL_ON_INDEX THEN
+ 18      DBMS_OUTPUT.PUT_LINE('Error: Duplicate stock ID');
+ 19    WHEN OTHERS THEN
+ 20      DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+ 21  END;
+ 22  /
+
+Procedure created.
+
+SQL> set serveroutput on;
+SQL> EXEC proc_stock_exception('ST01', 'milk', 'Chennai', 10);
+Error: Duplicate stock ID
+
+SQL> CREATE OR REPLACE PROCEDURE proc_no_data_found (
+  2    p_id IN VARCHAR2
+  3  )
+  4  IS
+  5    v_name stock.stock_name%TYPE;
+  6  BEGIN
+  7    SELECT stock_name INTO v_name
+  8    FROM stock
+  9    WHERE stock_id = p_id;
+ 10
+ 11    DBMS_OUTPUT.PUT_LINE('Stock Name: ' || v_name);
+ 12
+ 13  EXCEPTION
+ 14    WHEN NO_DATA_FOUND THEN
+ 15      DBMS_OUTPUT.PUT_LINE('Error: No stock found with given ID');
+ 16  END;
+ 17  /
+
+Procedure created.
+
+SQL> EXEC proc_no_data_found('ST89');
+Error: No stock found with given ID
+
+PL/SQL procedure successfully completed.
+
+
+SQL> CREATE OR REPLACE PROCEDURE proc_too_many_rows
+  2  IS
+  3    v_name customer.cust_name%TYPE;
+  4  BEGIN
+  5    -- This may return multiple rows (same city)
+  6    SELECT cust_name INTO v_name
+  7    FROM customer
+  8    WHERE city = 'Chennai';
+  9
+ 10    DBMS_OUTPUT.PUT_LINE('Customer: ' || v_name);
+ 11
+ 12  EXCEPTION
+ 13    WHEN TOO_MANY_ROWS THEN
+ 14      DBMS_OUTPUT.PUT_LINE('Error: Multiple customers found');
+ 15  END;
+ 16  /
+
+Procedure created.
+
+SQL> EXEC proc_too_many_rows;
+Error: Multiple customers found
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION factorial(n NUMBER)
+  2  RETURN NUMBER
+  3  IS
+  4  BEGIN
+  5    IF n = 0 THEN
+  6      RETURN 1;
+  7    ELSE
+  8      RETURN n * factorial(n - 1);
+  9    END IF;
+ 10  END;
+ 11  /
+
+Function created.
+
+SQL> set serveroutput on;
+SQL> BEGIN
+  2    DBMS_OUTPUT.PUT_LINE('Factorial: ' || factorial(5));
+  3  END;
+  4  /
+Factorial: 120
+
+PL/SQL procedure successfully completed.
+
+
+SQL> set serveroutput on;
+SQL> CREATE OR REPLACE PROCEDURE proc_display_products
+  2  IS
+  3  BEGIN
+  4    FOR rec IN (
+  5      SELECT pro_id, pro_name, cat_id, mfg_date, selling_price
+  6      FROM fodder_product
+  7    )
+  8    LOOP
+  9      DBMS_OUTPUT.PUT_LINE(rec.pro_id || ' | ' || rec.pro_name ||
+ 10                           ' | ' || rec.cat_id ||
+ 11                           ' | ' || rec.mfg_date ||
+ 12                           ' | ' || rec.selling_price);
+ 13    END LOOP;
+ 14  END;
+ 15  /
+
+Procedure created.
+
+SQL> EXEC proc_display_products;
+PRO20 | milk powder | CAT20 | 05-APR-25 | 10
+PRO25 | wheat |  |  | 500
+PRO99 | fuse |  |  | 100
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION func_display_categories
+  2  RETURN VARCHAR2
+  3  IS
+  4    v_result VARCHAR2(2000) := 'CATEGORIES: ';
+  5  BEGIN
+  6    FOR rec IN (SELECT cat_name FROM category)
+  7    LOOP
+  8      v_result := v_result || rec.cat_name || ', ';
+  9    END LOOP;
+ 10
+ 11    RETURN v_result;
+ 12  END;
+ 13  /
+
+Function created.
+
+SQL> BEGIN
+       DBMS_OUTPUT.PUT_LINE(func_avg_salary_job);
+    END;
+    /
+CATEGORIES: Dairy, dhal, stationary, perfumes, 
+chocolates, icecream
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE proc_max_price_per_category
+     IS
+       CURSOR c_cat IS SELECT DISTINCT product_id FROM product;
+   
+       v_cat product.product_id%TYPE;
+       v_max NUMBER;
+     BEGIN
+       OPEN c_cat;
+   
+       LOOP
+         FETCH c_cat INTO v_cat;
+         EXIT WHEN c_cat%NOTFOUND;
+   
+         SELECT MAX(product_mrp) INTO v_max
+         FROM product
+         WHERE product_id = v_cat;
+   
+         DBMS_OUTPUT.PUT_LINE('Category: ' || v_cat ||
+                              ' Max Price: ' || v_max);
+       END LOOP;
+   
+       CLOSE c_cat;
+     END;
+     /
+
+Procedure created.
+
+SQL> EXEC proc_max_price_per_category;
+Category: CAT16 Max Price: 50000
+Category: CAT17 Max Price: 50000
+Category: CAT18 Max Price: 50000
+Category: CAT19 Max Price: 50000
+Category: CAT20 Max Price: 10
+Category:  Max Price:
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE FUNCTION func_avg_price_per_category
+    RETURN SYS_REFCURSOR
+    IS
+       v_cursor SYS_REFCURSOR;
+     BEGIN
+       OPEN v_cursor FOR
+         SELECT product_id, AVG(product_mrp)
+         FROM product
+         GROUP BY product_id;
+   
+       RETURN v_cursor;
+     END;
+     /
+
+Function created.
+
+SQL> DECLARE
+      v_cursor SYS_REFCURSOR;
+       v_cat VARCHAR2(10);
+      v_avg NUMBER;
+     BEGIN
+       v_cursor := func_avg_price_per_category;
+   
+       LOOP
+         FETCH v_cursor INTO v_cat, v_avg;
+         EXIT WHEN v_cursor%NOTFOUND;
+   
+         DBMS_OUTPUT.PUT_LINE(v_cat || ' - ' || v_avg);
+       END LOOP;
+   
+       CLOSE v_cursor;
+     END;
+     /
+
+CAT15 - 1
+CAT16 - 50000
+CAT17 - 50000
+CAT18 - 50000
+CAT19 - 50000
+CAT20 - 10
+- 3000
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE OR REPLACE PROCEDURE proc_max_product
+     IS
+       v_max NUMBER;
+     BEGIN
+       
+       SELECT MAX(product_mrp) INTO v_max
+       FROM (
+         SELECT COUNT(*) product_mrp
+         FROM product
+         GROUP BY product_id
+       );
+   
+       
+       FOR rec IN (
+         SELECT product_id
+         FROM product
+         GROUP BY product_id
+         HAVING COUNT(*) = v_max
+       )
+       LOOP
+         DBMS_OUTPUT.PUT_LINE('Product with max mrp: ' || rec.product_mrp);
+       END LOOP;
+     END;
+     /
+
+Procedure created.
+
+SQL> SET SERVEROUTPUT ON;
+SQL> EXEC proc_max_product;
+Location with max stock: Madurai
+
+PL/SQL procedure successfully completed.
+
+
+SQL> select location,stock_id from stock;
+
+
+LOCATION             STOCK_ID
+-------------------- --------------------
+Cuddalore            ST16
+Kanchipuram          ST17
+Perambalur           ST20
+Madurai              ST21
+Chennai              ST99
+
+LOCATION             STOCK_ID
+-------------------- --------------------
+Madurai              ST50
+
+23 rows selected.
+
+
+SQL> CREATE OR REPLACE FUNCTION func_less_than_avg_price
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4    v_cursor SYS_REFCURSOR;
+  5    v_avg NUMBER;
+  6  BEGIN
+  7    SELECT AVG(selling_price) INTO v_avg
+  8    FROM fodder_product
+  9    WHERE cat_id = (
+ 10      SELECT cat_id
+ 11      FROM fodder_product
+ 12      WHERE pro_name = 'Cattle Feed'
+ 13      AND ROWNUM = 1
+ 14    );
+ 15
+ 16    OPEN v_cursor FOR
+ 17      SELECT pro_id, pro_name, selling_price
+ 18      FROM fodder_product
+ 19      WHERE selling_price < v_avg;
+ 20
+ 21    RETURN v_cursor;
+ 22  END;
+ 23  /
+
+Function created.
+
+SQL> DECLARE
+  2    v_cursor SYS_REFCURSOR;
+  3    v_id VARCHAR2(10);
+  4    v_name VARCHAR2(50);
+  5    v_price NUMBER;
+  6  BEGIN
+  7    v_cursor := func_less_than_avg_price;
+  8
+  9    LOOP
+ 10      FETCH v_cursor INTO v_id, v_name, v_price;
+ 11      EXIT WHEN v_cursor%NOTFOUND;
+ 12
+ 13      DBMS_OUTPUT.PUT_LINE(v_id || ' - ' || v_name || ' - ' || v_price);
+ 14    END LOOP;
+ 15
+ 16    CLOSE v_cursor;
+ 17  END;
+ 18  /
+PRO08 - dhal - 1
+PRO09 - oats - 10
+
+PL/SQL procedure successfully completed.
+
+
