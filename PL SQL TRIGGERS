@@ -1,0 +1,596 @@
+
+SQL> CREATE OR REPLACE TRIGGER before_insert_customer
+  2  BEFORE INSERT ON customer
+  3  FOR EACH ROW
+  4  BEGIN
+  5      IF :NEW.cus_city IS NULL THEN
+  6          RAISE_APPLICATION_ERROR(-20001,'Customer city cannot be NULL');
+  7      END IF;
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> INSERT INTO customer(customer_id,customer_name,cus_city) VALUES('cus30','Ramesh',NULL);
+INSERT INTO customer(customer_id,customer_name,cus_city) VALUES('cus30','Ramesh',NULL)
+            *
+ERROR at line 1:
+ORA-20001: Customer city cannot be NULL
+ORA-06512: at "SYSTEM.BEFORE_INSERT_CUSTOMER", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.BEFORE_INSERT_CUSTOMER'
+
+
+SQL> CREATE OR REPLACE TRIGGER after_insert_product
+  2  AFTER INSERT ON product
+  3  FOR EACH ROW
+  4  BEGIN
+  5      DBMS_OUTPUT.PUT_LINE('New Product Added: ' || :NEW.product_name);
+  6  END;
+  7  /
+
+Trigger created.
+
+SQL> insert into product values('pro06','cat01',66,'sup06',5,'milk powder','22/09/26');
+New Product Added: milk powder
+
+1 row created.
+
+SQL> CREATE OR REPLACE TRIGGER check_product_price
+  2  BEFORE UPDATE ON product
+  3  FOR EACH ROW
+  4  BEGIN
+  5      IF :NEW.product_price < 0 THEN
+  6          RAISE_APPLICATION_ERROR(-20002,'Price cannot be negative');
+  7      END IF;
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> UPDATE product SET product_price = -50 WHERE product_id = 'pro01';
+UPDATE product SET product_price = -50 WHERE product_id = 'pro01'
+       *
+ERROR at line 1:
+ORA-20002: Price cannot be negative
+ORA-06512: at "SYSTEM.CHECK_PRODUCT_PRICE", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.CHECK_PRODUCT_PRICE'
+
+SQL> CREATE OR REPLACE TRIGGER after_update_price
+  2       AFTER UPDATE ON product
+  3       FOR EACH ROW
+  4       BEGIN
+  5           DBMS_OUTPUT.PUT_LINE('product ' || :OLD.product_id || ' updated. New price: ' || :NEW.product_price);
+  6       END;
+  7       /
+
+Trigger created.
+
+SQL> update product set product_price = 100 where product_id = 'pro07';
+product pro07 updated. New price: 100
+
+1 row updated.
+
+SQL> CREATE OR REPLACE TRIGGER after_delete_product
+  2  AFTER DELETE ON product
+  3  FOR EACH ROW
+  4  BEGIN
+  5      DBMS_OUTPUT.PUT_LINE('Product Deleted: ' || :OLD.product_name);
+  6  END;
+  7  /
+
+Trigger created.
+
+SQL> delete from product where product_name=lower('notebook');
+Product Deleted: notebook
+
+1 row deleted.
+
+SQL> CREATE OR REPLACE TRIGGER trg_before_delete_product
+  2  BEFORE DELETE ON product
+  3  FOR EACH ROW
+  4  BEGIN
+  5      IF :OLD.quantity > 0 THEN
+  6          RAISE_APPLICATION_ERROR(-20010,'Cannot delete product with stock available');
+  7      END IF;
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> DELETE FROM product WHERE product_id = 'pro02';
+DELETE FROM product WHERE product_id = 'pro02'
+            *
+ERROR at line 1:
+ORA-20010: Cannot delete product with stock available
+ORA-06512: at "SYSTEM.TRG_BEFORE_DELETE_PRODUCT", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.TRG_BEFORE_DELETE_PRODUCT'
+
+
+SQL> select product_id from product;
+
+PRODU
+-----
+pro01
+pro02
+pro04
+pro05
+pro07
+
+SQL> CREATE OR REPLACE TRIGGER trg_last_modified
+          BEFORE UPDATE ON workers
+          FOR EACH ROW
+          BEGIN
+              :NEW.last_modified := SYSDATE;
+          END;
+          /
+
+Trigger created.
+
+SQL> update workers set work_shift='evening';
+update workers set work_shift='evening'
+       *
+ERROR at line 1:
+ORA-04045: errors during recompilation/revalidation of
+SYSTEM.TRG_ERROR_NOTIFICATION
+ORA-01031: insufficient privileges
+ORA-04098: trigger 'SYSTEM.UPDATE_LAST_MOD' is invalid and failed re-validation
+
+SQL> CREATE OR REPLACE TRIGGER trg_no_duplicate_supplier
+  2      BEFORE INSERT OR UPDATE ON Supplier
+  3       FOR EACH ROW
+  4       DECLARE
+  5           v_count NUMBER;
+  6       BEGIN
+  7           SELECT COUNT(*) INTO v_count
+  8           FROM Supplier
+  9           WHERE supplier_id = :NEW.supplier_id;
+ 10
+ 11           IF v_count > 0 THEN
+ 12               RAISE_APPLICATION_ERROR(-20003,
+ 13               'Duplicate supplier id not allowed');
+ 14           END IF;
+ 15       END;
+ 16       /
+
+Trigger created.
+
+SQL> INSERT INTO Supplier VALUES ('sup01','deva',630898,'chennai','north');
+INSERT INTO Supplier VALUES ('sup01','deva',630898,'chennai','north')
+            *
+ERROR at line 1:
+ORA-20003: Duplicate supplier id not allowed
+ORA-06512: at "SYSTEM.TRG_NO_DUPLICATE_SUPPLIER", line 9
+ORA-04088: error during execution of trigger 'SYSTEM.TRG_NO_DUPLICATE_SUPPLIER'
+
+SQL> set serveroutput on;
+SQL> CREATE OR REPLACE TRIGGER compound_trigger_product
+  2           FOR INSERT OR DELETE ON PRODUCT
+  3           COMPOUND TRIGGER
+  4             v_total_change NUMBER := 500;
+  5             BEFORE EACH ROW IS
+  6            BEGIN
+  7              IF INSERTING THEN
+  8                UPDATE PRODUCT
+  9                SET quantity = quantity + v_total_change
+ 10                WHERE quantity = :NEW.quantity;
+ 11              END IF;
+ 12            END BEFORE EACH ROW;
+ 13            AFTER EACH ROW IS
+ 14            BEGIN
+ 15              IF DELETING THEN
+ 16               UPDATE  PRODUCT
+ 17                SET quantity = quantity - v_total_change
+ 18               WHERE quantity = :OLD.quantity;
+ 19              END IF;
+ 20           END AFTER EACH ROW;
+ 21
+ 22          END compound_trigger_product;
+ 23          /
+
+Trigger created.
+
+
+SQL> insert into product values('pro10','cat01',250,'sup01',5,'ghee','24/10/26');
+product pro06 updated. New price: 66
+New Product Added: ghee
+
+1 row created.
+
+SQL> update product set quantity=quantity+5;
+product pro01 updated. New price: 500
+product pro04 updated. New price: 5
+product pro03 updated. New price: 200
+product pro02 updated. New price: 6500
+product pro05 updated. New price: 30
+product pro07 updated. New price: 100
+product pro06 updated. New price: 66
+product pro09 updated. New price: 45
+product pro10 updated. New price: 250
+product pro11 updated. New price: 100
+
+SQL> CREATE OR REPLACE TRIGGER statement_trigger_product
+  2            BEFORE INSERT OR DELETE ON product
+  3            DECLARE
+  4              v_total_change NUMBER := 1000;
+  5           BEGIN
+  6           IF INSERTING THEN
+  7              UPDATE product
+  8              SET quantity = quantity + v_total_change
+  9              WHERE quantity = 500;
+ 10           END IF;
+ 11           IF DELETING THEN
+ 12              UPDATE product
+ 13              SET quantity = quantity - v_total_change
+ 14              WHERE quantity =500;
+ 15           END IF;
+ 16           END statement_trigger_product;
+ 17           /
+
+Trigger created.
+
+SQL> insert into product values('pro11','cat01',100,'sup01',10,'curd','12/08/26');
+product pro04 updated. New price: 5
+New Product Added: curd
+
+1 row created.
+
+SQL> CREATE OR REPLACE TRIGGER trg_restrict_update_hours
+     BEFORE UPDATE OF product_price ON product
+     FOR EACH ROW
+     DECLARE
+         v_hour NUMBER;
+     BEGIN
+         v_hour := TO_NUMBER(TO_CHAR(SYSDATE,'HH24'));
+   
+         IF v_hour BETWEEN 15 AND 23 OR v_hour BETWEEN 0 AND 6 THEN
+             RAISE_APPLICATION_ERROR(-20001,
+             'Updates to product price are not allowed at this time.');
+         END IF;
+     END;
+     /
+
+Trigger created.
+
+SQL> UPDATE product
+  2  SET product_price = product_price + 10
+  3  WHERE product_id = 'pro01';
+product pro01 updated. New price: 560
+Price updated for product: milk
+Old Price: 550  New Price: 560
+
+SQL>      UPDATE product
+  2       SET product_price = product_price + 10
+  3       WHERE product_id = 'pro01';
+     UPDATE product
+            *
+ERROR at line 1:
+ORA-20001: Updates to product price are not allowed at this time.
+ORA-06512: at "SYSTEM.TRG_RESTRICT_UPDATE_HOURS", line 7
+ORA-04088: error during execution of trigger 'SYSTEM.TRG_RESTRICT_UPDATE_HOURS'
+
+
+SQL> CREATE OR REPLACE TRIGGER trg_check_duplicate_customer
+  2  BEFORE INSERT ON customer
+  3  FOR EACH ROW
+  4  DECLARE
+  5      v_count NUMBER;
+  6  BEGIN
+  7      SELECT COUNT(*) INTO v_count
+  8      FROM customer
+  9      WHERE customer_name = :NEW.customer_name;
+ 10
+ 11      IF v_count > 0 THEN
+ 12          RAISE_APPLICATION_ERROR(-20003,
+ 13          'Duplicate customer name not allowed');
+ 14      END IF;
+ 15  END;
+ 16  /
+
+Trigger created.
+
+SQL> insert into customer(customer_id,customer_name) values('cus55','ram');
+insert into customer(customer_id,customer_name) values('cus55','ram')
+            *
+ERROR at line 1:
+ORA-04045: errors during recompilation/revalidation of
+SYSTEM.TRG_ERROR_NOTIFICATION
+ORA-01031: insufficient privileges
+ORA-20003: Duplicate customer name not allowed
+ORA-06512: at "SYSTEM.TRG_CHECK_DUPLICATE_CUSTOMER", line 9
+ORA-04088: error during execution of trigger
+'SYSTEM.TRG_CHECK_DUPLICATE_CUSTOMER'
+
+SQL> CREATE OR REPLACE TRIGGER trg_restrict_update_worker
+          BEFORE UPDATE OF salary ON workers
+          FOR EACH ROW
+          BEGIN
+            IF TO_CHAR(SYSDATE, 'HH24') >= 15 THEN
+              RAISE_APPLICATION_ERROR(-20010, 'Updates not allowed after 6 PM');
+            END IF;
+          END;
+          /
+
+Trigger created.
+
+
+SQL> update workers set salary=salary+2000;
+update workers set salary=salary+2000
+       *
+ERROR at line 1:
+ORA-20010: Updates not allowed after 6 PM
+ORA-06512: at "SYSTEM.TRG_RESTRICT_UPDATE_WORKER", line 3
+ORA-04088: error during execution of trigger
+'SYSTEM.TRG_RESTRICT_UPDATE_WORKER'
+
+SQL> CREATE OR REPLACE TRIGGER trg_prevent_delete_product
+     BEFORE DELETE ON category
+     FOR EACH ROW
+     DECLARE
+         v_count NUMBER;
+     BEGIN
+         SELECT COUNT(*)
+         INTO v_count
+         FROM product
+         WHERE category_id = :OLD.category_id;
+   
+         IF v_count > 0 THEN
+             RAISE_APPLICATION_ERROR(-20011,
+             'Cannot delete category because product exist');
+         END IF;
+     END;
+     /
+
+Trigger created.
+
+SQL> delete from product where category_id = 'cat01';
+delete from product where category_id = 'cat01'
+            *
+ERROR at line 1:
+ORA-20010: Cannot delete product with stock available
+ORA-06512: at "SYSTEM.TRG_BEFORE_DELETE_PRODUCT", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.TRG_BEFORE_DELETE_PRODUCT'
+
+SQL> UPDATE Enroll
+  2  SET marks = marks * 1.1
+  3  WHERE course_id IN (
+  4      SELECT course_id
+  5      FROM Teaches
+  6      WHERE instructor_name = 'Dr. Kumar'
+  7  );
+
+2 rows updated.
+
+SQL> select * from enroll;
+
+STUDENT_ID COURSE_ID       MARKS
+---------- ---------- ----------
+S1         C1               93.5
+S1         C2                 78
+S2         C1                 99
+S3         C3                 88
+
+SQL> SELECT student_name
+  2  FROM Student s, Enroll e
+  3  WHERE s.student_id = e.student_id
+  4  AND marks = (
+  5      SELECT MAX(marks)
+  6      FROM Enroll
+  7      WHERE marks < (SELECT MAX(marks) FROM Enroll)
+  8  );
+
+STUDENT_NAME
+--------------------------------------------------
+Ravi
+
+SQL> SELECT DISTINCT course_name
+  2  FROM Course c, Enroll e
+  3  WHERE c.course_id = e.course_id
+  4  AND marks > (SELECT AVG(marks) FROM Enroll);
+
+COURSE_NAME
+--------------------------------------------------
+DBMS
+
+SQL> SELECT student_name, city
+  2  FROM Student
+  3  WHERE student_id IN (
+  4      SELECT student_id
+  5      FROM Enroll
+  6      WHERE marks > 80
+  7  );
+
+STUDENT_NAME
+--------------------------------------------------
+CITY
+--------------------------------------------------
+Ravi
+Chennai
+
+Anu
+Madurai
+
+Karthik
+Coimbatore
+
+SQL> CREATE OR REPLACE FUNCTION GET_MAX_ENROLL_COURSE
+  2       RETURN VARCHAR2
+  3       IS
+  4           V_COURSE_NAME COURSE.COURSE_NAME%TYPE;
+  5       BEGIN
+  6           SELECT COURSE_NAME INTO V_COURSE_NAME
+  7           FROM (SELECT C.COURSE_NAME FROM COURSE C JOIN ENROLL E ON C.COURSE_ID = E.COURSE_ID
+  8           GROUP BY C.COURSE_ID, C.COURSE_NAME
+  9           ORDER BY COUNT(*) DESC) WHERE ROWNUM = 1;
+ 10
+ 11           RETURN V_COURSE_NAME;
+ 12       END;
+ 13       /
+
+Function created.
+
+SQL>
+SQL> SELECT GET_MAX_ENROLL_COURSE FROM DUAL;
+
+GET_MAX_ENROLL_COURSE
+--------------------------------------------------------------------------------
+DBMS
+
+SQL> SELECT staff_name
+  2  FROM Staff
+  3  WHERE UPPER(block) IN ('A','C');
+
+STAFF_NAME
+--------------------------------------------------
+Ram
+Lekshmi
+Kumari
+
+SQL> SELECT *
+  2  FROM Books
+  3  WHERE UPPER(category) IN ('PROGRAMMING','TECHNOLOGY');
+
+BOOK_I BOOK_TITLE                AUTHOR               CATEGORY        PRICE
+------ ------------------------- -------------------- --------------- -----
+B9     Big Data                  Viktor Mayer         Technology        720
+B10    Python Programming        Guido Rossum         Programming       450
+B11    Java Programming          Herbert Schildt      Programming       480
+B12    C Programming             Dennis Ritchie       Programming       350
+
+SQL> SELECT M.*
+  2  FROM Members M
+  3  JOIN Fine F ON M.member_id = F.member_id
+  4  WHERE F.amount > 50;
+
+MEMBER_ID  MEMBER_NAME                                        DEPT
+---------- -------------------------------------------------- --------------------------------------------------
+ADDRESS                                                                                              PHONE
+---------------------------------------------------------------------------------------------------- ---------------
+M2         Anu                                                IT
+Madurai                                                                                              9876501234
+
+SQL> SELECT member_id, member_name, dept, address, phone
+  2  FROM Members M
+  3  JOIN Fine F ON M.member_id = F.member_id
+  4  WHERE F.amount > 50
+  5  ;
+SELECT member_id, member_name, dept, address, phone
+       *
+ERROR at line 1:
+ORA-00918: column ambiguously defined
+
+
+SQL> SELECT NULL, book_title, category, author, price
+  2  FROM Books
+  3  WHERE UPPER(category) IN ('PROGRAMMING','TECHNOLOGY');
+
+N BOOK_TITLE                CATEGORY        AUTHOR               PRICE
+- ------------------------- --------------- -------------------- -----
+  Big Data                  Technology      Viktor Mayer           720
+  Python Programming        Programming     Guido Rossum           450
+  Java Programming          Programming     Herbert Schildt        480
+  C Programming             Programming     Dennis Ritchie         350
+
+SQL> CREATE OR REPLACE VIEW member_book_view AS
+  2  SELECT
+  3      M.member_id,
+  4      M.member_name,
+  5      B.book_title
+  6  FROM Members M
+  7  JOIN Borrow BR ON M.member_id = BR.member_id
+  8  JOIN Books B ON BR.book_id = B.book_id;
+
+View created.
+
+SQL> SELECT * FROM member_book_view;
+
+MEMBER_ID  MEMBER_NAME                                        BOOK_TITLE
+---------- -------------------------------------------------- -------------------------
+M1         Ravi                                               Python Programming
+M2         Anu                                                Java Programming
+M3         Karthik                                            C Programming
+
+SQL> CREATE OR REPLACE PROCEDURE add_new_book (
+  2      p_book_id     IN NUMBER,
+  3      p_book_title  IN VARCHAR2,
+  4      p_author      IN VARCHAR2,
+  5      p_category    IN VARCHAR2,
+  6      p_price       IN NUMBER
+  7  )
+  8  IS
+  9  BEGIN
+ 10      INSERT INTO Books (book_id, book_title, author, category, price)
+ 11      VALUES (p_book_id, p_book_title, p_author, p_category, p_price);
+ 12
+ 13      DBMS_OUTPUT.PUT_LINE('Book inserted successfully');
+ 14  EXCEPTION
+ 15      WHEN DUP_VAL_ON_INDEX THEN
+ 16          DBMS_OUTPUT.PUT_LINE('Error: Book ID already exists');
+ 17      WHEN OTHERS THEN
+ 18          DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+ 19  END;
+ 20  /
+
+Procedure created.
+
+SQL> SELECT *
+  2  FROM Members
+  3  ORDER BY member_name;
+
+MEMBER_ID  MEMBER_NAME                                        DEPT
+---------- -------------------------------------------------- --------------------------------------------------
+ADDRESS                                                                                              PHONE
+---------------------------------------------------------------------------------------------------- ---------------
+M2         Anu                                                IT
+Madurai                                                                                              9876501234
+
+M5         Arun                                               MECH
+Trichy                                                                                               9988776655
+
+M4         Divya                                              EEE
+Salem                                                                                                9012345678
+
+M3         Karthik                                            ECE
+Coimbatore                                                                                           9123456780
+
+M1         Ravi                                               CSE
+Chennai                                                                                              9876543210
+
+
+
+SQL> SET SERVEROUTPUT ON;
+SQL> CREATE OR REPLACE PROCEDURE add_new_book (
+  2      p_book_id     IN NUMBER,
+  3      p_book_title  IN VARCHAR2,
+  4      p_author      IN VARCHAR2,
+  5      p_category    IN VARCHAR2,
+  6      p_price       IN NUMBER
+  7  )
+  8  IS
+  9  BEGIN
+ 10      INSERT INTO Books (book_id, book_title, author, category, price)
+ 11      VALUES (p_book_id, p_book_title, p_author, p_category, p_price);
+ 12
+ 13      DBMS_OUTPUT.PUT_LINE('Book inserted successfully');
+ 14  EXCEPTION
+ 15      WHEN DUP_VAL_ON_INDEX THEN
+ 16          DBMS_OUTPUT.PUT_LINE('Error: Book ID already exists');
+ 17      WHEN OTHERS THEN
+ 18          DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+ 19  END;
+ 20  /
+
+Procedure created.
+
+SQL> BEGIN
+  2      add_new_book(111, 'Machine Learning', 'Tom Mitchell', 'AI', 900);
+  3  END;
+  4  /
+Book inserted successfully
+
+PL/SQL procedure successfully completed.
+
+SQL> CREATE INDEX idx_member_name
+  2  ON Members(member_name);
+
+Index created.
+
