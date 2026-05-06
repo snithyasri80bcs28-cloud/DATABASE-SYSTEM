@@ -1,0 +1,3416 @@
+=====================================
+HACKERANK
+=====================================
+
+
+package unipack;
+
+import javax.swing.*;
+
+import javax.swing.table.DefaultTableModel;
+
+import java.awt.*;
+
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
+
+public class ShoppingSystem {
+
+
+
+    Connection con;
+
+    int loggedCustomerId = -1;
+
+
+
+    JTable cartTable, productTable, orderTable, checkoutTable;
+
+ // 🎨 THEME METHODS
+
+    void applyTheme() {
+
+        UIManager.put("Panel.background", new Color(250,245,255));
+
+        UIManager.put("OptionPane.background", new Color(250,245,255));
+
+        UIManager.put("Button.font", new Font("Segoe UI", Font.BOLD, 14));
+
+        UIManager.put("Label.font", new Font("Segoe UI", Font.PLAIN, 14));
+
+        UIManager.put("TextField.font", new Font("Segoe UI", Font.PLAIN, 14));
+
+    }
+
+
+
+    JButton btn(String text, Color c) {
+
+        JButton b = new JButton(text);
+
+        b.setBackground(c);
+
+        b.setForeground(Color.DARK_GRAY);
+
+        b.setFocusPainted(false);
+
+        b.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
+
+        return b;
+
+    }
+
+
+
+    void styleFrame(JFrame f, Color c){
+
+        f.getContentPane().setBackground(c);
+
+        f.setLocationRelativeTo(null);
+
+    }
+
+
+
+    public ShoppingSystem() {
+
+        applyTheme(); // ✅ ADD THIS LINE FIRST
+
+        try {
+
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+
+            con = DriverManager.getConnection(
+            		"jdbc:oracle:thin:@//localhost:1521/XEPDB1",
+                    //"jdbc:oracle:thin:@localhost:1521:XEPDB1",
+                    "System",
+                    "Nithya021"
+
+            		
+            );
+
+            con.setAutoCommit(true);
+
+        } catch (Exception e) {
+
+            System.out.println(e);
+
+        }
+
+    }
+
+
+
+    // ---------------- START ----------------
+
+    void startPage() {
+
+        JFrame f = new JFrame("Online Shopping");
+
+        f.setSize(400,300);
+
+        f.setLayout(new GridLayout(3,1,15,15));
+
+        styleFrame(f, new Color(245,250,255));
+
+
+
+        JButton login = btn("Customer Login", new Color(200,230,255));
+
+        JButton reg = btn("Register", new Color(210,255,210));
+
+        JButton admin = btn("Admin Login", new Color(255,220,220));
+
+        
+
+        f.add(login); f.add(reg); f.add(admin);
+
+
+
+        login.addActionListener(e -> customerLogin());
+
+        reg.addActionListener(e -> register());
+
+        admin.addActionListener(e -> adminLogin());
+
+
+
+        f.setVisible(true);
+
+    }
+
+
+
+    // ---------------- REGISTER ----------------
+
+    void register() {
+
+        JFrame f = new JFrame("Register");
+
+        styleFrame(f, new Color(255,250,240));
+
+        
+
+        f.setSize(300,250);
+
+        f.setLayout(new GridLayout(5,2));
+
+
+
+        JTextField name = new JTextField();
+
+        JTextField email = new JTextField();
+
+        JTextField phone = new JTextField();
+
+        JTextField pass = new JTextField();
+
+
+
+        JButton btn = btn("Register", new Color(255,230,200));
+
+
+
+        f.add(new JLabel("Name")); f.add(name);
+
+        f.add(new JLabel("Email")); f.add(email);
+
+        f.add(new JLabel("Phone")); f.add(phone);
+
+        f.add(new JLabel("Password")); f.add(pass);
+
+        f.add(btn);
+
+
+
+        btn.addActionListener(e -> {
+
+            try {
+
+
+
+                String n = name.getText().trim();
+
+                String em = email.getText().trim();
+
+                String ph = phone.getText().trim();
+
+                String pw = pass.getText().trim();
+
+
+
+                if(n.isEmpty()){
+
+                    JOptionPane.showMessageDialog(f,"Name cannot be empty!");
+
+                    return;
+
+                }
+
+
+
+                if(em.isEmpty()){
+
+                    JOptionPane.showMessageDialog(f,"Email cannot be empty!");
+
+                    return;
+
+                }
+
+
+
+                if(!em.matches("^[A-Za-z0-9+_.-]+@(.+)$")){
+
+                    JOptionPane.showMessageDialog(f,"Invalid Email!");
+
+                    return;
+
+                }
+
+
+
+                if(ph.isEmpty()){
+
+                    JOptionPane.showMessageDialog(f,"Phone cannot be empty!");
+
+                    return;
+
+                }
+
+
+
+                if(!ph.matches("\\d{10}")){
+
+                    JOptionPane.showMessageDialog(f,"Phone must be 10 digits!");
+
+                    return;
+
+                }
+
+
+
+                if(pw.isEmpty()){
+
+                    JOptionPane.showMessageDialog(f,"Password cannot be empty!");
+
+                    return;
+
+                }
+
+
+
+                if(pw.length() < 4){
+
+                    JOptionPane.showMessageDialog(f,"Password too short!");
+
+                    return;
+
+                }
+
+
+
+                PreparedStatement ps = con.prepareStatement(
+
+                        "INSERT INTO Customers1 VALUES (?,?,?,?,?)"
+
+                );
+
+
+
+                ps.setInt(1,(int)(Math.random()*1000));
+
+                ps.setString(2,n);
+
+                ps.setString(3,em);
+
+                ps.setString(4,ph);
+
+                ps.setString(5,pw);
+
+
+
+                ps.executeUpdate();
+
+
+
+                JOptionPane.showMessageDialog(f,"Registration Successful!");
+
+
+
+            } catch(SQLIntegrityConstraintViolationException ex){
+
+                JOptionPane.showMessageDialog(f,"Email already exists!");
+
+            } catch(Exception ex){
+
+                JOptionPane.showMessageDialog(f,"Error: "+ex.getMessage());
+
+            }
+
+        });
+
+        
+
+        f.setVisible(true);
+
+    }
+
+
+
+    // ---------------- LOGIN ----------------
+
+    void customerLogin() {
+
+
+
+        String email = JOptionPane.showInputDialog("Email");
+
+        String pass = JOptionPane.showInputDialog("Password");
+
+
+
+        // 🔥 EMPTY VALIDATION
+
+        if(email == null || email.trim().isEmpty()){
+
+            JOptionPane.showMessageDialog(null,"Email cannot be empty!");
+
+            return;
+
+        }
+
+
+
+        if(pass == null || pass.trim().isEmpty()){
+
+            JOptionPane.showMessageDialog(null,"Password cannot be empty!");
+
+            return;
+
+        }
+
+
+
+        try {
+
+
+
+            // 🔥 STEP 1: CHECK EMAIL ONLY
+
+            PreparedStatement ps = con.prepareStatement(
+
+                    "SELECT customer_id, password FROM Customers1 WHERE email=?"
+
+            );
+
+
+
+            ps.setString(1,email.trim());
+
+            ResultSet rs = ps.executeQuery();
+
+
+
+            //  EMAIL NOT FOUND
+
+            if(!rs.next()){
+
+                JOptionPane.showMessageDialog(null,"Email not registered!");
+
+                return;
+
+            }
+
+
+
+            int id = rs.getInt("customer_id");
+
+            String dbPass = rs.getString("password");
+
+
+
+            //  PASSWORD WRONG
+
+            if(!dbPass.equals(pass)){
+
+                JOptionPane.showMessageDialog(null,"Incorrect Password!");
+
+                return;
+
+            }
+
+
+
+            // ✅ SUCCESS
+
+            loggedCustomerId = id;
+
+            JOptionPane.showMessageDialog(null,"Login Successful!");
+
+            customerDashboard();
+
+
+
+        } catch(Exception e){
+
+            JOptionPane.showMessageDialog(null,"Login Error: " + e.getMessage());
+
+        }
+
+    }
+
+
+
+    void adminLogin() {
+
+        String u = JOptionPane.showInputDialog("Admin Username");
+
+        String p = JOptionPane.showInputDialog("Password");
+
+
+
+        if(u.equals("admin")){
+
+        	if(p.equals("admin123")){
+
+        		adminDashboard();
+
+        	}
+
+        	else {
+
+        		JOptionPane.showMessageDialog(null,"Pasword is wrong");
+
+        		}
+
+        	}
+
+        else {
+
+            JOptionPane.showMessageDialog(null,"User id is wrong");
+
+        }
+
+    }
+
+
+
+    // ---------------- ADMIN ----------------
+
+    void adminDashboard() {
+
+
+
+        JFrame f = new JFrame("Admin");
+
+        styleFrame(f, new Color(245,255,250));
+
+        f.setSize(700,400);
+
+
+
+        JTabbedPane tabs = new JTabbedPane();
+
+        tabs.add("Products", productPanel());
+
+        tabs.add("Orders", ordersPanel());
+
+
+
+        JButton logout = btn("Logout", new Color(255,200,200));
+
+
+
+        f.add(tabs,BorderLayout.CENTER);
+
+        f.add(logout,BorderLayout.SOUTH);
+
+
+
+        logout.addActionListener(e -> {
+
+            f.dispose();
+
+            startPage();
+
+        });
+
+
+
+        f.setVisible(true);
+
+
+
+        new Timer(10000,e->{
+
+            loadProducts(productTable);
+
+            loadOrders(orderTable);
+
+        }).start();
+
+    }
+
+
+
+    JPanel productPanel() {
+
+
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+
+
+        JPanel form = new JPanel(new GridLayout(6,2,10,10));
+
+
+
+        JTextField name = new JTextField();
+
+        JTextField cat = new JTextField();
+
+        JTextField price = new JTextField();
+
+        JTextField stock = new JTextField();
+
+
+
+        JButton add = new JButton("Add");
+
+        JButton update = new JButton("Update");
+
+        JButton delete = new JButton("Delete");
+
+
+
+        form.add(new JLabel("Product Name:"));
+
+        form.add(name);
+
+        form.add(new JLabel("Category:"));
+
+        form.add(cat);
+
+        form.add(new JLabel("Price:"));
+
+        form.add(price);
+
+        form.add(new JLabel("Stock Quantity:"));
+
+        form.add(stock);
+
+
+
+        form.add(add);
+
+        form.add(update);
+
+        form.add(delete);
+
+        form.add(new JLabel(""));
+
+
+
+        productTable = new JTable();
+
+        
+
+        productTable.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+
+                int row = productTable.getSelectedRow();
+
+
+
+                if(row != -1){
+
+                    name.setText(productTable.getValueAt(row,1).toString());
+
+                    cat.setText(productTable.getValueAt(row,2).toString());
+
+                    price.setText(productTable.getValueAt(row,3).toString());
+
+                    stock.setText(productTable.getValueAt(row,4).toString());
+
+                }
+
+            }
+
+        });
+
+
+
+        panel.add(form, BorderLayout.NORTH);
+
+        panel.add(new JScrollPane(productTable), BorderLayout.CENTER);
+
+
+
+        // ---------------- ADD ----------------
+
+        add.addActionListener(e -> {
+
+            try {
+
+
+
+                String productName = name.getText().trim();
+
+                String category = cat.getText().trim();
+
+                String priceStr = price.getText().trim();
+
+                String stockStr = stock.getText().trim();
+
+
+
+                if(productName.isEmpty() || category.isEmpty() ||
+
+                   priceStr.isEmpty() || stockStr.isEmpty()){
+
+                    JOptionPane.showMessageDialog(null,"All fields required!");
+
+                    return;
+
+                }
+
+
+
+                double priceVal = Double.parseDouble(priceStr);
+
+                int stockVal = Integer.parseInt(stockStr);
+
+
+
+                PreparedStatement ps = con.prepareStatement(
+
+                        "INSERT INTO Products1 VALUES (?,?,?,?,?)"
+
+                );
+
+
+
+                ps.setInt(1,(int)(Math.random()*1000));
+
+                ps.setString(2,productName);
+
+                ps.setString(3,category);
+
+                ps.setDouble(4,priceVal);
+
+                ps.setInt(5,stockVal);
+
+
+
+                ps.executeUpdate();
+
+
+
+                JOptionPane.showMessageDialog(null,"Product Added!");
+
+                loadProducts(productTable);
+
+
+
+            } catch(Exception ex){
+
+                JOptionPane.showMessageDialog(null,"Error: " + ex.getMessage());
+
+            }
+
+        });
+
+
+
+        // ---------------- UPDATE ----------------
+
+        update.addActionListener(e -> {
+
+            try {
+
+                int row = productTable.getSelectedRow();
+
+
+
+                if(row == -1){
+
+                    JOptionPane.showMessageDialog(null,"Select product first!");
+
+                    return;
+
+                }
+
+
+
+                String productName = name.getText().trim();
+
+                String category = cat.getText().trim();
+
+                String priceStr = price.getText().trim();
+
+                String stockStr = stock.getText().trim();
+
+
+
+                // 🔥 VALIDATION
+
+                if(productName.isEmpty()){
+
+                    JOptionPane.showMessageDialog(null,"Product name required!");
+
+                    return;
+
+                }
+
+
+
+                if(category.isEmpty()){
+
+                    JOptionPane.showMessageDialog(null,"Category required!");
+
+                    return;
+
+                }
+
+
+
+                if(priceStr.isEmpty()){
+
+                    JOptionPane.showMessageDialog(null,"Price required!");
+
+                    return;
+
+                }
+
+
+
+                if(stockStr.isEmpty()){
+
+                    JOptionPane.showMessageDialog(null,"Stock required!");
+
+                    return;
+
+                }
+
+
+
+                double priceVal;
+
+                int stockVal;
+
+
+
+                // 🔥 SAFE PARSING
+
+                try {
+
+                    priceVal = Double.parseDouble(priceStr);
+
+                } catch(Exception ex){
+
+                    JOptionPane.showMessageDialog(null,"Invalid price! Enter numbers only.");
+
+                    return;
+
+                }
+
+
+
+                try {
+
+                    stockVal = Integer.parseInt(stockStr);
+
+                } catch(Exception ex){
+
+                    JOptionPane.showMessageDialog(null,"Invalid stock! Enter integer.");
+
+                    return;
+
+                }
+
+
+
+                if(priceVal <= 0){
+
+                    JOptionPane.showMessageDialog(null,"Price must be > 0");
+
+                    return;
+
+                }
+
+
+
+                if(stockVal < 0){
+
+                    JOptionPane.showMessageDialog(null,"Stock cannot be negative");
+
+                    return;
+
+                }
+
+
+
+                int pid = (int) productTable.getValueAt(row,0);
+
+
+
+                PreparedStatement ps = con.prepareStatement(
+
+                    "UPDATE Products1 SET product_name=?, category=?, price=?, stock_quantity=? WHERE product_id=?"
+
+                );
+
+
+
+                ps.setString(1,productName);
+
+                ps.setString(2,category);
+
+                ps.setDouble(3,priceVal);
+
+                ps.setInt(4,stockVal);
+
+                ps.setInt(5,pid);
+
+
+
+                ps.executeUpdate();
+
+                name.setText("");
+
+                cat.setText("");
+
+                price.setText("");
+
+                stock.setText("");
+
+                JOptionPane.showMessageDialog(null,"Product Updated!");
+
+                loadProducts(productTable);
+
+
+
+            } catch(Exception ex){
+
+                JOptionPane.showMessageDialog(null,"Error: " + ex.getMessage());
+
+            }
+
+        });
+
+
+
+       
+
+        
+
+        // ---------------- DELETE ----------------
+
+        delete.addActionListener(e -> {
+
+            try {
+
+                int row = productTable.getSelectedRow();
+
+
+
+                if(row == -1){
+
+                    JOptionPane.showMessageDialog(null,"Select product first!");
+
+                    return;
+
+                }
+
+
+
+                int pid = (int) productTable.getValueAt(row,0);
+
+
+
+                PreparedStatement ps = con.prepareStatement(
+
+                    "DELETE FROM Products1 WHERE product_id=?"
+
+                );
+
+
+
+                ps.setInt(1,pid);
+
+                ps.executeUpdate();
+
+                name.setText("");
+
+                cat.setText("");
+
+                price.setText("");
+
+                stock.setText("");
+
+                JOptionPane.showMessageDialog(null,"Product Deleted!");
+
+                loadProducts(productTable);
+
+
+
+            } catch(Exception ex){
+
+                JOptionPane.showMessageDialog(null,"Error: " + ex.getMessage());
+
+            }
+
+        });
+
+     
+
+
+
+        loadProducts(productTable);
+
+        return panel;
+
+    }
+
+    JPanel ordersPanel() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+
+
+        orderTable = new JTable();
+
+
+
+        panel.add(new JScrollPane(orderTable), BorderLayout.CENTER);
+
+
+
+        loadOrders(orderTable);
+
+
+
+        return panel;
+
+    }
+
+
+
+    // ---------------- CUSTOMER ----------------
+
+    void customerDashboard() {
+
+
+
+        JFrame f = new JFrame("Customer");
+
+        styleFrame(f, new Color(250,255,245));
+
+        f.setSize(700,400);
+
+
+
+        JTabbedPane tabs = new JTabbedPane();
+
+        tabs.add("Products", customerProductsPanel());
+
+        tabs.add("Cart", cartPanel());
+
+        tabs.add("Checkout", checkoutPanel());
+
+
+
+        JButton logout = btn("Logout", new Color(255,210,210));
+
+
+
+        f.add(tabs,BorderLayout.CENTER);
+
+        f.add(logout,BorderLayout.SOUTH);
+
+
+
+        logout.addActionListener(e -> {
+
+            f.dispose();
+
+            startPage();
+
+        });
+
+        loadProducts(productTable);
+
+        f.setVisible(true);
+
+
+
+        new Timer(10000,e->{
+
+            loadCart(cartTable);
+
+            loadCart(checkoutTable);
+
+            
+
+        }).start();
+
+    }
+
+
+
+    JPanel customerProductsPanel() {
+
+
+
+        JPanel p = new JPanel(new BorderLayout());
+
+        productTable = new JTable();
+
+        p.setBackground(new Color(245,250,255));
+
+
+
+        JButton add = btn("Add to Cart", new Color(210,255,210));
+
+        
+
+        p.add(new JScrollPane(productTable));
+
+        p.add(add,BorderLayout.SOUTH);
+
+
+
+        add.addActionListener(e->{
+
+            try{
+
+                int row = productTable.getSelectedRow();
+
+                if(row==-1){
+
+                    JOptionPane.showMessageDialog(null,"Select Product");
+
+                    return;
+
+                }
+
+
+
+                int pid = (int)productTable.getValueAt(row,0);
+
+                int qty;
+
+
+
+                try {
+
+                    qty = Integer.parseInt(JOptionPane.showInputDialog("Qty"));
+
+                } catch(Exception ex){
+
+                    JOptionPane.showMessageDialog(null,"Enter valid quantity!");
+
+                    return;
+
+                }
+
+
+
+                if(qty <= 0){
+
+                    JOptionPane.showMessageDialog(null,"Quantity must be > 0!");
+
+                    return;
+
+                }
+
+                
+
+                int cartId = getCartId();
+
+
+
+                PreparedStatement ps = con.prepareStatement(
+
+                        "INSERT INTO Cart_Items VALUES (?,?,?,?)"
+
+                );
+
+
+
+                ps.setInt(1,(int)(Math.random()*1000));
+
+                ps.setInt(2,cartId);
+
+                ps.setInt(3,pid);
+
+                ps.setInt(4,qty);
+
+
+
+                ps.executeUpdate();
+
+
+
+            }catch(Exception ex){ System.out.println(ex); }
+
+        });
+
+
+
+        loadProducts(productTable);
+
+        return p;
+
+    }
+
+
+
+    JPanel cartPanel() {
+
+
+
+        JPanel p = new JPanel(new BorderLayout());
+
+        cartTable = new JTable();
+
+        p.setBackground(new Color(245,250,255));
+
+
+
+        JButton remove = btn("Remove", new Color(255,220,220));
+
+        JButton update = btn("Update Qty", new Color(255,240,200));
+
+
+
+        JPanel btn = new JPanel();
+
+        btn.add(remove);
+
+        btn.add(update);
+
+
+
+        p.add(new JScrollPane(cartTable));
+
+        p.add(btn,BorderLayout.SOUTH);
+
+
+
+        remove.addActionListener(e->removeItem());
+
+        update.addActionListener(e->updateQty());
+
+        
+
+        loadCart(cartTable);
+
+        return p;
+
+    }
+
+
+
+    void removeItem(){
+
+        try{
+
+            int row = cartTable.getSelectedRow();
+
+
+
+            if(row == -1){
+
+                JOptionPane.showMessageDialog(null,"Select item first!");
+
+                return;
+
+            }
+
+
+
+            int productId = (int) cartTable.getValueAt(row,0);
+
+            int cartId = getCartId();
+
+
+
+            PreparedStatement ps = con.prepareStatement(
+
+                "DELETE FROM Cart_Items WHERE cart_id=? AND product_id=?"
+
+            );
+
+
+
+            ps.setInt(1,cartId);
+
+            ps.setInt(2,productId);
+
+            ps.executeUpdate();
+
+
+
+            loadCart(cartTable);
+
+
+
+        }catch(Exception e){ System.out.println(e); }
+
+    }
+
+
+
+    void updateQty(){
+
+        try{
+
+            int row = cartTable.getSelectedRow();
+
+
+
+            if(row == -1){
+
+                JOptionPane.showMessageDialog(null,"Select item first!");
+
+                return;
+
+            }
+
+
+
+            int productId = (int) cartTable.getValueAt(row,0);
+
+            int cartId = getCartId();
+
+
+
+            int qty;
+
+
+
+            try {
+
+                qty = Integer.parseInt(JOptionPane.showInputDialog("New Qty"));
+
+            } catch(Exception ex){
+
+                JOptionPane.showMessageDialog(null,"Invalid number!");
+
+                return;
+
+            }
+
+
+
+            if(qty <= 0){
+
+                JOptionPane.showMessageDialog(null,"Quantity must be positive!");
+
+                return;
+
+            }
+
+            
+
+            PreparedStatement ps = con.prepareStatement(
+
+                "UPDATE Cart_Items SET quantity=? WHERE cart_id=? AND product_id=?"
+
+            );
+
+
+
+            ps.setInt(1,qty);
+
+            ps.setInt(2,cartId);
+
+            ps.setInt(3,productId);
+
+            ps.executeUpdate();
+
+
+
+            loadCart(cartTable);
+
+
+
+        }catch(Exception e){ System.out.println(e); }
+
+    }
+
+
+
+    JPanel checkoutPanel() {
+
+
+
+        JPanel p = new JPanel(new BorderLayout());
+
+        checkoutTable = new JTable();
+
+        JButton checkout = btn("Checkout", new Color(200,230,255));
+
+        p.setBackground(new Color(245,250,255));
+
+
+
+        p.add(new JScrollPane(checkoutTable));
+
+        p.add(checkout,BorderLayout.SOUTH);
+
+
+
+        loadCart(checkoutTable);
+
+        
+
+        checkout.addActionListener(e->{
+
+            try{
+
+
+
+                // ✅ STEP 1: CONFIRM ORDER
+
+                int confirm = JOptionPane.showConfirmDialog(
+
+                        null,
+
+                        "Do you want to place the order?",
+
+                        "Confirm Order",
+
+                        JOptionPane.YES_NO_OPTION
+
+                );
+
+
+
+                if(confirm != JOptionPane.YES_OPTION){
+
+                    return;
+
+                }
+
+
+
+                // ✅ STEP 2: GET ADDRESS
+
+                String address = JOptionPane.showInputDialog("Enter Delivery Address");
+
+
+
+                if(address == null || address.trim().isEmpty()){
+
+                    JOptionPane.showMessageDialog(null,"Address cannot be empty!");
+
+                    return;
+
+                }
+
+
+
+                int cartId = getCartId();
+
+                int orderId = (int)(Math.random()*1000);
+
+                double total = 0;
+
+
+
+                // 👉 Get Customer Name
+
+                String custName = "";
+
+                PreparedStatement custPs = con.prepareStatement(
+
+                    "SELECT name FROM Customers1 WHERE customer_id=?"
+
+                );
+
+                custPs.setInt(1, loggedCustomerId);
+
+                ResultSet custRs = custPs.executeQuery();
+
+                if(custRs.next()){
+
+                    custName = custRs.getString(1);
+
+                }
+
+
+
+                // 👉 Fetch Cart Items
+
+                PreparedStatement ps = con.prepareStatement(
+
+                    "SELECT ci.product_id, p.product_name, ci.quantity, p.price " +
+
+                    "FROM Cart_Items ci JOIN Products1 p ON ci.product_id=p.product_id WHERE ci.cart_id=?"
+
+                );
+
+
+
+                ps.setInt(1,cartId);
+
+                ResultSet rs = ps.executeQuery();
+
+
+
+                StringBuilder bill = new StringBuilder();
+                
+                //StringBuilder bill = new StringBuilder();
+                
+
+
+
+                bill.append("\n========== 🧾 BILL ==========\n");
+
+                bill.append("Customer Name : ").append(custName).append("\n");
+
+                bill.append("Address       : ").append(address).append("\n");
+                
+                bill.append("Payment Mode  : Cash on Delivery\n");
+                
+                bill.append("Payment Mode  : Cash on Delivery\n");
+                                
+                bill.append("Date: "+new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())+"\n\n");
+                
+                bill.append("GST(17%)  : 2500\n");
+             
+                
+
+                bill.append("---------------------------------\n");
+
+                bill.append(String.format("%-15s %-5s %-10s %-10s\n","Product","Qty","Price","Total"));
+
+                bill.append("---------------------------------\n");
+                
+               // bill.append("GST(17%)  : 2500\n");
+
+
+                // 👉 Calculate total + build bill
+
+                while(rs.next()){
+
+                    String pname = rs.getString("product_name");
+
+                    int qty = rs.getInt("quantity");
+
+                    double price = rs.getDouble("price");
+
+
+
+                    double amt = qty * price;
+                    
+
+
+
+                    bill.append(String.format(
+
+                        "%-15s %-5d %-10.2f %-10.2f\n",
+
+                        pname,
+
+                        qty,
+
+                        price,
+
+                        amt
+
+                    ));
+                    
+                    
+                    total += amt;
+
+
+
+                }
+
+
+
+                bill.append("---------------------------------\n");
+
+                bill.append("TOTAL AMOUNT : ").append(String.format("%.2f",total+2500)).append("\n");
+
+                bill.append("=================================\n");
+
+                
+
+                boolean stockOk = true;
+
+                String msg = "";
+
+
+
+                rs = ps.executeQuery();
+
+
+
+                while(rs.next()){
+
+                    int pid = rs.getInt("product_id");
+
+                    int qty = rs.getInt("quantity");
+
+
+
+                    PreparedStatement check = con.prepareStatement(
+
+                        "SELECT stock_quantity FROM Products1 WHERE product_id=?"
+
+                    );
+
+                    check.setInt(1,pid);
+
+                    ResultSet crs = check.executeQuery();
+
+
+
+                    if(crs.next()){
+
+                        int available = crs.getInt(1);
+
+
+
+                        if(qty > available){
+
+                            stockOk = false;
+
+                            msg += "Only " + available + " available for Product ID: " + pid + "\n";
+
+                        }
+
+                    }
+
+                }
+
+
+
+                if(!stockOk){
+
+                    JOptionPane.showMessageDialog(null,msg);
+
+                    return;
+
+                }
+
+                // 👉 Insert Order
+
+                PreparedStatement order = con.prepareStatement(
+
+                    "INSERT INTO Orders VALUES (?,?,SYSDATE,?,?,?)"
+
+                );
+
+
+
+                order.setInt(1,orderId);
+
+                order.setInt(2,loggedCustomerId);
+
+                order.setDouble(3,total);
+
+                order.setString(4,"Placed");
+
+                order.setString(5,address);
+
+                order.executeUpdate();
+
+
+
+                // 👉 Re-execute for order items
+
+                rs = ps.executeQuery();
+
+
+
+                while(rs.next()){
+
+                    int pid = rs.getInt("product_id");
+
+                    int qty = rs.getInt("quantity");
+
+                    double price = rs.getDouble("price");
+
+
+
+                    PreparedStatement oi = con.prepareStatement(
+
+                        "INSERT INTO Order_Items VALUES (?,?,?,?,?)"
+
+                    );
+
+
+
+                    oi.setInt(1,(int)(Math.random()*1000));
+
+                    oi.setInt(2,orderId);
+
+                    oi.setInt(3,pid);
+
+                    oi.setInt(4,qty);
+
+                    oi.setDouble(5,price);
+
+                    oi.executeUpdate();
+
+
+
+                    PreparedStatement stock = con.prepareStatement(
+
+                    	    "UPDATE Products1 SET stock_quantity = stock_quantity - ? WHERE product_id=? AND stock_quantity >= ?"
+
+                    	);
+
+
+
+                    	stock.setInt(1,qty);
+
+                    	stock.setInt(2,pid);
+
+                    	stock.setInt(3,qty);
+
+
+
+                    	int updated = stock.executeUpdate();
+
+
+
+                    	if(updated == 0){
+
+                    	    JOptionPane.showMessageDialog(null,"Stock issue! Order cancelled.");
+
+                    	    return;
+
+                    	}
+
+                }
+
+
+
+                // 👉 CLEAR CART
+
+                PreparedStatement clear = con.prepareStatement(
+
+                    "DELETE FROM Cart_Items WHERE cart_id=?"
+
+                );
+
+
+
+                clear.setInt(1,cartId);
+
+                clear.executeUpdate();
+
+
+
+                loadCart(cartTable);
+
+                loadCart(checkoutTable);
+
+                loadProducts(productTable);
+
+
+
+                // ✅ SHOW BILL (PROPER FORMAT)
+
+                JTextArea area = new JTextArea(bill.toString());
+
+                area.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+                JOptionPane.showMessageDialog(null, new JScrollPane(area), "Bill", JOptionPane.INFORMATION_MESSAGE);
+
+                
+
+                JOptionPane.showMessageDialog(
+
+                	    null,
+
+                	    "Order Placed Successfully!\n\nThank you for shopping!\nVisit Again!",
+
+                	    "Success",
+
+                	    JOptionPane.INFORMATION_MESSAGE
+
+                	);
+
+
+
+            }catch(Exception ex){
+
+                ex.printStackTrace();
+
+            }
+
+        });
+
+
+
+        return p;
+
+    }
+
+
+
+    // ---------------- LOAD ----------------
+
+    void loadProducts(JTable t){
+
+        try{
+
+            ResultSet rs=con.createStatement().executeQuery("SELECT * FROM Products1");
+
+            DefaultTableModel m=new DefaultTableModel(new String[]{"ID","Name","Category","Price","Stock"},0);
+
+            while(rs.next()){
+
+                m.addRow(new Object[]{rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getInt(5)});
+
+            }
+
+            t.setModel(m);
+
+        }catch(Exception e){}
+
+    }
+
+
+
+    void loadCart(JTable t){
+
+        try{
+
+            PreparedStatement ps=con.prepareStatement(
+
+                "SELECT p.product_id, p.product_name, ci.quantity " +
+
+                "FROM Cart_Items ci JOIN Cart c ON ci.cart_id=c.cart_id " +
+
+                "JOIN Products1 p ON ci.product_id=p.product_id " +
+
+                "WHERE c.customer_id=?"
+
+            );
+
+
+
+            ps.setInt(1,loggedCustomerId);
+
+            ResultSet rs=ps.executeQuery();
+
+
+
+            DefaultTableModel m=new DefaultTableModel(
+
+                new String[]{"ID","Product","Qty"},0
+
+            );
+
+
+
+            while(rs.next()){
+
+                m.addRow(new Object[]{
+
+                    rs.getInt(1),
+
+                    rs.getString(2),
+
+                    rs.getInt(3)
+
+                });
+
+            }
+
+
+
+            t.setModel(m);
+
+
+
+        }catch(Exception e){}
+
+    }
+
+
+
+    void loadOrders(JTable t){
+
+        try{
+
+            ResultSet rs=con.createStatement().executeQuery("SELECT * FROM Orders");
+
+            DefaultTableModel m=new DefaultTableModel(new String[]{"ID","Cust","Total","Status"},0);
+
+            while(rs.next()){
+
+                m.addRow(new Object[]{rs.getInt(1),rs.getInt(2),rs.getDouble(4),rs.getString(5)});
+
+            }
+
+            t.setModel(m);
+
+        }catch(Exception e){}
+
+    }
+
+
+
+    int getCartId() throws Exception{
+
+        PreparedStatement ps=con.prepareStatement("SELECT cart_id FROM Cart WHERE customer_id=?");
+
+        ps.setInt(1,loggedCustomerId);
+
+        ResultSet rs=ps.executeQuery();
+
+
+
+        if(rs.next()) return rs.getInt(1);
+
+
+
+        int id=(int)(Math.random()*1000);
+
+        PreparedStatement ps2=con.prepareStatement("INSERT INTO Cart VALUES (?,?,SYSDATE)");
+
+        ps2.setInt(1,id);
+
+        ps2.setInt(2,loggedCustomerId);
+
+        ps2.executeUpdate();
+
+        return id;
+
+    }
+
+
+
+    public static void main(String[] args){
+
+        new ShoppingSystem().startPage();
+
+    }
+
+}
+
+-----------------------------------------------------------------------------------------------
+
+package unipack;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.*;
+import java.util.regex.*;
+
+public class AddEmployeeUI extends JFrame {
+
+    JTextField name,id,email,age,exp,state,district,pincode,street,doj,manager;
+
+    public AddEmployeeUI(){
+
+        setTitle("Add Employee");
+        setSize(600,500);
+        setLocationRelativeTo(null);
+        setLayout(new GridLayout(12,2,10,10));
+
+        name=new JTextField();
+        id=new JTextField();
+        email=new JTextField();
+        age=new JTextField();
+        exp=new JTextField();
+        street=new JTextField();
+        state=new JTextField();
+        district=new JTextField();
+        pincode=new JTextField();
+        doj=new JTextField();
+        manager=new JTextField();
+
+        add(new JLabel("Name")); add(name);
+        add(new JLabel("ID")); add(id);
+        add(new JLabel("Email")); add(email);
+        add(new JLabel("Age")); add(age);
+        add(new JLabel("Experience")); add(exp);
+        add(new JLabel("Street")); add(street);
+        add(new JLabel("State")); add(state);
+        add(new JLabel("District")); add(district);
+        add(new JLabel("Pincode")); add(pincode);
+        add(new JLabel("Date YYYY-MM-DD")); add(doj);
+        add(new JLabel("Manager ID")); add(manager);
+
+        JButton addBtn=new JButton("Add");
+        JButton back=new JButton("Back");
+
+        add(addBtn); 
+        add(back);
+
+        addBtn.addActionListener(e->addEmployee());
+        back.addActionListener(e->{dispose(); new EmployeeMainUI();});
+
+        setVisible(true);
+    }
+
+    void addEmployee(){
+
+        StringBuilder error=new StringBuilder();
+
+        boolean nameErr=false,idErr=false,emailErr=false,
+                stateErr=false,districtErr=false,streetErr=false,
+                pinErr=false,ageErr=false,expErr=false,
+                managerErr=false;   
+
+        if(name.getText().isEmpty() || !name.getText().matches("[A-Za-z ]+")){
+            error.append("Name alphabets only and not empty\n");
+            nameErr=true;
+        }
+
+        if(!id.getText().matches("EMP\\d+")){
+            error.append("ID must be CAPITAL EMP followed by numbers\n");
+            idErr=true;
+        }
+
+        if(email.getText().isEmpty() ||
+                !Pattern.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$",email.getText())){
+            error.append("Invalid Email\n");
+            emailErr=true;
+        }
+
+        if(age.getText().isEmpty()){
+            error.append("Age cannot be empty\n");
+            ageErr=true;
+        } else if(!age.getText().matches("\\d+")){
+            error.append("Age numbers only\n");
+            ageErr=true;
+        }
+
+        if(exp.getText().isEmpty()){
+            error.append("Experience cannot be empty\n");
+            expErr=true;
+        } else if(!exp.getText().matches("\\d+")){
+            error.append("Experience numbers only\n");
+            expErr=true;
+        }
+
+        if(street.getText().isEmpty() || !street.getText().matches("[A-Za-z ]+")){
+            error.append("Street alphabets only\n");
+            streetErr=true;
+        }
+
+        if(state.getText().isEmpty() || !state.getText().matches("[A-Za-z ]+")){
+            error.append("State alphabets only\n");
+            stateErr=true;
+        }
+
+        if(district.getText().isEmpty() || !district.getText().matches("[A-Za-z ]+")){
+            error.append("District alphabets only\n");
+            districtErr=true;
+        }
+
+        if(!pincode.getText().matches("\\d{6}")){
+            error.append("Pincode must be 6 digits\n");
+            pinErr=true;
+        }
+        boolean dateErr=false;
+
+        if(doj.getText().isEmpty()){
+            error.append("Date cannot be empty (YYYY-MM-DD)\n");
+            dateErr=true;
+        }else{
+            try{
+                java.sql.Date.valueOf(doj.getText());
+            }catch(Exception e){
+                error.append("Invalid Date format (YYYY-MM-DD)\n");
+                dateErr=true;
+            }
+        }
+    
+        if(!manager.getText().isEmpty() && !manager.getText().matches("EMP\\d+")){
+            error.append("Manager ID must be EMP followed by numbers\n");
+            managerErr=true;
+        }
+        if(error.length()>0){
+            JOptionPane.showMessageDialog(this,error.toString());
+
+            if(nameErr) name.setText("");
+            if(idErr) id.setText("");
+            if(emailErr) email.setText("");
+            if(ageErr) age.setText("");
+            if(expErr) exp.setText("");
+            if(streetErr) street.setText("");
+            if(stateErr) state.setText("");
+            if(districtErr) district.setText("");
+            if(pinErr) pincode.setText("");
+            if(dateErr) doj.setText("");
+            if(managerErr) manager.setText("");
+            return;
+        }
+
+        try{
+            Connection con=DBConnection.getConnection();
+
+            PreparedStatement checkID=con.prepareStatement(
+                    "select * from employee where employee_id=?");
+            checkID.setString(1,id.getText());
+            ResultSet rs1=checkID.executeQuery();
+
+            if(rs1.next()){
+                JOptionPane.showMessageDialog(this,"Duplicate Employee ID not allowed");
+                id.setText("");
+                return;
+            }
+
+            PreparedStatement checkEmail=con.prepareStatement(
+                    "select * from employee where email=?");
+            checkEmail.setString(1,email.getText());
+            ResultSet rs2=checkEmail.executeQuery();
+
+            if(rs2.next()){
+                JOptionPane.showMessageDialog(this,"Duplicate Email not allowed");
+                email.setText("");
+                return;
+            }
+
+            PreparedStatement ps=con.prepareStatement(
+                    "insert into employee values(?,?,?,?,?,?,?,?,?,?,?)");
+
+            ps.setString(1,name.getText());
+            ps.setString(2,id.getText());
+            ps.setString(3,email.getText());
+            ps.setInt(4,Integer.parseInt(age.getText()));
+            ps.setInt(5,Integer.parseInt(exp.getText()));
+            ps.setString(6,street.getText());
+            ps.setString(7,state.getText());
+            ps.setString(8,district.getText());
+            ps.setInt(9,Integer.parseInt(pincode.getText()));
+            ps.setDate(10,java.sql.Date.valueOf(doj.getText()));
+            if(manager.getText().isEmpty()){
+                ps.setNull(11, Types.VARCHAR);
+            }else{
+                ps.setString(11, manager.getText());
+            }
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this,"Employee Added Successfully");
+
+        }catch(SQLException e){
+
+            if(e.getErrorCode() == 12899){   // 🔥 VALUE TOO LARGE
+
+                JOptionPane.showMessageDialog(this,
+                        "Street should not exceed 15 characters");
+
+                // ✅ CLEAR ONLY STREET FIELD
+                street.setText("");
+                street.requestFocus();
+
+            }
+            else{
+                JOptionPane.showMessageDialog(this,
+                        "Insert Failed");
+            }
+
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(this,"Insert Failed");
+        }
+    }
+}
+
+
+-----------------------------------------------------------------------
+
+package unipack;
+
+import java.sql.*;
+
+public class DBConnection {
+
+    public static Connection getConnection(){
+        try{
+            Class.forName("oracle.jdbc.OracleDriver");
+            return DriverManager.getConnection(
+            		"jdbc:oracle:thin:@//localhost:1521/XEPDB1",
+                    "System",
+                    "Nithya021");
+        }catch(Exception e){
+            return null;
+        }
+    }
+}
+----------------------------------------------------------------------
+
+package unipack;
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.*;
+
+public class DeleteEmployeeUI extends JFrame {
+
+    JTextField id;
+
+    public DeleteEmployeeUI(){
+
+        setTitle("Delete Employee");
+        setSize(350,200);
+        setLayout(new GridLayout(3,2,10,10));
+        setLocationRelativeTo(null);
+
+        id=new JTextField();
+
+        add(new JLabel("Employee ID"));
+        add(id);
+
+        JButton delete=new JButton("Delete");
+        JButton back=new JButton("Back");
+
+        add(delete);
+        add(back);
+
+        delete.addActionListener(e->deleteEmployee());
+        back.addActionListener(e->{dispose(); new EmployeeMainUI();});
+
+        setVisible(true);
+    }
+
+    void deleteEmployee(){
+
+        // 1. Validate ID format
+        if(!id.getText().matches("EMP\\d+")){
+            JOptionPane.showMessageDialog(this,
+                    "Employee ID must be CAPITAL EMP followed by numbers");
+            id.setText("");
+            return;
+        }
+
+        try{
+            Connection con=DBConnection.getConnection();
+
+            // 2. Check employee exists
+            PreparedStatement check=con.prepareStatement(
+                    "select * from employee where employee_id=?");
+            check.setString(1,id.getText());
+
+            ResultSet rs=check.executeQuery();
+
+            if(!rs.next()){
+                JOptionPane.showMessageDialog(this,
+                        "No employee found with this ID");
+                id.setText("");
+                return;
+            }
+
+            // 3. Check if employee is manager
+            PreparedStatement managerCheck=con.prepareStatement(
+                    "select * from employee where manager_id=?");
+            managerCheck.setString(1,id.getText());
+
+            ResultSet rsManager=managerCheck.executeQuery();
+
+            if(rsManager.next()){
+                JOptionPane.showMessageDialog(this,
+                        "This employee is manager for other employees. Cannot delete.");
+                return;
+            }
+
+            // 4. Delete employee
+            PreparedStatement delete=con.prepareStatement(
+                    "delete from employee where employee_id=?");
+            delete.setString(1,id.getText());
+
+            delete.executeUpdate();
+
+            JOptionPane.showMessageDialog(this,"Employee Deleted Successfully");
+            id.setText("");
+
+        }catch(SQLIntegrityConstraintViolationException e){
+            JOptionPane.showMessageDialog(this,
+                    "Employee associated with other domains. Cannot delete.");
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,"Delete Failed");
+        }
+    }
+}
+
+-------------------------------------------------------------------------------------
+
+package unipack;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class EmployeeMainUI extends JFrame {
+
+    public EmployeeMainUI(){
+
+        setTitle("Employee Management System");
+        setSize(450,420);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel panel=new JPanel(new GridLayout(7,1,15,15));
+        panel.setBorder(BorderFactory.createEmptyBorder(30,50,30,50));
+        panel.setBackground(Color.WHITE);
+
+        JLabel title=new JLabel("Welcome to Employee Management System",JLabel.CENTER);
+        title.setFont(new Font("Segoe UI",Font.BOLD,16));
+
+        JButton add=new JButton("Add Employee");
+        JButton update=new JButton("Update Employee");
+        JButton delete=new JButton("Delete Employee");
+        JButton search=new JButton("Search Employee");
+        JButton view=new JButton("View Employees");
+        JButton exit=new JButton("Exit");
+
+        //add.setBackground(new Color(46,204,113));
+        add.setForeground(Color.MAGENTA);
+        update.setForeground(Color.MAGENTA);
+        delete.setForeground(Color.MAGENTA);
+        search.setForeground(Color.MAGENTA);
+        view.setForeground(Color.MAGENTA);
+        exit.setForeground(Color.MAGENTA);
+        //add.setBackground(Color.MEGENTA));
+        /*update.setBackground(new Color(52,152,219));
+        delete.setBackground(new Color(231,76,60));
+        search.setBackground(new Color(155,89,182));
+        view.setBackground(new Color(241,196,15));
+        exit.setBackground(new Color(127,140,141));*/
+
+        panel.add(title);
+        panel.add(add);
+        panel.add(update);
+        panel.add(delete);
+        panel.add(search);
+        panel.add(view);
+        panel.add(exit);
+
+        add(panel);
+
+        add.addActionListener(e->{dispose(); new AddEmployeeUI();});
+        update.addActionListener(e->{dispose(); new UpdateEmployeeUI();});
+        delete.addActionListener(e->{dispose(); new DeleteEmployeeUI();});
+        search.addActionListener(e->{dispose(); new SearchEmployeeUI();});
+        view.addActionListener(e->{dispose(); new ViewEmployeeUI();});
+        exit.addActionListener(e->System.exit(0));
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args){
+        new EmployeeMainUI();
+    }
+}
+
+---------------------------------------------------------------------------------
+
+package unipack;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+
+public class SearchEmployeeUI extends JFrame {
+
+    JTextField id;
+    JTable table;
+    DefaultTableModel model;
+
+    public SearchEmployeeUI(){
+
+        setTitle("Search Employee by ID");
+        setSize(800,450);
+        setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
+
+        // 🔹 TOP PANEL
+        JPanel top = new JPanel(new GridLayout(1,3,10,10));
+
+        id = new JTextField();
+
+        JButton search = new JButton("Search");
+        JButton back = new JButton("Back");
+
+        top.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+        top.add(new JLabel("Employee ID (EMPxxx):"));
+        top.add(id);
+        top.add(search);
+        top.add(back);
+
+        add(top, BorderLayout.NORTH);
+
+        // 🔹 TABLE
+        model = new DefaultTableModel();
+        table = new JTable(model);
+
+        add(new JScrollPane(table), BorderLayout.CENTER);
+
+        // 🔹 ACTIONS
+        search.addActionListener(e -> searchEmployee());
+        back.addActionListener(e -> { dispose(); new EmployeeMainUI(); });
+
+        setVisible(true);
+    }
+
+    // 🔥 SEARCH WITH VALIDATION
+    void searchEmployee(){
+
+        String empId = id.getText().trim();
+
+        // ❌ VALIDATION
+        if(!empId.matches("EMP\\d+")){
+            JOptionPane.showMessageDialog(this,
+                "❌ Invalid ID!\nFormat must be: EMP followed by numbers (e.g., EMP101)");
+            return;
+        }
+
+        try{
+            Connection con = DBConnection.getConnection();
+
+            String sql = "SELECT * FROM employee WHERE employee_id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, empId);
+
+            ResultSet rs = ps.executeQuery();
+
+            model.setRowCount(0);
+            model.setColumnCount(0);
+
+            ResultSetMetaData md = rs.getMetaData();
+            int col = md.getColumnCount();
+
+            for(int i=1; i<=col; i++)
+                model.addColumn(md.getColumnName(i));
+
+            // ❌ NOT FOUND
+            if(!rs.next()){
+                JOptionPane.showMessageDialog(this, "❌ Employee not found");
+                return;
+            }
+
+            // ✅ DISPLAY DATA
+            do{
+                Object[] row = new Object[col];
+                for(int i=1; i<=col; i++)
+                    row[i-1] = rs.getObject(i)==null ? "" : rs.getObject(i);
+
+                model.addRow(row);
+
+            } while(rs.next());
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,"❌ Search failed");
+            e.printStackTrace();
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+package unipack;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class UpdateEmployeeUI extends JFrame {
+
+    JTextField id, name, email, state, district, pincode;
+
+    JCheckBox nameChk, emailChk, stateChk, districtChk, pinChk;
+
+    JButton checkBtn, updateBtn, backBtn;
+
+    public UpdateEmployeeUI() {
+
+        setTitle("Update Employee");
+        setSize(550, 400);
+        setLayout(new GridLayout(8, 2, 10, 10));
+        setLocationRelativeTo(null);
+
+        id = new JTextField();
+        name = new JTextField();
+        email = new JTextField();
+        state = new JTextField();
+        district = new JTextField();
+        pincode = new JTextField();
+
+        nameChk = new JCheckBox("Update Name");
+        emailChk = new JCheckBox("Update Email");
+        stateChk = new JCheckBox("Update State");
+        districtChk = new JCheckBox("Update District");
+        pinChk = new JCheckBox("Update Pincode");
+
+        checkBtn = new JButton("Check ID");
+        updateBtn = new JButton("Update");
+        backBtn = new JButton("Back");
+
+        // Disable fields initially
+        name.setEnabled(false);
+        email.setEnabled(false);
+        state.setEnabled(false);
+        district.setEnabled(false);
+        pincode.setEnabled(false);
+        updateBtn.setEnabled(false);
+
+        // Layout
+        add(new JLabel("Employee ID"));
+        add(id);
+
+        add(checkBtn);
+        add(new JLabel(""));
+
+        add(nameChk);
+        add(name);
+
+        add(emailChk);
+        add(email);
+
+        add(stateChk);
+        add(state);
+
+        add(districtChk);
+        add(district);
+
+        add(pinChk);
+        add(pincode);
+
+        add(updateBtn);
+        add(backBtn);
+
+        // Checkbox Actions
+        nameChk.addActionListener(e -> name.setEnabled(nameChk.isSelected()));
+        emailChk.addActionListener(e -> email.setEnabled(emailChk.isSelected()));
+        stateChk.addActionListener(e -> state.setEnabled(stateChk.isSelected()));
+        districtChk.addActionListener(e -> district.setEnabled(districtChk.isSelected()));
+        pinChk.addActionListener(e -> pincode.setEnabled(pinChk.isSelected()));
+
+        // Button Actions
+        checkBtn.addActionListener(e -> checkEmployee());
+        updateBtn.addActionListener(e -> updateEmployee());
+
+        backBtn.addActionListener(e -> {
+            dispose();
+            new EmployeeMainUI();
+        });
+
+        setVisible(true);
+        
+    }
+    void resetFields() {
+
+        name.setText("");
+        email.setText("");
+        state.setText("");
+        district.setText("");
+        pincode.setText("");
+
+        nameChk.setSelected(false);
+        emailChk.setSelected(false);
+        stateChk.setSelected(false);
+        districtChk.setSelected(false);
+        pinChk.setSelected(false);
+
+        name.setEnabled(false);
+        email.setEnabled(false);
+        state.setEnabled(false);
+        district.setEnabled(false);
+        pincode.setEnabled(false);
+
+        updateBtn.setEnabled(false);
+    }
+    // 🔍 Check Employee
+    void checkEmployee() {
+    	  resetFields();
+
+        if (!id.getText().matches("EMP\\d+")) {
+            JOptionPane.showMessageDialog(this,
+                    "Employee ID must be EMP followed by numbers");
+            id.setText("");
+            return;
+        }
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "select * from employee where employee_id=?");
+
+            ps.setString(1, id.getText());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                JOptionPane.showMessageDialog(this,
+                        "No employee found with this ID");
+                id.setText("");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "Employee Found! Select fields to update");
+
+            updateBtn.setEnabled(true);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error checking employee");
+        }
+    }
+
+    // ✏️ Update Employee
+    void updateEmployee() {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            StringBuilder query = new StringBuilder("update employee set ");
+            ArrayList<Object> values = new ArrayList<>();
+
+            // NAME
+            if (nameChk.isSelected()) {
+                if (!name.getText().matches("[A-Za-z ]+")) {
+                    JOptionPane.showMessageDialog(this, "Name alphabets only");
+                    name.setText("");
+                    name.requestFocus();
+                    return;
+                }
+                query.append("employee_name=?,");
+                values.add(name.getText());
+            }
+
+            // EMAIL
+            if (emailChk.isSelected()) {
+                if (!email.getText().matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$")) {
+                    JOptionPane.showMessageDialog(this, "Invalid Email");
+                    email.setText("");
+                    email.requestFocus();
+                    return;
+                }
+                query.append("email=?,");
+                values.add(email.getText());
+            }
+
+            // STATE
+            if (stateChk.isSelected()) {
+                if (!state.getText().matches("[A-Za-z ]+")) {
+                    JOptionPane.showMessageDialog(this, "State alphabets only");
+                    state.setText("");
+                    state.requestFocus();
+                    return;
+                }
+                query.append("address_state=?,");
+                values.add(state.getText());
+            }
+
+            // DISTRICT
+            if (districtChk.isSelected()) {
+                if (!district.getText().matches("[A-Za-z ]+")) {
+                    JOptionPane.showMessageDialog(this, "District alphabets only");
+                    district.setText("");
+                    district.requestFocus();
+                    return;
+                }
+                query.append("address_district=?,");
+                values.add(district.getText());
+            }
+
+            // PINCODE
+            if (pinChk.isSelected()) {
+                if (!pincode.getText().matches("\\d{6}")) {
+                    JOptionPane.showMessageDialog(this,
+                            "Pincode must be 6 digits");
+                    pincode.setText("");
+                    pincode.requestFocus();
+                    return;
+                }
+                query.append("address_pincode=?,");
+                values.add(Integer.parseInt(pincode.getText()));
+            }
+
+            // No selection
+            if (values.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Select at least one field");
+                return;
+            }
+
+            // Remove last comma
+            query.deleteCharAt(query.length() - 1);
+
+            query.append(" where employee_id=?");
+            values.add(id.getText());
+
+            PreparedStatement ps = con.prepareStatement(query.toString());
+
+            for (int i = 0; i < values.size(); i++) {
+                ps.setObject(i + 1, values.get(i));
+            }
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this,
+                    "Employee Updated Successfully");
+
+        } catch (SQLException e) {
+
+            if (e.getErrorCode() == 1) {   // ORA-00001 duplicate
+
+                JOptionPane.showMessageDialog(this,
+                        "Duplicate Email is not allowed");
+
+                // ✅ SAME LIKE NAME FIELD
+                email.setText("");
+                email.requestFocus();
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Update failed");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Update failed");
+        }
+    }
+}
+
+----------------------------------------------------------------------
+
+package unipack;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.*;
+
+public class ViewEmployeeUI extends JFrame {
+
+    JTable table;
+    DefaultTableModel model;
+
+    public ViewEmployeeUI(){
+
+        setTitle("View Employees");
+        setSize(900,500);
+        setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
+
+        model=new DefaultTableModel();
+        table=new JTable(model);
+
+        add(new JScrollPane(table),BorderLayout.CENTER);
+
+        JButton back=new JButton("Back");
+        add(back,BorderLayout.SOUTH);
+
+        back.addActionListener(e->{dispose(); new EmployeeMainUI();});
+
+        loadEmployees();
+        setVisible(true);
+    }
+
+    void loadEmployees(){
+
+        try{
+            Connection con=DBConnection.getConnection();
+            ResultSet rs=con.prepareStatement("select * from employee").executeQuery();
+
+            ResultSetMetaData md=rs.getMetaData();
+            int col=md.getColumnCount();
+
+            for(int i=1;i<=col;i++)
+                model.addColumn(md.getColumnName(i));
+
+            while(rs.next()){
+                Object[] row=new Object[col];
+                for(int i=1;i<=col;i++)
+                    row[i-1]=rs.getObject(i)==null?"":rs.getObject(i);
+
+                model.addRow(row);
+            }
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,"Load failed");
+        }
+    }
+}
+
+
+----------------------------------------------------------------------------------
+
+package scipack;
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class EmployeeJDBC {
+
+    static Connection con;
+    static Scanner sc;
+
+    public static void main(String[] args) {
+
+        sc = new Scanner(System.in);
+
+        if (!connectDB()) {
+            System.out.println("❌ Database connection failed");
+            return;
+        }
+
+        while (true) {
+            System.out.println("\n===== EMPLOYEE MENU =====");
+            System.out.println("1. Display Employees");
+            System.out.println("2. Add Employee");
+            System.out.println("3. Search Employee");
+            System.out.println("4. Update Employee																	1");
+            System.out.println("5. Delete Employee");
+            System.out.println("6. Exit");
+
+            int ch = getValidInt("Enter choice");
+
+            switch (ch) {
+                case 1: displayEmployees(); break;
+                case 2: addEmployee(); break;
+                case 3: searchEmployee(); break;
+                case 4: updateEmployee(); break;
+                case 5: deleteEmployee(); break;
+                case 6: closeDB(); System.exit(0);
+                default: System.out.println("❌ Invalid choice");
+            }
+        }
+    }
+
+    // 🔹 DB CONNECTION
+    static boolean connectDB() {
+        try {
+            Class.forName("oracle.jdbc.OracleDriver");
+
+            con = DriverManager.getConnection(
+            	"jdbc:oracle:thin:@//localhost:1521/XEPDB1",
+                "System",
+                "Nithya021");
+                
+            System.out.println("✅ Connected to Database");
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("❌ Connection Failed");
+            return false;
+        }
+    }
+
+    static void closeDB() {
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {}
+    }
+
+    // 🔥 VALIDATIONS
+
+    static int getValidInt(String field) {
+        while (true) {
+            System.out.print(field + ": ");
+            String input = sc.nextLine();
+
+            if (!input.matches("\\d+")) {
+                System.out.println("❌ " + field + " must be a number");
+            } else return Integer.parseInt(input);
+        }
+    }
+
+    static String getValidId() {
+        while (true) {
+            System.out.print("Enter Employee ID (EMPxxx): ");
+            String id = sc.nextLine();
+
+            if (!id.matches("EMP\\d+")) {
+                System.out.println("❌ ID must start with EMP");
+            } else return id;
+        }
+    }
+
+    static String getUniqueEmployeeId() {
+        while (true) {
+            String id = getValidId();
+
+            if (employeeExists(id)) {
+                System.out.println("❌ Employee already exists with this ID");
+            } else return id;
+        }
+    }
+
+    static String getValidManagerId(String empId) {
+        while (true) {
+            System.out.print("Enter Manager ID (press Enter if none): ");
+            String id = sc.nextLine();
+
+            if (id.isEmpty()) return null;
+
+            if (!id.matches("EMP\\d+")) {
+                System.out.println("❌ Manager ID must start with EMP");
+            }
+            else if (id.equals(empId)) {
+                System.out.println("❌ Employee cannot be their own manager");
+            }
+            else if (!employeeExists(id)) {
+                System.out.println("❌ This ID is not a valid Manager");
+            }
+            else return id;
+        }
+    }
+
+    static String getValidName() {
+        while (true) {
+            System.out.print("Enter Name: ");
+            String name = sc.nextLine();
+
+            if (!name.matches("[A-Za-z ]+")) {
+                System.out.println("❌ Name must contain only alphabets");
+            } else return name;
+        }
+    }
+
+    static String getValidEmail() {
+        while (true) {
+            System.out.print("Enter Email: ");
+            String email = sc.nextLine();
+
+            // ✅ Format validation
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$")) {
+                System.out.println("❌ Invalid email format");
+                continue;
+            }
+
+            // 🔍 Check duplicate email
+            if (emailExists(email)) {
+                System.out.println("❌ Duplicate Email Not Allowed");
+                continue;
+            }
+
+            // ✅ Valid email
+            return email;
+        }
+    }
+    static boolean emailExists(String email) {
+        try {
+            PreparedStatement ps = con.prepareStatement(
+                "SELECT email FROM employee WHERE email=?");
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next(); // true if found
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    static String getValidText(String field) {
+        while (true) {
+            System.out.print("Enter " + field + ": ");
+            String val = sc.nextLine();
+
+            if (!val.matches("[A-Za-z ]+")) {
+                System.out.println("❌ " + field + " must contain only alphabets");
+            } else return val;
+        }
+    }
+
+    static int getValidPincode() {
+        while (true) {
+            System.out.print("Enter Pincode (6 digits): ");
+            String pin = sc.nextLine();
+
+            if (!pin.matches("\\d{6}")) {
+                System.out.println("❌ Pincode must be 6 digits");
+            } else return Integer.parseInt(pin);
+        }
+    }
+
+    static Date getValidDate() {
+        while (true) {
+            try {
+                System.out.print("Enter Date (YYYY-MM-DD): ");
+                return Date.valueOf(sc.nextLine());
+            } catch (Exception e) {
+                System.out.println("❌ Invalid date format");
+            }
+        }
+    }
+    
+    static int getEmployeeAge(String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement(
+                "SELECT employee_age FROM employee WHERE employee_id=?");
+
+            ps.setString(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {}
+        
+        return 0;
+    }
+
+    // 🔹 CHECK EXISTENCE
+    static boolean employeeExists(String id) {
+        try {
+            PreparedStatement ps = con.prepareStatement(
+                "SELECT employee_id FROM employee WHERE employee_id=?");
+            ps.setString(1, id);
+            return ps.executeQuery().next();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // 🔥 DISPLAY
+    static void displayEmployees() {
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM employee");
+            ResultSet rs = ps.executeQuery();
+
+            System.out.println("\n--- EMPLOYEES ---");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getString("EMPLOYEE_ID") + " | " +
+                    rs.getString("EMPLOYEE_NAME") + " | " +
+                    rs.getString("EMAIL") + " | Manager: " +
+                    rs.getString("MANAGER_ID")
+                );
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ Fetch failed");
+        }
+    }
+
+    // 🔥 ADD
+    static void addEmployee() {
+        try {
+            String id = getUniqueEmployeeId();
+            String name = getValidName();
+            String email = getValidEmail();
+            int age = getValidInt("Age");
+
+         // 🔥 FIX 1: AGE VALIDATION BEFORE DB
+            while (age < 18 || age > 60) {
+                System.out.println("❌ Insert failed: Age must be between 18 and 60");
+             age = getValidInt("Age");//return;
+            }
+
+            int exp = getValidInt("Experience");
+
+         // 🔥 FIX 2: EXPERIENCE VALIDATION
+            while (exp > age) {
+                System.out.println("❌ Insert failed: Experience must be less than or equal to Age");
+             exp = getValidInt("Experience");//return;
+            }
+            /*int age = getValidInt("Age");
+            int exp = getValidInt("Experience");
+
+            while (exp > age) {
+                System.out.println("❌ Experience cannot be greater than Age");
+                exp = getValidInt("Experience");
+            }*/
+
+            String street = getValidText("Street");   
+            String state = getValidText("State");
+            String district = getValidText("District");
+            int pincode = getValidPincode();
+            Date doj = getValidDate();
+
+            String managerId = getValidManagerId(id);
+
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO employee VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+
+            ps.setString(1, name);
+            ps.setString(2, id);
+            ps.setString(3, email);
+            ps.setInt(4, age);
+            ps.setInt(5, exp);
+            ps.setString(6, street);
+            ps.setString(7, state);
+            ps.setString(8, district);
+            ps.setInt(9, pincode);
+            ps.setDate(10, doj);
+
+            if (managerId == null)
+                ps.setNull(11, Types.VARCHAR);
+            else
+                ps.setString(11, managerId);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Employee Added");
+
+        }catch (SQLException e) {
+
+            String msg = e.getMessage().toUpperCase();
+
+            if (msg.contains("EMP_AGE_CHK")) {
+                System.out.println("❌ Insert failed: Age must be between 18 and 60");
+            }
+            else if (msg.contains("EMP_EXP_CHK")) {
+                System.out.println("❌ Insert failed: Experience must be less than or equal to Age");
+            }
+            else if (msg.contains("EMP_EMAIL_UNIQUE")) {
+                System.out.println("❌ Insert failed: Email already exists");
+            }
+            else if (msg.contains("EMP_ID_CHK")) {
+                System.out.println("❌ Insert failed: ID must start with EMP");
+            }
+            else {
+                System.out.println("❌ Insert failed");
+            }
+        }
+        catch (Exception e) {
+            System.out.println("❌ Insert failed (General Error)");
+        } /*catch (SQLException e) {
+
+            String msg = e.getMessage();
+
+            if (msg.contains("EMP_AGE_CHK")) {
+                System.out.println("❌ Insert failed: Age must be between 18 and 60");
+            }
+            else if (msg.contains("EMP_EXP_CHK")) {
+                System.out.println("❌ Insert failed: Experience must be less than or equal to Age");
+            }
+            else if (msg.contains("EMP_EMAIL_UNIQUE")) {
+                System.out.println("❌ Insert failed: Email already exists");
+            }
+            else {
+                System.out.println("❌ Insert failed");
+            }
+        }catch (Exception e) {
+            System.out.println("❌ Insert failed");
+        }*/
+    }
+
+    // 🔥 SEARCH
+    static void searchEmployee() {
+        try {
+            System.out.print("Enter Employee ID: ");
+            String id = sc.nextLine();
+
+            PreparedStatement ps = con.prepareStatement(
+                "SELECT * FROM employee WHERE employee_id=?");
+            ps.setString(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("Found: " +
+                    rs.getString("EMPLOYEE_NAME") + " | " +
+                    rs.getString("EMAIL"));
+            } else {
+                System.out.println("❌ Not found");
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ Search failed");
+        }
+    }
+
+ 
+    static void updateEmployee() {
+        try {
+            System.out.print("Enter Employee ID to update: ");
+            String id = sc.nextLine();
+
+            if (!employeeExists(id)) {
+                System.out.println("❌ Employee not found");
+                return;
+            }
+
+            System.out.println("\nEnter fields to update (comma separated)");
+            System.out.println("Options: name, email, age, exp, street, state, district, pincode, doj, manager");
+            System.out.print("Your choice: ");
+
+            String input = sc.nextLine().toLowerCase();
+            String[] fields = input.split(",");
+
+            StringBuilder query = new StringBuilder("UPDATE employee SET ");
+            int count = 0;
+
+            // Store values
+            String name = null, email = null, street = null, state = null, district = null, managerId = null;
+            Integer age = null, exp = null, pincode = null;
+            Date doj = null;
+
+            for (String field : fields) {
+                field = field.trim();
+
+                switch (field) {
+
+                    case "name":
+                        name = getValidName();
+                        query.append("employee_name=?, ");
+                        count++;
+                        break;
+
+                    case "email":
+                        email = getValidEmail();
+                        query.append("email=?, ");
+                        count++;
+                        break;
+                        
+                    case "age":
+                        age = getValidInt("Age");
+
+                        // 🔁 LOOP UNTIL VALID
+                        while (age < 18 || age > 60) {
+                            System.out.println("❌ Age must be between 18 and 60");
+                            age = getValidInt("Age");
+                        }
+
+                        query.append("employee_age=?, ");
+                        count++;
+                        break;
+
+                    case "exp":
+                        exp = getValidInt("Experience");
+
+                        // 🔥 GET CURRENT AGE (VERY IMPORTANT)
+                        int currentAge = (age != null) ? age : getEmployeeAge(id);
+
+                        // 🔁 LOOP UNTIL VALID
+                        while (exp > currentAge) {
+                            System.out.println("❌ Experience must be less than or equal to Age");
+                            exp = getValidInt("Experience");
+                        }
+
+                        query.append("employee_exp=?, ");
+                        count++;
+                        break;
+
+                   /* case "age":
+                        age = getValidInt("Age");
+                        query.append("employee_age=?, ");
+                        count++;
+                        break;
+
+                    case "exp":
+                        exp = getValidInt("Experience");
+                        query.append("employee_exp=?, ");
+                        count++;
+                        break;*/
+
+                    case "street":
+                        street = getValidText("Street");
+                        query.append("address_street=?, ");
+                        count++;
+                        break;
+
+                    case "state":
+                        state = getValidText("State");
+                        query.append("address_state=?, ");
+                        count++;
+                        break;
+
+                    case "district":
+                        district = getValidText("District");
+                        query.append("address_district=?, ");
+                        count++;
+                        break;
+
+                    case "pincode":
+                        pincode = getValidPincode();
+                        query.append("address_pincode=?, ");
+                        count++;
+                        break;
+
+                    case "doj":
+                        doj = getValidDate();
+                        query.append("date_of_joining=?, ");
+                        count++;
+                        break;
+
+                    case "manager":
+                        managerId = getValidManagerId(id);
+                        query.append("manager_id=?, ");
+                        count++;
+                        break;
+
+                    default:
+                        System.out.println("⚠️ Invalid field: " + field);
+                }
+            }
+
+            if (count == 0) {
+                System.out.println("❌ No valid fields selected");
+                return;
+            }
+
+            // remove last comma
+            query.setLength(query.length() - 2);
+
+            query.append(" WHERE employee_id=?");
+
+            PreparedStatement ps = con.prepareStatement(query.toString());
+
+            int index = 1;
+
+            // Set values in same order
+            for (String field : fields) {
+                field = field.trim();
+
+                switch (field) {
+
+                    case "name": ps.setString(index++, name); break;
+                    case "email": ps.setString(index++, email); break;
+                    case "age": ps.setInt(index++, age); break;
+                    case "exp": ps.setInt(index++, exp); break;
+                    case "street": ps.setString(index++, street); break;
+                    case "state": ps.setString(index++, state); break;
+                    case "district": ps.setString(index++, district); break;
+                    case "pincode": ps.setInt(index++, pincode); break;
+                    case "doj": ps.setDate(index++, doj); break;
+
+                    case "manager":
+                        if (managerId == null)
+                            ps.setNull(index++, Types.VARCHAR);
+                        else
+                            ps.setString(index++, managerId);
+                        break;
+                }
+            }
+
+            ps.setString(index, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0)
+                System.out.println("✅ Employee Updated Successfully");
+            else
+                System.out.println("❌ Update failed");
+
+        } catch (SQLException e) {
+
+            String msg = e.getMessage();
+
+            if (msg.contains("EMP_AGE_CHK")) {
+                System.out.println("❌ Update failed: Age must be between 18 and 60");
+            }
+            else if (msg.contains("EMP_EXP_CHK")) {
+                System.out.println("❌ Update failed: Experience must be less than or equal to Age");
+            }
+            else if (msg.contains("EMP_EMAIL_UNIQUE")) {
+                System.out.println("❌ Update failed: Email already exists");
+            }
+            else if (msg.contains("EMP_ID_CHK")) {
+                System.out.println("❌ Update failed: Employee ID must start with EMP");
+            }
+            else {
+                System.out.println("❌ Update failed");
+            }
+        }/*catch (Exception e) {
+            e.printStackTrace();
+        }*/
+    }
+    // 🔥 DELETE
+    static void deleteEmployee() {
+        try {
+            System.out.print("Enter Employee ID: ");
+            String id = sc.nextLine();
+
+            PreparedStatement ps = con.prepareStatement(
+                "DELETE FROM employee WHERE employee_id=?");
+
+            ps.setString(1, id);
+
+            if (ps.executeUpdate() > 0)
+                System.out.println("✅ Deleted");
+            else
+                System.out.println("❌ Not found");
+
+        } catch (Exception e) {
+            System.out.println("❌ Delete failed");
+        }
+    }
+}
+
+OUTPUT:
+
+✅ Connected to Database
+
+===== EMPLOYEE MENU =====
+1. Display Employees
+2. Add Employee
+3. Search Employee
+4. Update Employee																	1
+5. Delete Employee
+6. Exit
+Enter choice: 1
+
+--- EMPLOYEES ---
+EMP001 | Nithya | snithya@gmail.com | Manager: null
+EMP100 | Manager One | manager@gmail.com | Manager: null
+EMP102 | Priya | priya@gmail.com | Manager: EMP100
+EMP006 | Shiva | shiva@gmail.com | Manager: null
+EMP002 | siva | siva@gmail.com | Manager: null
+EMP003 | Akshaya | Akshaya@gmail.com | Manager: EMP100
+EMP004 | Madhu | madhu@gmail.com | Manager: null
+EMP005 | Santhosh | santhosh@gmail.com | Manager: null
+EMP008 | Kumar | nkumar@gmail.com | Manager: null
+EMP01 | NN | U@D.COM | Manager: null
+
+===== EMPLOYEE MENU =====
+1. Display Employees
+2. Add Employee
+3. Search Employee
+4. Update Employee																	1
+5. Delete Employee
+6. Exit
+Enter choice: 2
+Enter Employee ID (EMPxxx): JYJU
+❌ ID must start with EMP
+Enter Employee ID (EMPxxx): EMP10
+Enter Name: NITHYA
+Enter Email: jhgjyu
+❌ Invalid email format
+Enter Email: snithya@gmail.com
+❌ Duplicate Email Not Allowed
+Enter Email: ak@gmail.com
+Age: 21
+Experience: 34
+❌ Insert failed: Experience must be less than or equal to Age
+Experience: 10
+Enter Street: dsfd
+Enter State: TN
+Enter District: SIVAGANGAI
+Enter Pincode (6 digits): 630551
+Enter Date (YYYY-MM-DD): 20007-32
+❌ Invalid date format
+Enter Date (YYYY-MM-DD): 2018-09-09
+Enter Manager ID (press Enter if none): 
+✅ Employee Added
+
+===== EMPLOYEE MENU =====
+1. Display Employees
+2. Add Employee
+3. Search Employee
+4. Update Employee																	1
+5. Delete Employee
+6. Exit
+Enter choice: 3
+Enter Employee ID: EMP10
+Found: NITHYA | ak@gmail.com
+
+===== EMPLOYEE MENU =====
+1. Display Employees
+2. Add Employee
+3. Search Employee
+4. Update Employee																	1
+5. Delete Employee
+6. Exit
+Enter choice: 4
+Enter Employee ID to update: EMP10
+
+Enter fields to update (comma separated)
+Options: name, email, age, exp, street, state, district, pincode, doj, manager
+Your choice: AGE
+Age: 30
+✅ Employee Updated Successfully
+
+===== EMPLOYEE MENU =====
+1. Display Employees
+2. Add Employee
+3. Search Employee
+4. Update Employee																	1
+5. Delete Employee
+6. Exit
+Enter choice: 5
+Enter Employee ID: EMP10
+✅ Deleted
+
+===== EMPLOYEE MENU =====
+1. Display Employees
+2. Add Employee
+3. Search Employee
+4. Update Employee																	1
+5. Delete Employee
+6. Exit
+Enter choice: 6
+-----------------------------------------------------------------------------------------------------------
+
