@@ -1,0 +1,558 @@
+
+SQL> create view customer_city_view as select customer_name, cus_city from customer;
+
+View created.
+
+SQL> select * from customer_city_view;
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+shiva                sivagangai
+kavi                 madurai
+PAVI                 CHENNAI
+ARUN                 SIVAKASI
+DHIVI                MADURAI
+devi                 kalaiyarkovil
+amutha               kalaiyarkovil
+akshaya              kalaiyarkovil
+nathiya              kalaiyarkovil
+shiva                sivagangai
+KAVI                 MADURAI
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+RAVI                 SIVAKASI
+ARUN                 MADURAI
+VARUN                MADURAI
+PARUN                CHENNAI
+
+15 rows selected.
+
+SQL> create view cus_city as select customer_name, cus_city from customer where cus_city = 'madurai';
+
+View created.
+
+SQL> select * from cus_city;
+
+CUSTOMER_NAME        CUS_CITY
+-------------------- --------------------
+kavi                 madurai
+
+SQL> select customer_name from customer;
+
+CUSTOMER_NAME
+--------------------
+shiva
+kavi
+PAVI
+ARUN
+DHIVI
+devi
+amutha
+akshaya
+nathiya
+shiva
+KAVI
+
+CUSTOMER_NAME
+--------------------
+RAVI
+ARUN
+VARUN
+PARUN
+
+15 rows selected.
+
+SQL> select loyalty_points from customer;
+
+LOYALTY_POINTS
+--------------
+            88
+            23
+
+
+
+            30
+            50
+            34
+            60
+            77
+
+
+LOYALTY_POINTS
+--------------
+
+15 rows selected.
+
+
+SQL> create view product_sale_view as select p.product_id,p.product_name,c.category_name,s.sale_status from product p join category c on p.category_id = c.category_id join sales s on p.product_id = s.product_id;
+
+View created.
+
+SQL> select * from product_sale_view;
+
+PRODU PRODUCT_NAME         CATEGORY_NAME        SALE_STATU
+----- -------------------- -------------------- ----------
+pro01 milk                 dairy                paid
+pro02 dhal                 grocery              paid
+
+SQL> create view product_sale_summary as select p.product_id,p.product_name,sum(p.quantity) as total_quantity from product p join sales s on p.product_id = s.product_id group by p.product_id,p.product_name;
+
+View created.
+
+SQL> select * from product_sale_summary;
+
+PRODU PRODUCT_NAME         TOTAL_QUANTITY
+----- -------------------- --------------
+pro01 milk                             20
+pro02 dhal                             20
+
+
+SQL> create view top_quantity as select product_id,product_name total_quantity from product_sale_summary where total_quantity > 15;
+
+View created.
+
+SQL> select * from top_quantity;
+
+PRODU TOTAL_QUANTITY
+----- --------------------
+pro01 milk
+pro02 dhal
+
+SQL> create view product_view as select product_id,product_name,product_price,quantity from product;
+
+View created.
+
+SQL> select * from product_view;
+
+PRODU PRODUCT_NAME         PRODUCT_PRICE   QUANTITY
+----- -------------------- ------------- ----------
+pro01 milk                         10000         20
+pro02 dhal                          1000         20
+
+SQL> update product_view set product_price = product_price * 5 where product_id = 'pro02';
+
+1 row updated.
+
+SQL> select * from product_view;
+
+PRODU PRODUCT_NAME         PRODUCT_PRICE   QUANTITY
+----- -------------------- ------------- ----------
+pro01 milk                         10000         20
+pro02 dhal                          5000         20
+
+SQL> INSERT INTO ProductView (ProductID, ProductName, Price, StockQuantity)
+  2  VALUES (105, 'New Product', 25.50, 100);
+INSERT INTO ProductView (ProductID, ProductName, Price, StockQuantity)
+            *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> insert into product_view (product_id,product_name,product_price,quantity) values ('pro3','notebook',25.5,15);
+
+1 row created.
+
+SQL> select * from product_view;
+
+PRODU PRODUCT_NAME         PRODUCT_PRICE   QUANTITY
+----- -------------------- ------------- ----------
+pro01 milk                         10000         20
+pro02 dhal                          5000         20
+pro3  notebook                      25.5         15
+
+SQL> delete from product_view where product_id = 'pro02';
+
+1 row deleted.
+
+SQL> select * from product_view;
+
+PRODU PRODUCT_NAME         PRODUCT_PRICE   QUANTITY
+----- -------------------- ------------- ----------
+pro01 milk                         10000         20
+pro3  notebook                      25.5         15
+
+SQL> insert into product_view (product_id,product_name,product_price,quantity) values ('pro02','dhal',5000,25);
+
+1 row created.
+
+SQL> select * from product_view;
+
+PRODU PRODUCT_NAME         PRODUCT_PRICE   QUANTITY
+----- -------------------- ------------- ----------
+pro01 milk                         10000         20
+pro3  notebook                      25.5         15
+pro02 dhal                          5000         25
+
+SQL>
+
+
+SQL> set timing on;
+SQL> create index cr1 on customer(customer_id);
+create index cr1 on customer(customer_id)
+                             *
+ERROR at line 1:
+ORA-01408: such column list already indexed
+
+
+Elapsed: 00:00:00.09
+SQL> create index cr1 on customer(customer_name);
+
+Index created.
+
+Elapsed: 00:00:00.07
+SQL> select customer_name,count(*) from customer group by cus_city;
+select customer_name,count(*) from customer group by cus_city
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+
+Elapsed: 00:00:00.00
+SQL> select customer_name,count(*) from customer group by customer_name;
+
+CUSTOMER_NAME          COUNT(*)
+-------------------- ----------
+shiva                         2
+kavi                          1
+PAVI                          1
+ARUN                          2
+DHIVI                         1
+devi                          1
+amutha                        1
+akshaya                       1
+nathiya                       1
+KAVI                          1
+RAVI                          1
+
+CUSTOMER_NAME          COUNT(*)
+-------------------- ----------
+VARUN                         1
+PARUN                         1
+ram                           1
+
+14 rows selected.
+
+Elapsed: 00:00:00.07
+SQL> create unique index i1 on customer(loyalty_points);
+
+Index created.
+
+Elapsed: 00:00:00.06
+SQL> create bitmap index i2 on customer(cus_city);
+
+Index created.
+
+Elapsed: 00:00:00.08
+SQL> create index i4 on customer(cus_city,age);
+
+Index created.
+
+Elapsed: 00:00:00.06
+SQL> select * from customer where age<30 or cus_city like 'k%';
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+cus09 shiva                            88 north street             sivagangai                     630551 25-FEB-26
+        21
+
+cus06 kavi                             23 ddnagar                  madurai                        654789 21-MAR-26
+         0
+
+CUS13 DHIVI                                                        MADURAI
+        22
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+cus01 devi                             30 moorthy nagar            kalaiyarkovil                  630551
+
+
+cus02 amutha                           50 ss nagar                 kalaiyarkovil                  630551
+
+
+cus03 akshaya                          34 thiru nagar              kalaiyarkovil                  630551
+
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET           CUS_CITY              ADDRESS_PINCODE DOB
+----- -------------------- -------------- ------------------------- -------------------- --------------- ---------
+       AGE SUP_NAME
+---------- --------------------
+cus04 nathiya                          60 vip nagar                kalaiyarkovil                  630551
+
+
+CUS24 ARUN                                                         MADURAI
+        23 KAVI
+
+CUS25 VARUN                                                        MADURAI
+        28 KAVI
+
+
+9 rows selected.
+
+Elapsed: 00:00:00.02
+SQL> alter table customer add email varchar(20);
+
+Table altered.
+
+Elapsed: 00:00:00.06
+SQL> insert into customer(customer_id,customer_name,cus_city,email,age) values('cus44','abi','theni','abirami90_nb@mepco.ac',32);
+insert into customer(customer_id,customer_name,cus_city,email,age) values('cus44','abi','theni','abirami90_nb@mepco.ac',32)
+                                                                                                *
+ERROR at line 1:
+ORA-12899: value too large for column "SYSTEM"."CUSTOMER"."EMAIL" (actual: 21, maximum: 20)
+
+
+Elapsed: 00:00:00.08
+SQL> insert into customer(customer_id,customer_name,cus_city,email,age) values('cus44','abi','theni','abi90_nb@mep.ac',32);
+
+1 row created.
+
+Elapsed: 00:00:00.08
+SQL> create index idx_lower_email on customer(lower(email));
+
+Index created.
+
+Elapsed: 00:00:00.08
+SQL> create index inx_name on product(product_name);
+
+Index created.
+
+Elapsed: 00:00:00.06
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Fri Mar 6 13:04:53 2026
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: System
+Enter password:
+Last Successful login time: Thu Feb 26 2026 09:50:33 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> create view top_cus as select rownum as cus_id,cus_name,cus_city from customer where rownum <=5;
+create view top_cus as select rownum as cus_id,cus_name,cus_city from customer where rownum <=5
+                                               *
+ERROR at line 1:
+ORA-00904: "CUS_NAME": invalid identifier
+
+
+SQL> create view top_cus as select rownum as cus_id,customer_name,cus_city from customer where rownum <=5;
+
+View created.
+
+SQL> select * from top_cus;
+
+    CUS_ID CUSTOMER_NAME        CUS_CITY
+---------- -------------------- --------------------
+         1 shiva                sivagangai
+         2 kavi                 madurai
+         3 PAVI                 CHENNAI
+         4 ARUN                 SIVAKASI
+         5 DHIVI                MADURAI
+
+SQL> select * from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+bil03 20-FEB-26         2000 paid       cus03 dis02
+bil04 20-FEB-26         5000 not paid   cus04 dis03
+bil05 20-FEB-26         2400 paid       cus05 dis04
+
+SQL> insert into bill(bill-id,final_amount) select 2400,case when 5000>2000 then 5000 else 2000 end from dual;
+insert into bill(bill-id,final_amount) select 2400,case when 5000>2000 then 5000 else 2000 end from dual
+                     *
+ERROR at line 1:
+ORA-00917: missing comma
+
+
+SQL> insert into bill(bill_id,final_amount) select 2400,case when 5000>2000 then 5000 else 2000 end from dual;
+
+1 row created.
+
+SQL> select * from bill;
+
+BILL_ BILL_DATE FINAL_AMOUNT BILL_STATU CUSTO DISCO
+----- --------- ------------ ---------- ----- -----
+2400                    5000
+bil01 20-FEB-26         5000 paid       cus01 dis01
+bil02 20-FEB-26         6000 paid       cus02 dis02
+bil03 20-FEB-26         2000 paid       cus03 dis02
+bil04 20-FEB-26         5000 not paid   cus04 dis03
+bil05 20-FEB-26         2400 paid       cus05 dis04
+
+6 rows selected.
+
+SQL> update  bill set discount_id = case when final_amount > 5000 then 2000 when final_amount between 2000 and 5000 then 2000 else 2400 end;
+update  bill set discount_id = case when final_amount > 5000 then 2000 when final_amount between 2000 and 5000 then 2000 else 2400 end
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.SYS_C008356) violated - parent key not
+found
+
+
+SQL> select * from customer fetch first 3 rows only;
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+cus09 shiva                            88 north street
+sivagangai                    630551 25-FEB-26         21
+
+
+cus06 kavi                             23 ddnagar
+madurai                       654789 21-MAR-26          0
+
+
+CUSTO CUSTOMER_NAME        LOYALTY_POINTS ADDRESS_STREET
+----- -------------------- -------------- -------------------------
+CUS_CITY             ADDRESS_PINCODE DOB              AGE SUP_NAME
+-------------------- --------------- --------- ---------- --------------------
+EMAIL
+--------------------
+
+CUS11 PAVI
+CHENNAI                                                45
+
+
+
+SQL> delete from case where customer_id = 2400;
+delete from case where customer_id = 2400
+            *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> delete from bill where case when final_amount < 5000 then 1 else 0 end = 1;
+delete from bill where case when final_amount < 5000 then 1 else 0 end = 1
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.SYS_C008358) violated - child record
+found
+
+
+SQL> desc stock;
+ERROR:
+ORA-04043: object stock does not exist
+
+
+SQL> update product_sale_summary set quantity = case when quantity>10 then quantity+5 when quantity>5 then quantity+10 else quantity+0 end;
+update product_sale_summary set quantity = case when quantity>10 then quantity+5 when quantity>5 then quantity+10 else quantity+0 end
+                                                                                                                       *
+ERROR at line 1:
+ORA-00904: "QUANTITY": invalid identifier
+
+
+SQL> update product_sale_summary set total_quantity = case when total_quantity>10 then total_quantity+5 when total_quantity>5 then total_quantity+10 else total_quantity+0 end;
+update product_sale_summary set total_quantity = case when total_quantity>10 then total_quantity+5 when total_quantity>5 then total_quantity+10 else total_quantity+0 end
+       *
+ERROR at line 1:
+ORA-01732: data manipulation operation not legal on this view
+
+
+SQL> delete from top_cus where cus_id=2400;
+delete from top_cus where cus_id=2400
+            *
+ERROR at line 1:
+ORA-01732: data manipulation operation not legal on this view
+
+
+SQL> commit;
+
+Commit complete.
+
+SQL> delete from top_cus where cus_id=2400;
+delete from top_cus where cus_id=2400
+            *
+ERROR at line 1:
+ORA-01732: data manipulation operation not legal on this view
+
+
+SQL> select * from supplier;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET
+--------------------
+sup03 ravi                          630551 kalaiyar kovil
+kk nagar
+
+sup04 ram                           630221 sivagangai
+ss nagar
+
+sup01 dhivya                        654321 madurai
+gandhi nagar
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET
+--------------------
+sup02 murugen                       621091 chennai
+kv nagar
+
+sup06 dhivya                       6305511 sivagangai
+north street
+
+
+SQL> update supplier set city = case when supplier_id = 'sup02' then 'kerala' else 'mumbai' end;
+update supplier set city = case when supplier_id = 'sup02' then 'kerala' else 'mumbai' end
+                    *
+ERROR at line 1:
+ORA-00904: "CITY": invalid identifier
+
+
+SQL> update supplier set sup_city = case when supplier_id = 'sup02' then 'kerala' else 'mumbai' end;
+
+5 rows updated.
+
+SQL> select * from supplier;
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET
+--------------------
+sup03 ravi                          630551 mumbai
+kk nagar
+
+sup04 ram                           630221 mumbai
+ss nagar
+
+sup01 dhivya                        654321 mumbai
+gandhi nagar
+
+
+SUPPL SUPPLIER_NAME        ADDRESS_PINCODE SUP_CITY
+----- -------------------- --------------- --------------------
+ADDRESS_STREET
+--------------------
+sup02 murugen                       621091 kerala
+kv nagar
+
+sup06 dhivya                       6305511 mumbai
+north street
+
+
+SQL> delete from supplier where supplier_id in (select supplier_id from supplier where case when address_pincode = 621091 then 1 else 0 end = 1;
+delete from supplier where supplier_id in (select supplier_id from supplier where case when address_pincode = 621091 then 1 else 0 end = 1
+                                                                                                                                         *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> delete from supplier where supplier_id in (select supplier_id from supplier where case when address_pincode = 621091 then 1 else 0 end = 1);
+
+1 row deleted.
